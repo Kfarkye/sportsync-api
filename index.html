@@ -4,35 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SportsSync | The Unified Sports Data API</title>
-  <meta name="description" content="A single, normalized API for global sports odds, live injuries, and schedule data. Built for quantitative models and LLM applications.">
+  <meta name="description" content="Stop building brittle sports data pipelines. A single API for resolved entities, live odds, and computed match context.">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      /* Refined Zinc/Slate Palette - No neon gradients */
-      --bg: #000000;
-      --surface: #09090b;
-      --surface-hover: #18181b;
-      --surface-border: #27272a;
+      /* High-Contrast Zinc Palette for better readability */
+      --bg: #09090b; 
+      --surface: #18181b;
+      --surface-hover: #27272a;
+      --surface-border: #3f3f46;
       
       --text: #ffffff;
+      --text-body: #e4e4e7; /* Brightened for readability */
       --text-muted: #a1a1aa;
       --text-dim: #71717a;
       
       /* Sharp, deliberate accent */
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
+      --accent: #e4e4e7;
+      --accent-invert: #09090b;
       
-      /* Git Diff Colors */
+      /* High-Readability Git Diff Colors */
       --diff-add: #10b981;
-      --diff-add-bg: rgba(16, 185, 129, 0.08);
+      --diff-add-text: #6ee7b7;
+      --diff-add-bg: rgba(16, 185, 129, 0.12);
+      
       --diff-sub: #ef4444;
-      --diff-sub-bg: rgba(239, 68, 68, 0.08);
+      --diff-sub-text: #fca5a5;
+      --diff-sub-bg: rgba(239, 68, 68, 0.12);
 
-      /* Editor Syntax (GitHub Dark Dimmed inspired) */
+      /* Editor Syntax */
       --syn-key: #79c0ff;
       --syn-str: #a5d6ff;
       --syn-num: #d2a8ff;
@@ -56,11 +60,11 @@
     body::before {
       content: ""; position: fixed; inset: 0;
       background-image: 
-        linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+        linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
       background-size: 64px 64px;
-      mask-image: radial-gradient(circle at top center, black 20%, transparent 80%);
-      -webkit-mask-image: radial-gradient(circle at top center, black 20%, transparent 80%);
+      mask-image: radial-gradient(circle at top center, black 25%, transparent 80%);
+      -webkit-mask-image: radial-gradient(circle at top center, black 25%, transparent 80%);
       z-index: -1; pointer-events: none;
     }
 
@@ -70,7 +74,7 @@
     /* Minimalist Header */
     header { 
       padding: 16px 0; position: fixed; top: 0; width: 100%; z-index: 100;
-      background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      background: rgba(9, 9, 11, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid transparent; transition: border-color 0.2s;
     }
     header.scrolled { border-bottom: 1px solid var(--surface-border); }
@@ -93,10 +97,10 @@
       padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; 
       text-decoration: none; transition: all 0.15s ease; cursor: pointer; border: 1px solid transparent; 
     }
-    .btn-primary { background: var(--text); color: var(--bg); }
-    .btn-primary:hover { background: #e4e4e7; }
+    .btn-primary { background: var(--accent); color: var(--accent-invert); box-shadow: 0 0 0 1px rgba(255,255,255,0.1); }
+    .btn-primary:hover { background: #ffffff; }
     .btn-secondary { background: var(--surface); border-color: var(--surface-border); color: var(--text); }
-    .btn-secondary:hover { background: var(--surface-hover); border-color: #3f3f46; }
+    .btn-secondary:hover { background: var(--surface-hover); border-color: #52525b; }
 
     /* Hero Section */
     .hero { padding: 140px 0 80px; border-bottom: 1px solid var(--surface-border); }
@@ -112,17 +116,17 @@
     
     .hero h1 { font-size: clamp(36px, 4vw, 56px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 20px; }
     .hero h1 span { color: var(--text-dim); }
-    .hero p { font-size: 16px; color: var(--text-muted); max-width: 480px; margin: 0 0 32px; line-height: 1.6; }
+    .hero p { font-size: 16px; color: var(--text-body); max-width: 480px; margin: 0 0 32px; line-height: 1.6; }
     .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
 
     /* Clean Editor Window */
     .editor-window {
-      background: #09090b; border: 1px solid var(--surface-border); border-radius: 8px; overflow: hidden;
-      box-shadow: 0 24px 48px -12px rgba(0,0,0,0.8); text-align: left;
+      background: #000; border: 1px solid var(--surface-border); border-radius: 8px; overflow: hidden;
+      box-shadow: 0 24px 48px -12px rgba(0,0,0,0.8); text-align: left; scroll-margin-top: 100px;
     }
     
     .editor-header { 
-      background: #18181b; border-bottom: 1px solid var(--surface-border); 
+      background: #121214; border-bottom: 1px solid var(--surface-border); 
       display: flex; align-items: center; justify-content: space-between; padding: 0 8px; height: 40px; 
     }
     .editor-tabs { display: flex; height: 100%; align-items: flex-end; }
@@ -132,13 +136,13 @@
       display: flex; align-items: center; outline: none;
     }
     .editor-tab:hover { color: var(--text-muted); background: rgba(255,255,255,0.02); }
-    .editor-tab.active { color: var(--text); background: #09090b; box-shadow: inset 0 2px 0 var(--text); }
+    .editor-tab.active { color: var(--text); background: #000; box-shadow: inset 0 2px 0 var(--text); }
     
     .editor-copy { background: transparent; border: none; color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 6px; border-radius: 4px; transition: all 0.2s; }
     .editor-copy:hover { color: var(--text); background: var(--surface-hover); }
     .editor-copy svg { width: 14px; height: 14px; stroke-width: 2; }
     
-    .editor-body { padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; color: #e4e4e7; height: 340px; }
+    .editor-body { padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; color: #e4e4e7; height: 400px; }
     .editor-body::-webkit-scrollbar { height: 4px; }
     .editor-body::-webkit-scrollbar-track { background: transparent; }
     .editor-body::-webkit-scrollbar-thumb { background: var(--surface-border); border-radius: 2px; }
@@ -151,10 +155,10 @@
 
     /* Section Typography */
     .section-header { margin-bottom: 40px; }
-    .section-header h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; }
-    .section-header p { color: var(--text-muted); font-size: 15px; max-width: 500px; }
+    .section-header h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; color: var(--text); }
+    .section-header p { color: var(--text-body); font-size: 15px; max-width: 540px; }
 
-    /* Git Diff Architecture Section */
+    /* Git Diff Architecture Section (High Contrast) */
     .diff-section { padding: 80px 0; border-bottom: 1px solid var(--surface-border); }
     .diff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     @media (max-width: 768px) { .diff-grid { grid-template-columns: 1fr; } }
@@ -164,30 +168,18 @@
     .diff-list { list-style: none; }
     .diff-list li { 
       font-size: 13px; padding: 12px 16px; display: flex; align-items: flex-start; gap: 12px;
-      font-family: 'JetBrains Mono', monospace; border-bottom: 1px solid var(--surface-border); line-height: 1.5;
+      font-family: 'JetBrains Mono', monospace; border-bottom: 1px solid var(--surface-border); line-height: 1.6;
     }
     .diff-list li:last-child { border-bottom: none; }
     
     .diff-sub .diff-header::before { content: '--- src/legacy_pipeline.py'; }
-    .diff-sub li { background: var(--diff-sub-bg); color: #f87171; }
+    .diff-sub li { background: var(--diff-sub-bg); color: var(--diff-sub-text); }
     .diff-sub li::before { content: '-'; color: var(--diff-sub); font-weight: bold; }
     
     .diff-add { border-color: rgba(16, 185, 129, 0.3); }
     .diff-add .diff-header::before { content: '+++ src/sportsync_client.py'; color: var(--diff-add); }
-    .diff-add li { background: var(--diff-add-bg); color: #34d399; }
+    .diff-add li { background: var(--diff-add-bg); color: var(--diff-add-text); }
     .diff-add li::before { content: '+'; color: var(--diff-add); font-weight: bold; }
-
-    /* Architecture / Use Cases */
-    .usecases { padding: 80px 0; border-bottom: 1px solid var(--surface-border); }
-    .usecases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    @media (max-width: 800px) { .usecases-grid { grid-template-columns: 1fr; } }
-    
-    .usecase-card { padding: 24px; border: 1px solid var(--surface-border); border-radius: 8px; background: var(--bg); transition: background 0.2s; }
-    .usecase-card:hover { background: var(--surface); }
-    .usecase-icon { width: 32px; height: 32px; border: 1px solid var(--surface-border); border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; background: var(--surface); color: var(--text); }
-    .usecase-icon svg { width: 16px; height: 16px; stroke-width: 2; }
-    .usecase-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
-    .usecase-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
 
     /* Coverage Table */
     .coverage { padding: 80px 0; border-bottom: 1px solid var(--surface-border); }
@@ -204,7 +196,7 @@
     
     .table-wrapper { border: 1px solid var(--surface-border); border-radius: 8px; overflow-x: auto; background: var(--surface); }
     .data-table { width: 100%; border-collapse: collapse; min-width: 600px; }
-    .data-table th, .data-table td { padding: 14px 20px; text-align: left; border-bottom: 1px solid var(--surface-border); font-size: 13px; }
+    .data-table th, .data-table td { padding: 14px 20px; text-align: left; border-bottom: 1px solid var(--surface-border); font-size: 13px; color: var(--text-body); }
     .data-table th { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; color: var(--text-dim); font-weight: 500; letter-spacing: 0.05em; background: var(--bg); }
     .data-table tr:last-child td { border-bottom: none; }
     .data-table tbody tr { transition: background 0.1s; }
@@ -215,7 +207,7 @@
     .th-num { text-align: right; }
     
     .badge-refresh { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 11px; background: var(--bg); border: 1px solid var(--surface-border); color: var(--text-muted); }
-    .badge-refresh.live { background: var(--diff-add-bg); border-color: rgba(16, 185, 129, 0.2); color: var(--diff-add); }
+    .badge-refresh.live { background: var(--diff-add-bg); border-color: rgba(16, 185, 129, 0.2); color: var(--diff-add-text); }
 
     .data-row { display: none; }
     .data-row.show-row { display: table-row; }
@@ -233,7 +225,7 @@
     .tier-card { border: 1px solid var(--surface-border); border-radius: 8px; padding: 32px; background: var(--bg); display: flex; flex-direction: column; }
     .tier-card.featured { border-color: var(--text-dim); background: var(--surface); }
     
-    .tier-name { font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); margin-bottom: 12px; }
+    .tier-name { font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); margin-bottom: 12px; font-weight: 600; }
     .tier-card.featured .tier-name { color: var(--text); }
     
     .tier-price { font-size: 32px; font-weight: 600; color: var(--text); margin-bottom: 4px; display: flex; align-items: baseline; gap: 4px; }
@@ -241,7 +233,7 @@
     .tier-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--surface-border); }
     
     .tier-features { list-style: none; margin-bottom: 32px; flex-grow: 1; display: flex; flex-direction: column; gap: 12px; }
-    .tier-features li { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 10px; }
+    .tier-features li { font-size: 13px; color: var(--text-body); display: flex; align-items: center; gap: 10px; }
     .tier-features li svg { width: 14px; height: 14px; color: var(--text-dim); flex-shrink: 0; }
     .tier-card.featured .tier-features li { color: var(--text); }
     .tier-card.featured .tier-features li svg { color: var(--text); }
@@ -249,7 +241,7 @@
     .btn-block { width: 100%; }
 
     /* Footer */
-    footer { padding: 48px 0; border-top: 1px solid var(--surface-border); font-size: 13px; color: var(--text-muted); }
+    footer { padding: 48px 0; font-size: 13px; color: var(--text-muted); }
     .footer-flex { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 48px; }
     .footer-col { display: flex; flex-direction: column; gap: 12px; }
     .footer-col h4 { font-size: 13px; color: var(--text); margin-bottom: 4px; font-weight: 500; }
@@ -268,11 +260,11 @@
         SportsSync API
       </a>
       <div class="header-links">
+        <a class="nav-link" href="#payload">Sample Payload</a>
         <a class="nav-link" href="#pipeline">Architecture</a>
         <a class="nav-link" href="#coverage">Coverage</a>
-        <a class="nav-link" href="#pricing">Pricing</a>
         <a class="nav-link" href="#">Docs</a>
-        <a class="btn btn-secondary" href="mailto:api@sportsync.io">Get API Key</a>
+        <a class="btn btn-secondary" href="mailto:api@sportsync.io?subject=Request%20Beta%20Access">Request Access</a>
       </div>
     </div>
   </header>
@@ -284,15 +276,15 @@
           <div class="hero-badge">
             <div class="indicator"></div> API v1.2 Release · FIFA WCQ Supported
           </div>
-          <h1>A unified schema for<br/><span>global sports data.</span></h1>
-          <p>SportsSync consolidates odds, player statuses, and schedules into a single normalized JSON payload designed for LLM context windows and quantitative models.</p>
+          <h1>The unified sports<br/><span>data layer.</span></h1>
+          <p>Stop stitching fragile provider feeds. SportsSync handles entity resolution, embeds freshness metadata, and calculates situational context—delivering a deterministic JSON payload for your AI and quantitative models.</p>
           <div class="hero-ctas">
-            <a href="#" class="btn btn-primary">Read Documentation</a>
-            <a href="#coverage" class="btn btn-secondary">View Data Coverage</a>
+            <button class="btn btn-primary" onclick="document.getElementById('payload').scrollIntoView({behavior: 'smooth', block: 'center'})">View Sample Payload</button>
+            <a href="#" class="btn btn-secondary">Read Documentation</a>
           </div>
         </div>
 
-        <div class="editor-window">
+        <div class="editor-window" id="payload">
           <div class="editor-header">
             <div class="editor-tabs">
               <button class="editor-tab active" data-target="json">response.json</button>
@@ -308,22 +300,29 @@
             <div class="editor-content active" id="code-json">
 <pre><code>{
   <span class="c-key">"id"</span>: <span class="c-str">"match_wcq_usa_mex_2026"</span>,
-  <span class="c-key">"league_id"</span>: <span class="c-str">"fifa.worldq.concacaf"</span>,
   <span class="c-key">"status"</span>: <span class="c-str">"scheduled"</span>,
-  <span class="c-key">"teams"</span>: {
-    <span class="c-key">"home"</span>: { <span class="c-key">"id"</span>: <span class="c-str">"usmnt"</span>, <span class="c-key">"rest_days"</span>: <span class="c-num">4</span> },
-    <span class="c-key">"away"</span>: { <span class="c-key">"id"</span>: <span class="c-str">"mex"</span>, <span class="c-key">"rest_days"</span>: <span class="c-num">3</span> }
+  <span class="c-key">"entity_resolution"</span>: {
+    <span class="c-key">"home"</span>: { 
+      <span class="c-key">"global_id"</span>: <span class="c-str">"usmnt"</span>, 
+      <span class="c-key">"aliases_mapped"</span>: [<span class="c-str">"USA"</span>, <span class="c-str">"United States"</span>] 
+    },
+    <span class="c-key">"away"</span>: { 
+      <span class="c-key">"global_id"</span>: <span class="c-str">"mex"</span>, 
+      <span class="c-key">"aliases_mapped"</span>: [<span class="c-str">"Mexico"</span>, <span class="c-str">"MEX"</span>] 
+    }
+  },
+  <span class="c-key">"computed_context"</span>: {
+    <span class="c-key">"home_rest_days"</span>: <span class="c-num">4</span>,
+    <span class="c-key">"away_rest_days"</span>: <span class="c-num">3</span>,
+    <span class="c-key">"schedule_disadvantage"</span>: <span class="c-bool">false</span>
   },
   <span class="c-key">"odds"</span>: {
     <span class="c-key">"moneyline"</span>: { <span class="c-key">"home"</span>: <span class="c-num">-120</span>, <span class="c-key">"away"</span>: <span class="c-num">+350</span>, <span class="c-key">"draw"</span>: <span class="c-num">+250</span> },
     <span class="c-key">"consensus_movement"</span>: <span class="c-str">"sharp_home"</span>
   },
-  <span class="c-key">"context"</span>: {
-    <span class="c-key">"fatigue_flag"</span>: <span class="c-bool">false</span>,
-    <span class="c-key">"h2h_summary"</span>: <span class="c-str">"USA holds distinct advantage..."</span>
-  },
   <span class="c-key">"metadata"</span>: {
-    <span class="c-key">"updated_at"</span>: <span class="c-str">"2026-03-12T10:10:20Z"</span>
+    <span class="c-key">"odds_freshness_ms"</span>: <span class="c-num">124</span>,
+    <span class="c-key">"injury_freshness_ms"</span>: <span class="c-num">412</span>
   }
 }</code></pre>
             </div>
@@ -335,11 +334,11 @@
 client = Client(api_key=<span class="c-str">"ss_live_..."</span>)
 
 <span class="c-com"># Fetch pre-joined payload containing </span>
-<span class="c-com"># odds, schedule, and team form</span>
+<span class="c-com"># odds, schedule, and computed context</span>
 match = client.matches.retrieve(<span class="c-str">"match_wcq_usa_mex_2026"</span>)
 
-<span class="c-key">if</span> match.odds.consensus_movement == <span class="c-str">"sharp_home"</span>:
-    <span class="c-key">print</span>(<span class="c-str">"Anomaly detected in line movement."</span>)
+<span class="c-key">if</span> match.computed_context.schedule_disadvantage:
+    <span class="c-key">print</span>(<span class="c-str">"Warning: Schedule anomaly detected."</span>)
 
 <span class="c-com"># Pass struct directly to LLM for deterministic generation</span>
 generate_preview(data=match.model_dump())</code></pre>
@@ -362,7 +361,7 @@ curl https://api.sportsync.io/v1/matches/match_wcq_usa_mex_2026 \
       <div class="container">
         <div class="section-header">
           <h2>Eliminate data engineering overhead</h2>
-          <p>A comparison of standard sports data integration versus the SportsSync unified payload.</p>
+          <p>A direct comparison of standard sports data integration versus the SportsSync unified schema.</p>
         </div>
         
         <div class="diff-grid">
@@ -387,36 +386,6 @@ curl https://api.sportsync.io/v1/matches/match_wcq_usa_mex_2026 \
               <li>Per-object freshness timestamps embedded natively</li>
             </ul>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="usecases container">
-      <div class="section-header">
-        <h2>Developer primitives</h2>
-        <p>A unified schema designed specifically for modern data applications, vector databases, and programmatic content generation.</p>
-      </div>
-      <div class="usecases-grid">
-        <div class="usecase-card">
-          <div class="usecase-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-          </div>
-          <h3>LLM Context Injection</h3>
-          <p>Structured, deterministic JSON perfect for system prompts. Generate previews, summaries, and automated content without model hallucination or stale data.</p>
-        </div>
-        <div class="usecase-card">
-          <div class="usecase-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
-          </div>
-          <h3>RAG Architectures</h3>
-          <p>Populate vector databases with clean, pre-joined match states. Enable models to answer complex queries about injuries, line movement, and H2H records instantly.</p>
-        </div>
-        <div class="usecase-card">
-          <div class="usecase-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-          </div>
-          <h3>Frontend Automation</h3>
-          <p>Map the strictly typed payload directly to React/Vue components. Build live match centers, betting widgets, and predictive tools with standard data models.</p>
         </div>
       </div>
     </section>
@@ -517,16 +486,16 @@ curl https://api.sportsync.io/v1/matches/match_wcq_usa_mex_2026 \
 
       <div class="pricing-grid">
         <div class="tier-card">
-          <div class="tier-name">Builder</div>
-          <div class="tier-price">$<span class="val" data-monthly="149" data-annual="119">149</span><span>/mo</span></div>
-          <p class="tier-desc">For prototypes and side projects.</p>
+          <div class="tier-name">Sandbox</div>
+          <div class="tier-price">$<span class="val" data-monthly="0" data-annual="0">0</span></div>
+          <p class="tier-desc">For local development and testing.</p>
           <ul class="tier-features">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> 10,000 requests / month</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> 15 requests / minute</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Full schema access</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Email support</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> 1,000 requests / month</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> 5 requests / minute</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Mocked live data access</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Community support</li>
           </ul>
-          <a class="btn btn-secondary btn-block" href="mailto:api@sportsync.io">Start Building</a>
+          <a class="btn btn-secondary btn-block" href="mailto:api@sportsync.io?subject=Sandbox%20Access">Request Access</a>
         </div>
         
         <div class="tier-card featured">
@@ -536,23 +505,23 @@ curl https://api.sportsync.io/v1/matches/match_wcq_usa_mex_2026 \
           <ul class="tier-features">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> 50,000 requests / month</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> 30 requests / minute</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Historical API access</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Webhook integrations</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Real-time production API</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Priority email support</li>
           </ul>
-          <a class="btn btn-primary btn-block" href="mailto:api@sportsync.io">Get Production Key</a>
+          <a class="btn btn-primary btn-block" href="mailto:api@sportsync.io?subject=Production%20Key">Get Production Key</a>
         </div>
         
         <div class="tier-card">
           <div class="tier-name">Enterprise</div>
           <div class="tier-price" style="font-size: 28px; padding-top:4px;">Custom</div>
-          <p class="tier-desc">For high-volume production needs.</p>
+          <p class="tier-desc">For high-volume quantitative needs.</p>
           <ul class="tier-features">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Unlimited volume</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Custom rate limits</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> WebSocket feeds</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> WebSocket feeds & Webhooks</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Dedicated Slack channel</li>
           </ul>
-          <a class="btn btn-secondary btn-block" href="mailto:api@sportsync.io">Contact Sales</a>
+          <a class="btn btn-secondary btn-block" href="mailto:api@sportsync.io?subject=Enterprise%20Sales">Contact Sales</a>
         </div>
       </div>
     </section>
@@ -570,22 +539,22 @@ curl https://api.sportsync.io/v1/matches/match_wcq_usa_mex_2026 \
       </div>
       <div class="footer-col">
         <h4>Product</h4>
+        <a href="#pipeline">Architecture</a>
         <a href="#coverage">Coverage Map</a>
         <a href="#pricing">Pricing</a>
-        <a href="#">Changelog</a>
       </div>
       <div class="footer-col">
         <h4>Developers</h4>
         <a href="#">Documentation</a>
+        <a href="#payload">Sample Payload</a>
         <a href="#">API Reference</a>
-        <a href="#">GitHub</a>
       </div>
     </div>
     <div class="container footer-bottom">
       <span>&copy; 2026 SportsSync Data Systems. API Version 1.2.</span>
       <div style="display: flex; gap: 24px;">
-        <a href="#" style="color: inherit; text-decoration: none;">Privacy</a>
-        <a href="#" style="color: inherit; text-decoration: none;">Terms</a>
+        <a href="#" style="color: inherit; text-decoration: none;">Privacy Policy</a>
+        <a href="#" style="color: inherit; text-decoration: none;">Terms of Service</a>
       </div>
     </div>
   </footer>
@@ -616,7 +585,7 @@ curl https://api.sportsync.io/v1/matches/match_wcq_usa_mex_2026 \
           const activeContent = document.querySelector('.editor-content.active pre').innerText;
           navigator.clipboard.writeText(activeContent).then(() => {
             const originalHTML = copyBtn.innerHTML;
-            copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="var(--success)"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+            copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="var(--diff-add-text)"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
             setTimeout(() => { copyBtn.innerHTML = originalHTML; }, 1500);
           });
         });
