@@ -978,6 +978,16 @@ async function syncOpeningLinesBackfill(
     }
   }
 
+  const { count: rowsSanitizedCount, error: sanitizeCountError } = await local
+    .from("opening_lines")
+    .select("id", { count: "exact", head: true })
+    .not("total", "is", null)
+    .lte("total", 0);
+
+  if (sanitizeCountError) {
+    throw new Error(`Sanitizer pre-count failed (opening_lines): ${sanitizeCountError.message}`);
+  }
+
   const { error: cleanError } = await local
     .from("opening_lines")
     .update({ total: null })
@@ -988,6 +998,34 @@ async function syncOpeningLinesBackfill(
     throw new Error(`Zero-line cleanup failed (opening_lines): ${cleanError.message}`);
   }
 
+  const rowsProcessed = mergedByMatch.size;
+  const rowsSanitized = rowsSanitizedCount ?? 0;
+  const sanitizerRate = rowsProcessed > 0
+    ? Number((rowsSanitized / rowsProcessed).toFixed(4))
+    : 0;
+
+  const { error: sanitizerLogError } = await local
+    .from("kalshi_sync_log")
+    .insert({
+      league: "all",
+      rows_processed: rowsProcessed,
+      rows_sanitized: rowsSanitized,
+      sanitizer_rate: sanitizerRate,
+      notes: `opening_lines_backfill total<=0 sanitizer; inserted=${inserts.length}; updated=${updates.length}`,
+    });
+
+  const sanitizerLogMissingTable = sanitizerLogError
+    && (
+      sanitizerLogError.code === "42P01"
+      || sanitizerLogError.message.toLowerCase().includes("kalshi_sync_log")
+    );
+
+  if (sanitizerLogError && !sanitizerLogMissingTable) {
+    throw new Error(`Sanitizer log insert failed: ${sanitizerLogError.message}`);
+  }
+
+  const sanitizerLogState = sanitizerLogError ? "skipped" : "logged";
+
   return {
     rowsRead: sourceOpeningRows.length + sourceClosingRows.length + sourceMarketRows.length,
     rowsUpserted: inserts.length + updates.length,
@@ -996,7 +1034,9 @@ async function syncOpeningLinesBackfill(
       `opening_lines_backfill from_opening=${openingByMatch.size}, ` +
       `from_closing=${closingByMatch.size}, merged=${mergedCount}, ` +
       `from_market=${marketByMatch.size}, merged_market=${mergedFromMarketCount}, ` +
-      `inserted=${inserts.length}, updated=${updates.length}`,
+      `inserted=${inserts.length}, updated=${updates.length}, ` +
+      `sanitized=${rowsSanitized}, sanitizer_rate=${sanitizerRate}, ` +
+      `sanitizer_log=${sanitizerLogState}`,
   };
 }
 

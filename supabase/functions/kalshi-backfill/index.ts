@@ -10,6 +10,7 @@ type KalshiMarket = {
   no_sub_title?: string;
   custom_strike?: JsonRecord;
   yes_sub_title?: string;
+  previous_price_dollars?: string;
   last_price_dollars?: string;
   settlement_value_dollars?: string;
   result?: string;
@@ -369,11 +370,14 @@ function extractLineValue(market: KalshiMarket, eventTitle: string | null, marke
       /(?:over|under)\s+([+-]?\d+(?:\.\d+)?)/i,
       /([+-]?\d+(?:\.\d+)?)\s+points?/i,
       /total[^0-9]*([+-]?\d+(?:\.\d+)?)/i,
+      /(?:set\s+at|is)\s+([+-]?\d+(?:\.\d+)?)/i,
+      /([+-]?\d+(?:\.\d+)?)\s*(?:or|and)\s*(?:fewer|less|more)/i,
     ]
     : [
       /wins\s+by\s+over\s+([+-]?\d+(?:\.\d+)?)/i,
       /(?:over|under)\s+([+-]?\d+(?:\.\d+)?)/i,
       /([+-]?\d+(?:\.\d+)?)\s+points?/i,
+      /margin[^0-9]*([+-]?\d+(?:\.\d+)?)/i,
     ];
 
   for (const source of prioritizedSources) {
@@ -529,7 +533,9 @@ async function parseParams(req: Request): Promise<RequestParams> {
     limit: Math.max(1, Math.min(200, Math.trunc(limit))),
     maxPages: Math.max(1, Math.min(1000, Math.trunc(maxPages))),
     startCursor,
-    resolveClosingPrices: asBoolean(pickValue("resolve_closing_prices"), true),
+    // Line-market runs can include thousands of contracts. Defaulting to detail lookups can exceed
+    // edge worker limits; keep it opt-in and rely on nested payload data by default.
+    resolveClosingPrices: asBoolean(pickValue("resolve_closing_prices"), mode === "line_markets" ? false : true),
     useCandlesticks: asBoolean(pickValue("use_candlesticks"), false),
     seedTeamMap: mode === "line_markets" ? false : asBoolean(pickValue("seed_team_map"), true),
     dryRun: asBoolean(pickValue("dry_run"), false),
@@ -735,8 +741,8 @@ Deno.serve(async (req) => {
             : null;
 
           if (params.mode === "line_markets") {
-            let lineClosingPrice: number | null = null;
-            if (params.resolveClosingPrices) {
+            let lineClosingPrice: number | null = clampProbability(asNumber(market.previous_price_dollars));
+            if (lineClosingPrice === null && params.resolveClosingPrices) {
               try {
                 const detail = await fetchMarketDetail(marketTicker);
                 lineClosingPrice = clampProbability(asNumber(detail?.previous_price_dollars));

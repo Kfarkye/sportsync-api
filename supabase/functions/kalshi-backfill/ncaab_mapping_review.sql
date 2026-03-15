@@ -1,0 +1,111 @@
+-- Auto-generated NCAAB review mappings (commented out)
+-- rows=54
+
+-- sim=0.5882 events=34 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('UCLA', 'UCLA Bruins', 'ncaab', '', null);
+-- sim=0.5000 events=34 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('BYU', 'BYU Cougars', 'ncaab', '', null);
+-- sim=0.6154 events=33 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('VCU', 'VCU Rams', 'ncaab', '', null);
+-- sim=0.5000 events=33 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('San Jose St.', 'Saint Joseph''s Hawks', 'ncaab', '', null);
+-- sim=0.4706 events=33 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('SMU', 'SMU Mustangs', 'ncaab', '', null);
+-- sim=0.6522 events=32 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('North Carolina St.', 'North Carolina Tar Heels', 'ncaab', '', null);
+-- sim=0.5882 events=32 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('UNLV', 'UNLV Rebels', 'ncaab', '', null);
+-- sim=0.5333 events=32 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('LSU', 'LSU Tigers', 'ncaab', '', null);
+-- sim=0.5000 events=32 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('UCF', 'UCF Knights', 'ncaab', '', null);
+-- sim=0.5000 events=31 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('UAB', 'UAB Blazers', 'ncaab', '', null);
+-- sim=0.5455 events=30 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Nicholls St.', 'Nicholls Colonels', 'ncaab', '', null);
+-- sim=0.4545 events=30 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('UTSA', 'UTSA Roadrunners', 'ncaab', '', null);
+-- sim=0.6923 events=29 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Southern University', 'Southern Jaguars', 'ncaab', '', null);
+-- sim=0.6061 events=28 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Grambling St.', 'Grambling Tigers', 'ncaab', '', null);
+-- sim=0.5882 events=27 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('UTEP', 'UTEP Miners', 'ncaab', '', null);
+-- sim=0.6154 events=26 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Montana', 'Montana Grizzlies', 'ncaab', '', null);
+-- sim=0.5263 events=26 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Tennessee-Martin', 'Tennessee Volunteers', 'ncaab', '', null);
+-- sim=0.4545 events=26 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('NJIT', 'NJIT Highlanders', 'ncaab', '', null);
+-- sim=0.6842 events=25 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('North Dakota', 'North Dakota State Bison', 'ncaab', '', null);
+-- sim=0.5333 events=25 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('UIC', 'UIC Flames', 'ncaab', '', null);
+-- sim=0.4762 events=25 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Southeastern Louisiana', 'SE Louisiana Lions', 'ncaab', '', null);
+-- sim=0.4762 events=25 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('UMBC', 'UMBC Retrievers', 'ncaab', '', null);
+-- sim=0.4000 events=25 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('University at Albany', 'UAlbany Great Danes', 'ncaab', '', null);
+-- sim=0.6897 events=24 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Central Connecticut St.', 'Central Connecticut Blue Devils', 'ncaab', '', null);
+-- sim=0.5000 events=24 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Louisiana-Monroe', 'Louisiana Ragin'' Cajuns', 'ncaab', '', null);
+-- sim=0.5000 events=24 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('VMI', 'VMI Keydets', 'ncaab', '', null);
+-- sim=0.6667 events=4 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Lincoln (CA)', 'Lincoln University (CA) Oaklanders', 'ncaab', '', null);
+-- sim=0.6383 events=2 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Brewton-Parker College', 'Brewton-Parker Wildcats', 'ncaab', '', null);
+-- sim=0.6957 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Salish Kootenai College', 'Salish Kootenai Bison', 'ncaab', '', null);
+-- sim=0.6667 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Cumberland', 'Cumberland (TN) Phoenix', 'ncaab', '', null);
+-- sim=0.6667 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Miami-Hamilton', 'Miami (OH)-Hamilton Harriers', 'ncaab', '', null);
+-- sim=0.6500 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('West Virginia Tech', 'Virginia Tech Hokies', 'ncaab', '', null);
+-- sim=0.6400 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Georgia College & St.', 'Georgia College Bobcats', 'ncaab', '', null);
+-- sim=0.6383 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('York College (NE)', 'York College Nebraska Panthers', 'ncaab', '', null);
+-- sim=0.6154 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Benedictine Mesa', 'Benedictine University (IL) Eagles', 'ncaab', '', null);
+-- sim=0.6154 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Penn State-Abington', 'Penn State-New Kensington Lions', 'ncaab', '', null);
+-- sim=0.5946 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Paul Quinn College', 'Paul Quinn Tigers', 'ncaab', '', null);
+-- sim=0.5833 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Dallas', 'Dallas Crusaders', 'ncaab', '', null);
+-- sim=0.5600 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Lancaster Bible', 'Lancasater Bible College Chargers', 'ncaab', '', null);
+-- sim=0.5600 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Pacific Union College', 'Pacific Union PACIFIC UNION', 'ncaab', '', null);
+-- sim=0.5556 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Blackburn College', 'Blackburn Beavers', 'ncaab', '', null);
+-- sim=0.5517 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Regis College', 'Regis (CO) REGIS UNIVERSITY', 'ncaab', '', null);
+-- sim=0.5405 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Bryan College', 'Lehman College Bridges', 'ncaab', '', null);
+-- sim=0.5366 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Penn State-Erie', 'Penn State Nittany Lions', 'ncaab', '', null);
+-- sim=0.5333 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Justice University', 'Justice College Lions', 'ncaab', '', null);
+-- sim=0.5306 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('City College of New York', 'City College NY Beavers', 'ncaab', '', null);
+-- sim=0.5263 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('McPherson College', 'McPherson Mcpherson', 'ncaab', '', null);
+-- sim=0.5246 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('UC-Colorado Springs', 'Colorado-Colorado Springs Mountain Lions', 'ncaab', '', null);
+-- sim=0.5000 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Cal Poly Humboldt', 'Cal Poly Mustangs', 'ncaab', '', null);
+-- sim=0.5000 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Notre Dame of Maryland', 'Notre Dame (MD) Gators', 'ncaab', '', null);
+-- sim=0.4865 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Baptist University of Florida', 'Baptist (Fl) Eagles', 'ncaab', '', null);
+-- sim=0.4848 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Brevard College', 'Brevard Tornados', 'ncaab', '', null);
+-- sim=0.4444 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('Alfred St.', 'St. John''s Red Storm', 'ncaab', '', null);
+-- sim=0.4286 events=1 method=fuzzy_trigram
+-- insert into kalshi_team_map (kalshi_name, espn_name, league, kalshi_abbrev, espn_team_id) values ('UMass Boston', 'Massachusetts-Boston Beacons', 'ncaab', '', null);
