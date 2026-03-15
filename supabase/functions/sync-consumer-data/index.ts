@@ -40,6 +40,7 @@ const SYNC_INTERVAL_MINUTES: Record<string, number> = {
   team_ou_splits: 30,
   team_ats_splits: 30,
   last_game_results: 120,
+  opening_lines_backfill: 120,
 };
 
 const TARGET_TABLES = Object.keys(SYNC_INTERVAL_MINUTES);
@@ -165,6 +166,27 @@ function normalizeLeagueId(value: unknown): string | null {
   if (!raw) return null;
   const normalized = raw.trim().toLowerCase();
   return LEAGUE_ID_CANONICAL_MAP[normalized] ?? normalized;
+}
+
+function normalizeTotalLine(value: unknown): number | null {
+  const total = asNumber(value);
+  if (total === null) return null;
+  return total > 0 ? total : null;
+}
+
+function normalizeMoneyline(value: unknown): number | null {
+  const line = asInteger(value);
+  if (line === null || line === 0) return null;
+  return line;
+}
+
+function lineSnapshotScore(row: JsonRecord): number {
+  let score = 0;
+  if (asNumber(row.total) !== null) score += 8;
+  if (asInteger(row.home_ml) !== null || asInteger(row.away_ml) !== null) score += 4;
+  if (asNumber(row.home_spread) !== null || asNumber(row.away_spread) !== null) score += 2;
+  if (asString(row.provider)) score += 1;
+  return score;
 }
 
 async function fetchAllFromTable(
@@ -662,6 +684,322 @@ async function syncLastGameResults(local: SupabaseClient, boltsks: SupabaseClien
   };
 }
 
+async function syncOpeningLinesBackfill(
+  local: SupabaseClient,
+  boltsks: SupabaseClient,
+): Promise<SyncExecutionResult> {
+  const sourceOpeningRows = await fetchAllFromTable(
+    boltsks,
+    "opening_lines",
+    "match_id,home_spread,away_spread,total,home_ml,away_ml,provider,created_at",
+  );
+  const sourceClosingRows = await fetchAllFromTable(
+    boltsks,
+    "closing_lines",
+    "match_id,home_spread,away_spread,total,home_ml,away_ml,league_id,created_at",
+  );
+  const sourceMarketRows = await fetchAllFromTable(
+    boltsks,
+    "market_history",
+    "match_id,total_line,home_ml,away_ml,home_spread,away_spread,provider,source,ts,is_live",
+  );
+  const localRows = await fetchAllFromTable(
+    local,
+    "opening_lines",
+    "match_id,total,home_ml,away_ml,home_spread,away_spread,league_id,provider,source",
+  );
+
+  const localByMatch = new Map<string, JsonRecord>();
+  for (const row of localRows) {
+    const matchId = asString(row.match_id);
+    if (!matchId) continue;
+    if (!localByMatch.has(matchId)) {
+      localByMatch.set(matchId, row);
+    }
+  }
+
+  const openingByMatch = new Map<string, JsonRecord>();
+  const closingByMatch = new Map<string, JsonRecord>();
+  const marketByMatch = new Map<string, JsonRecord>();
+
+  const chooseBest = (targetMap: Map<string, JsonRecord>, matchId: string, candidate: JsonRecord): void => {
+    const existing = targetMap.get(matchId);
+    if (!existing) {
+      targetMap.set(matchId, candidate);
+      return;
+    }
+
+    const existingScore = lineSnapshotScore(existing);
+    const incomingScore = lineSnapshotScore(candidate);
+
+    if (incomingScore > existingScore) {
+      targetMap.set(matchId, candidate);
+      return;
+    }
+
+    if (incomingScore === existingScore) {
+      const existingMs = getTimestampMs(existing.created_at);
+      const incomingMs = getTimestampMs(candidate.created_at);
+      if (incomingMs > existingMs) {
+        targetMap.set(matchId, candidate);
+      }
+    }
+  };
+
+  for (const row of sourceClosingRows) {
+    const matchId = asString(row.match_id);
+    if (!matchId) continue;
+
+    chooseBest(closingByMatch, matchId, {
+      match_id: matchId,
+      home_spread: asNumber(row.home_spread),
+      away_spread: asNumber(row.away_spread),
+      total: normalizeTotalLine(row.total),
+      home_ml: normalizeMoneyline(row.home_ml),
+      away_ml: normalizeMoneyline(row.away_ml),
+      league_id: normalizeLeagueId(row.league_id),
+      provider: "kalshi",
+      source: "Boltsks ClosingLines Backfill",
+      created_at: asIsoTimestamp(row.created_at) ?? new Date().toISOString(),
+    });
+  }
+
+  for (const row of sourceOpeningRows) {
+    const matchId = asString(row.match_id);
+    if (!matchId) continue;
+
+    chooseBest(openingByMatch, matchId, {
+      match_id: matchId,
+      home_spread: asNumber(row.home_spread),
+      away_spread: asNumber(row.away_spread),
+      total: normalizeTotalLine(row.total),
+      home_ml: normalizeMoneyline(row.home_ml),
+      away_ml: normalizeMoneyline(row.away_ml),
+      league_id: null,
+      provider: asString(row.provider),
+      source: "Boltsks OpeningLines Backfill",
+      created_at: asIsoTimestamp(row.created_at) ?? new Date().toISOString(),
+    });
+  }
+
+  for (const row of sourceMarketRows) {
+    if (asBoolean(row.is_live) === true) continue;
+
+    const matchId = asString(row.match_id);
+    if (!matchId) continue;
+
+    chooseBest(marketByMatch, matchId, {
+      match_id: matchId,
+      home_spread: asNumber(row.home_spread),
+      away_spread: asNumber(row.away_spread),
+      total: normalizeTotalLine(row.total_line),
+      home_ml: normalizeMoneyline(row.home_ml),
+      away_ml: normalizeMoneyline(row.away_ml),
+      league_id: null,
+      provider: asString(row.provider) ?? asString(row.source),
+      source: "Boltsks MarketHistory Backfill",
+      created_at: asIsoTimestamp(row.ts) ?? new Date().toISOString(),
+    });
+  }
+
+  const mergedByMatch = new Map<string, JsonRecord>();
+  let mergedCount = 0;
+  let mergedFromMarketCount = 0;
+
+  const mergeMissingFields = (
+    base: JsonRecord,
+    fallback: JsonRecord,
+  ): { row: JsonRecord; filled: number } => {
+    const merged: JsonRecord = {
+      match_id: asString(base.match_id) ?? asString(fallback.match_id),
+      total: normalizeTotalLine(base.total),
+      home_spread: asNumber(base.home_spread),
+      away_spread: asNumber(base.away_spread),
+      home_ml: normalizeMoneyline(base.home_ml),
+      away_ml: normalizeMoneyline(base.away_ml),
+      league_id: normalizeLeagueId(base.league_id) ?? normalizeLeagueId(fallback.league_id),
+      provider: asString(base.provider) ?? asString(fallback.provider),
+      source: asString(base.source) ?? asString(fallback.source),
+      created_at: asIsoTimestamp(base.created_at) ?? asIsoTimestamp(fallback.created_at) ?? new Date().toISOString(),
+    };
+
+    let filled = 0;
+    const fallbackTotal = normalizeTotalLine(fallback.total);
+    const fallbackHomeSpread = asNumber(fallback.home_spread);
+    const fallbackAwaySpread = asNumber(fallback.away_spread);
+    const fallbackHomeMl = normalizeMoneyline(fallback.home_ml);
+    const fallbackAwayMl = normalizeMoneyline(fallback.away_ml);
+
+    if (asNumber(merged.home_spread) === null && fallbackHomeSpread !== null) {
+      merged.home_spread = fallbackHomeSpread;
+      filled += 1;
+    }
+    if (asNumber(merged.away_spread) === null && fallbackAwaySpread !== null) {
+      merged.away_spread = fallbackAwaySpread;
+      filled += 1;
+    }
+    if (normalizeTotalLine(merged.total) === null && fallbackTotal !== null) {
+      merged.total = fallbackTotal;
+      filled += 1;
+    }
+    if (normalizeMoneyline(merged.home_ml) === null && fallbackHomeMl !== null) {
+      merged.home_ml = fallbackHomeMl;
+      filled += 1;
+    }
+    if (normalizeMoneyline(merged.away_ml) === null && fallbackAwayMl !== null) {
+      merged.away_ml = fallbackAwayMl;
+      filled += 1;
+    }
+
+    return { row: merged, filled };
+  };
+
+  for (const [matchId, closing] of closingByMatch.entries()) {
+    mergedByMatch.set(matchId, closing);
+  }
+
+  for (const [matchId, opening] of openingByMatch.entries()) {
+    const closing = mergedByMatch.get(matchId);
+    if (!closing) {
+      mergedByMatch.set(matchId, {
+        ...opening,
+        provider: asString(opening.provider) ?? "espn",
+      });
+      continue;
+    }
+
+    const merged = mergeMissingFields(opening, closing);
+    if (merged.filled > 0) {
+      mergedCount += 1;
+      if (!asString(opening.provider)) {
+        merged.row.provider = "espn+kalshi";
+      }
+    }
+
+    mergedByMatch.set(matchId, merged.row);
+  }
+
+  for (const [matchId, market] of marketByMatch.entries()) {
+    const existing = mergedByMatch.get(matchId);
+    if (!existing) {
+      mergedByMatch.set(matchId, market);
+      continue;
+    }
+
+    const merged = mergeMissingFields(existing, market);
+    if (merged.filled > 0) {
+      mergedFromMarketCount += 1;
+    }
+    mergedByMatch.set(matchId, merged.row);
+  }
+
+  const inserts: JsonRecord[] = [];
+  const updates: Array<{ matchId: string; patch: JsonRecord }> = [];
+  let skipped = 0;
+
+  for (const [matchId, candidate] of mergedByMatch.entries()) {
+    const candidateTotal = normalizeTotalLine(candidate.total);
+    const candidateHomeMl = normalizeMoneyline(candidate.home_ml);
+    const candidateAwayMl = normalizeMoneyline(candidate.away_ml);
+    const candidateHomeSpread = asNumber(candidate.home_spread);
+    const candidateAwaySpread = asNumber(candidate.away_spread);
+
+    if (
+      candidateTotal === null &&
+      candidateHomeMl === null &&
+      candidateAwayMl === null &&
+      candidateHomeSpread === null &&
+      candidateAwaySpread === null
+    ) {
+      skipped += 1;
+      continue;
+    }
+
+    const existing = localByMatch.get(matchId);
+
+    if (!existing) {
+      inserts.push({
+        match_id: matchId,
+        total: candidateTotal,
+        home_ml: candidateHomeMl,
+        away_ml: candidateAwayMl,
+        home_spread: candidateHomeSpread,
+        away_spread: candidateAwaySpread,
+        league_id: normalizeLeagueId(candidate.league_id),
+        provider: asString(candidate.provider),
+        source: asString(candidate.source),
+        created_at: asIsoTimestamp(candidate.created_at) ?? new Date().toISOString(),
+      });
+      continue;
+    }
+
+    const patch: JsonRecord = {};
+    const existingTotal = normalizeTotalLine(existing.total);
+    const existingHomeMl = normalizeMoneyline(existing.home_ml);
+    const existingAwayMl = normalizeMoneyline(existing.away_ml);
+    const existingHomeSpread = asNumber(existing.home_spread);
+    const existingAwaySpread = asNumber(existing.away_spread);
+    const existingLeagueId = normalizeLeagueId(existing.league_id);
+    const existingProvider = asString(existing.provider);
+    const existingSource = asString(existing.source);
+    const candidateLeagueId = normalizeLeagueId(candidate.league_id);
+    const candidateProvider = asString(candidate.provider);
+    const candidateSource = asString(candidate.source);
+
+    if (existingTotal === null && candidateTotal !== null) patch.total = candidateTotal;
+    if (existingHomeMl === null && candidateHomeMl !== null) patch.home_ml = candidateHomeMl;
+    if (existingAwayMl === null && candidateAwayMl !== null) patch.away_ml = candidateAwayMl;
+    if (existingHomeSpread === null && candidateHomeSpread !== null) patch.home_spread = candidateHomeSpread;
+    if (existingAwaySpread === null && candidateAwaySpread !== null) patch.away_spread = candidateAwaySpread;
+    if (!existingLeagueId && candidateLeagueId) patch.league_id = candidateLeagueId;
+    if (!existingProvider && candidateProvider) patch.provider = candidateProvider;
+    if (!existingSource && candidateSource) patch.source = candidateSource;
+
+    if (Object.keys(patch).length > 0) {
+      updates.push({ matchId, patch });
+    } else {
+      skipped += 1;
+    }
+  }
+
+  for (let start = 0; start < inserts.length; start += CHUNK_SIZE) {
+    const chunk = inserts.slice(start, start + CHUNK_SIZE);
+    if (chunk.length === 0) continue;
+    const { error } = await local.from("opening_lines").insert(chunk);
+    if (error) {
+      throw new Error(`Insert failed (opening_lines backfill): ${error.message}`);
+    }
+  }
+
+  for (const update of updates) {
+    const { error } = await local.from("opening_lines").update(update.patch).eq("match_id", update.matchId);
+    if (error) {
+      throw new Error(`Update failed (opening_lines backfill for ${update.matchId}): ${error.message}`);
+    }
+  }
+
+  const { error: cleanError } = await local
+    .from("opening_lines")
+    .update({ total: null })
+    .not("total", "is", null)
+    .lte("total", 0);
+
+  if (cleanError) {
+    throw new Error(`Zero-line cleanup failed (opening_lines): ${cleanError.message}`);
+  }
+
+  return {
+    rowsRead: sourceOpeningRows.length + sourceClosingRows.length + sourceMarketRows.length,
+    rowsUpserted: inserts.length + updates.length,
+    rowsSkipped: skipped,
+    note:
+      `opening_lines_backfill from_opening=${openingByMatch.size}, ` +
+      `from_closing=${closingByMatch.size}, merged=${mergedCount}, ` +
+      `from_market=${marketByMatch.size}, merged_market=${mergedFromMarketCount}, ` +
+      `inserted=${inserts.length}, updated=${updates.length}`,
+  };
+}
+
 async function runSyncTask(
   table: string,
   intervalMinutes: number,
@@ -761,6 +1099,7 @@ Deno.serve(async (req) => {
       { table: "team_ou_splits", run: () => syncTeamOuSplits(local, boltsks) },
       { table: "team_ats_splits", run: () => syncTeamAtsSplits(local, boltsks) },
       { table: "last_game_results", run: () => syncLastGameResults(local, boltsks) },
+      { table: "opening_lines_backfill", run: () => syncOpeningLinesBackfill(local, boltsks) },
     ];
 
     const results: SyncResult[] = [];
