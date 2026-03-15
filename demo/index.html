@@ -3,827 +3,542 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SportsSync AI Match Context API — Live Demo</title>
-  <meta name="description" content="See how one API call returns a complete match intelligence payload for AI sports apps, betting tools, and content generation.">
+  <title>SportsSync Match Context Demo</title>
+  <meta name="description" content="Interactive demo of one SportsSync match-context response rendered as a real page.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0a0a0f;
-      --surface: #111118;
-      --surface-2: #1a1a24;
-      --surface-3: #222230;
-      --border: rgba(255,255,255,0.06);
-      --border-active: rgba(255,255,255,0.12);
-      --text: #f0f0f5;
-      --text-muted: #8888a0;
-      --text-dim: #55556a;
-      --accent: #6366f1;
-      --accent-glow: rgba(99,102,241,0.15);
-      --green: #22c55e;
-      --green-dim: rgba(34,197,94,0.12);
-      --red: #ef4444;
-      --red-dim: rgba(239,68,68,0.12);
-      --amber: #f59e0b;
-      --amber-dim: rgba(245,158,11,0.12);
-      --radius: 16px;
-      --radius-sm: 10px;
-      --radius-xs: 6px;
+      --bg: #f8f6f1;
+      --panel: #ffffff;
+      --panel-soft: #f3efe6;
+      --border: #e3dccd;
+      --text: #1f1d18;
+      --muted: #5f574a;
+      --accent: #0f6b5f;
+      --good: #1b7a3b;
+      --warn: #9a6a14;
+      --bad: #8b2d2d;
+      --body: "Public Sans", "Avenir Next", sans-serif;
+      --display: "Newsreader", Georgia, serif;
+      --mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
+      font-family: var(--body);
+      line-height: 1.5;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Noise texture overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 0 20px 28px;
     }
 
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
-
-    /* Header */
-    .header {
+    header {
       padding: 20px 0;
       border-bottom: 1px solid var(--border);
       display: flex;
-      align-items: center;
       justify-content: space-between;
-    }
-    .logo {
-      display: flex;
       align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      font-size: 18px;
-      letter-spacing: -0.02em;
-    }
-    .logo-icon {
-      width: 32px; height: 32px;
-      background: linear-gradient(135deg, var(--accent), #a855f7);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-    }
-    .badge {
-      background: var(--accent-glow);
-      color: var(--accent);
-      font-size: 11px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 20px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    /* Hero */
-    .hero {
-      padding: 60px 0 40px;
-      text-align: center;
-    }
-    .hero h1 {
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.15;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, #fff 0%, #c4c4d8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .hero p {
-      color: var(--text-muted);
-      font-size: 17px;
-      max-width: 620px;
-      margin: 0 auto;
-      line-height: 1.7;
-    }
-    .hero .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--green-dim);
-      color: var(--green);
-      font-size: 12px;
-      font-weight: 600;
-      padding: 5px 14px;
-      border-radius: 20px;
-      margin-bottom: 20px;
-    }
-    .hero .pill::before {
-      content: '';
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    /* Match selector */
-    .match-selector {
-      display: flex;
       gap: 12px;
-      justify-content: center;
       flex-wrap: wrap;
-      margin: 32px 0;
     }
+
+    .brand {
+      color: var(--text);
+      text-decoration: none;
+      font-family: var(--display);
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    .back {
+      font-size: 14px;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .hero {
+      padding: 24px 0 14px;
+    }
+
+    .hero h1 {
+      font-family: var(--display);
+      font-size: clamp(32px, 5.6vw, 52px);
+      line-height: 1.06;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 60ch;
+    }
+
+    .controls {
+      margin: 16px 0 20px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
     .match-btn {
-      background: var(--surface);
       border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 12px 20px;
-      border-radius: var(--radius-sm);
-      font-family: inherit;
-      font-size: 13px;
+      background: var(--panel);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .match-btn:hover { border-color: var(--border-active); color: var(--text); background: var(--surface-2); }
-    .match-btn.active { border-color: var(--accent); background: var(--accent-glow); color: var(--accent); }
-    .match-btn .sport-tag {
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      background: var(--surface-3);
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      font-family: inherit;
     }
 
-    /* Preview card grid */
-    .preview-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 24px;
+    .match-btn.active {
+      border-color: var(--accent);
+      background: var(--panel-soft);
+      color: var(--accent);
     }
-    @media (max-width: 768px) { .preview-grid { grid-template-columns: 1fr; } }
+
+    .runtime {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      min-height: 18px;
+      font-family: var(--mono);
+    }
+
+    .stack {
+      display: grid;
+      gap: 12px;
+    }
 
     .card {
-      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      transition: all 0.25s;
-      position: relative;
-      overflow: hidden;
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 16px;
     }
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(99,102,241,0.3), transparent);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .card:hover::before { opacity: 1; }
-    .card:hover { border-color: var(--border-active); }
 
-    .card-full { grid-column: 1 / -1; }
-    .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
+    .card h2 {
+      font-size: 17px;
+      margin-bottom: 10px;
     }
-    .card-title {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-dim);
-    }
-    .card-status {
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-weight: 600;
-    }
-    .status-fresh { background: var(--green-dim); color: var(--green); }
-    .status-stale { background: var(--amber-dim); color: var(--amber); }
-    .status-unavailable { background: var(--surface-3); color: var(--text-dim); }
 
-    /* Match header card */
-    .match-header {
-      text-align: center;
-      padding: 32px 24px;
-    }
-    .match-teams {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 32px;
-      margin-bottom: 16px;
-    }
-    .team-name {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-    }
-    .team-code {
-      font-size: 12px;
-      color: var(--text-dim);
-      margin-top: 4px;
-    }
-    .team-record {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-    .vs {
-      font-size: 14px;
-      color: var(--text-dim);
-      font-weight: 600;
-      padding: 8px 14px;
-      background: var(--surface-2);
-      border-radius: 8px;
-    }
-    .match-meta {
-      font-size: 13px;
-      color: var(--text-muted);
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .match-meta span { display: flex; align-items: center; gap: 4px; }
-
-    /* Odds grid */
-    .odds-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 12px;
-    }
-    @media (max-width: 600px) { .odds-row { grid-template-columns: repeat(2, 1fr); } }
-    .odds-cell {
-      background: var(--surface-2);
-      border-radius: var(--radius-xs);
-      padding: 12px;
-      text-align: center;
-    }
-    .odds-label {
-      font-size: 11px;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+    .matchup-title {
+      font-family: var(--display);
+      font-size: 40px;
+      line-height: 1.03;
       margin-bottom: 6px;
     }
-    .odds-value {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-    .odds-juice {
-      font-size: 11px;
-      color: var(--text-dim);
-      margin-top: 2px;
-    }
 
-    /* Injury list */
-    .injury-list { list-style: none; }
-    .injury-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .injury-item:last-child { border: none; }
-    .injury-player {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .injury-player-name { font-size: 14px; font-weight: 600; }
-    .injury-pos { font-size: 11px; color: var(--text-dim); }
-    .injury-detail { font-size: 12px; color: var(--text-muted); }
-    .injury-status {
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-weight: 600;
-      text-transform: capitalize;
-    }
-    .injury-out { background: var(--red-dim); color: var(--red); }
-    .injury-questionable { background: var(--amber-dim); color: var(--amber); }
-    .injury-probable { background: var(--green-dim); color: var(--green); }
-    .injury-doubtful { background: var(--red-dim); color: #fb923c; }
-
-    /* Form display */
-    .form-comparison {
+    .meta {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
     }
-    .form-team h4 {
+
+    .meta-item {
+      background: var(--panel-soft);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 8px;
+    }
+
+    .meta-item dt {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
+    }
+
+    .meta-item dd {
       font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 12px;
+      color: var(--text);
+      font-weight: 600;
+      margin: 0;
     }
-    .form-string {
-      display: flex;
-      gap: 4px;
-      margin-bottom: 12px;
-    }
-    .form-char {
-      width: 28px; height: 28px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-    .form-W { background: var(--green-dim); color: var(--green); }
-    .form-L { background: var(--red-dim); color: var(--red); }
-    .form-D { background: var(--surface-3); color: var(--text-muted); }
-    .form-stat {
-      display: flex;
-      justify-content: space-between;
-      padding: 6px 0;
-      font-size: 13px;
-    }
-    .form-stat-label { color: var(--text-muted); }
-    .form-stat-value { font-weight: 600; }
 
-    /* Trends */
-    .trend-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .trend-item:last-child { border: none; }
-    .trend-arrow {
-      width: 24px; height: 24px;
-      border-radius: 6px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-    .trend-positive { background: var(--green-dim); color: var(--green); }
-    .trend-negative { background: var(--red-dim); color: var(--red); }
-    .trend-neutral { background: var(--surface-3); color: var(--text-muted); }
-    .trend-label { font-size: 13px; font-weight: 600; }
-    .trend-value { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-
-    /* H2H */
-    .h2h-stats {
+    .line-anchor {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin: 12px 0;
-    }
-    .h2h-stat {
-      text-align: center;
-      background: var(--surface-2);
-      padding: 12px;
-      border-radius: var(--radius-xs);
-    }
-    .h2h-stat-value { font-size: 24px; font-weight: 800; }
-    .h2h-stat-label { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
-
-    /* H2H recent matches */
-    .h2h-match {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      font-size: 13px;
-      border-bottom: 1px solid var(--border);
-    }
-    .h2h-match:last-child { border: none; }
-    .h2h-date { color: var(--text-dim); font-size: 12px; }
-    .h2h-score { font-weight: 700; }
-
-    /* Footer / powered-by */
-    .powered-by {
-      text-align: center;
-      padding: 48px 0 32px;
-      border-top: 1px solid var(--border);
-      margin-top: 48px;
-    }
-    .powered-by h3 {
-      font-size: 15px;
-      font-weight: 700;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
       margin-bottom: 8px;
+    }
+
+    .line-anchor .pill {
+      background: var(--panel-soft);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 10px;
+    }
+
+    .line-anchor .label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
+    }
+
+    .line-anchor .value {
+      font-family: var(--mono);
+      font-size: 22px;
       color: var(--text);
     }
-    .powered-by p {
-      font-size: 13px;
-      color: var(--text-muted);
-      max-width: 480px;
-      margin: 0 auto;
+
+    .line-note {
+      font-size: 14px;
+      color: var(--muted);
     }
-    .powered-tag {
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 9px 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+    }
+
+    td.mono { font-family: var(--mono); }
+
+    .muted { color: var(--muted); }
+
+    .status {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: var(--accent-glow);
-      color: var(--accent);
       font-size: 12px;
-      font-weight: 700;
-      padding: 6px 16px;
-      border-radius: 20px;
-      margin-top: 16px;
-      letter-spacing: 0.02em;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 4px 9px;
+      font-family: var(--mono);
     }
 
-    /* Response time badge */
-    .response-time {
-      font-size: 11px;
-      color: var(--text-dim);
-      text-align: center;
-      margin-top: 8px;
+    .status-fresh { color: var(--good); border-color: #c6e2cf; background: #eff8f2; }
+    .status-older { color: var(--warn); border-color: #eadbbb; background: #fbf6ea; }
+    .status-unavailable { color: var(--bad); border-color: #e8c2c2; background: #fbefef; }
+
+    .list {
+      list-style: none;
+      display: grid;
+      gap: 8px;
     }
 
-    /* Loading state */
-    .loading {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 60px;
-      color: var(--text-muted);
-      gap: 12px;
+    .list li {
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      font-size: 15px;
     }
-    .spinner {
-      width: 20px; height: 20px;
-      border: 2px solid var(--surface-3);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Impact score bar */
-    .impact-bar-wrapper {
-      margin-top: 8px;
+    .loading,
+    .error {
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 14px;
     }
-    .impact-label-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      margin-bottom: 4px;
-    }
-    .impact-label { color: var(--text-muted); }
-    .impact-value { font-weight: 700; }
-    .impact-bar {
-      background: var(--surface-3);
-      height: 6px;
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    .impact-fill {
-      height: 100%;
-      border-radius: 3px;
-      transition: width 0.6s ease;
-    }
-    .impact-low { background: var(--green); }
-    .impact-medium { background: var(--amber); }
-    .impact-high { background: var(--red); }
 
-    /* Skeleton loaders */
-    .skeleton {
-      background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-      border-radius: 6px;
+    .error { color: var(--bad); }
+
+    @media (max-width: 760px) {
+      .meta,
+      .line-anchor {
+        grid-template-columns: 1fr;
+      }
+
+      .matchup-title {
+        font-size: 34px;
+      }
+
+      th, td {
+        padding-left: 4px;
+        padding-right: 4px;
+      }
     }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Header -->
-    <header class="header">
-      <div class="logo">
-        <div class="logo-icon">⚡</div>
-        SportsSync
-      </div>
-      <span class="badge">Live Demo</span>
+    <header>
+      <a class="brand" href="/">SportsSync</a>
+      <a class="back" href="/">Back to main site</a>
     </header>
 
-    <!-- Hero -->
     <section class="hero">
-      <div class="pill">API Online</div>
-      <h1>AI Match Preview<br>Powered by One API Call</h1>
-      <p>Everything below — teams, odds, form, injuries, trends, H2H — comes from a single <code style="background:var(--surface-3);padding:2px 6px;border-radius:4px;font-size:14px;">/match-context</code> endpoint call.</p>
+      <h1>Live Match Context Demo</h1>
+      <p>Pick a match and watch one response render into a usable game view.</p>
     </section>
 
-    <!-- Match selector -->
-    <div class="match-selector">
-      <button class="match-btn active" data-match="b193b51f-cbed-4398-a297-237dd3322607">
-        <span class="sport-tag">EPL</span>Arsenal vs Man City
-      </button>
-      <button class="match-btn" data-match="b42fe447-b2b1-485f-ae6d-1559ee2b57c7">
-        <span class="sport-tag">WC26</span>USA vs Mexico
-      </button>
-      <button class="match-btn" data-match="d6742e61-2457-43fd-aa3f-e61f6a76c7af">
-        <span class="sport-tag">NBA</span>Lakers vs Celtics
-      </button>
-      <button class="match-btn" data-match="c94d7e01-333d-41cd-a67d-cc0285fa7f28">
-        <span class="sport-tag">WC26</span>England vs Brazil
-      </button>
+    <div class="controls">
+      <button class="match-btn active" data-match="b193b51f-cbed-4398-a297-237dd3322607">EPL · Arsenal vs Man City</button>
+      <button class="match-btn" data-match="b42fe447-b2b1-485f-ae6d-1559ee2b57c7">WC26 · USA vs Mexico</button>
+      <button class="match-btn" data-match="d6742e61-2457-43fd-aa3f-e61f6a76c7af">NBA · Lakers vs Celtics</button>
+      <button class="match-btn" data-match="c94d7e01-333d-41cd-a67d-cc0285fa7f28">WC26 · England vs Brazil</button>
     </div>
 
-    <div class="response-time" id="responseTime"></div>
-
-    <!-- Main content area -->
-    <div id="previewContent">
-      <div class="loading"><div class="spinner"></div> Fetching match context...</div>
-    </div>
-
-    <!-- Powered by -->
-    <footer class="powered-by">
-      <h3>This entire preview was built from one API response.</h3>
-      <p>No data stitching. No multiple feeds. No normalization scripts. One call, one payload, one product.</p>
-      <div class="powered-tag">⚡ Powered by SportsSync AI Match Context API</div>
-    </footer>
+    <div id="runtime" class="runtime"></div>
+    <main id="preview" class="stack"></main>
   </div>
 
   <script>
     const API_KEY = 'sk_test_sportsync_beta_001';
     const BASE_URL = 'https://hylnixnuabtnmjcdnujm.supabase.co/functions/v1/match-context';
+    const previewEl = document.getElementById('preview');
+    const runtimeEl = document.getElementById('runtime');
 
-    // Match selector
-    document.querySelectorAll('.match-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.match-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        loadMatch(btn.dataset.match);
+    const sections = ['market', 'form', 'h2h', 'injuries', 'players', 'trends', 'live_state'];
+
+    document.querySelectorAll('.match-btn').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.match-btn').forEach((x) => x.classList.remove('active'));
+        button.classList.add('active');
+        loadMatch(button.dataset.match);
       });
     });
 
+    function readAveragePoints(formSection) {
+      if (!formSection || !formSection.available) return null;
+      const home = formSection.home?.avg_points_scored;
+      const away = formSection.away?.avg_points_scored;
+      if (typeof home !== 'number' || typeof away !== 'number') return null;
+      return Number((home + away).toFixed(1));
+    }
+
+    function formatNumber(value, digits = 1) {
+      if (typeof value !== 'number' || !Number.isFinite(value)) return 'n/a';
+      return value.toFixed(digits);
+    }
+
+    function freshnessBadge(status) {
+      const normalized = typeof status === 'string' ? status.toLowerCase() : 'unavailable';
+      const cls = normalized === 'fresh' ? 'status-fresh' : normalized === 'stale' ? 'status-older' : 'status-unavailable';
+      const label = normalized === 'fresh' ? 'updated' : normalized === 'stale' ? 'older' : 'missing';
+      return `<span class="status ${cls}">${label}</span>`;
+    }
+
+    function renderMetaCard(match, home, away) {
+      const kickoff = new Date(match.start_time);
+      return `
+        <section class="card">
+          <h2>Match</h2>
+          <div class="matchup-title">${home.name} vs ${away.name}</div>
+          <p class="muted">${match.league_name || match.league || 'League'} · ${String(match.status || 'scheduled').replaceAll('_', ' ')}</p>
+          <dl class="meta">
+            <div class="meta-item"><dt>Kickoff</dt><dd>${Number.isNaN(kickoff.getTime()) ? 'TBD' : kickoff.toLocaleString()}</dd></div>
+            <div class="meta-item"><dt>Venue</dt><dd>${match.venue ? `${match.venue.name}, ${match.venue.city}` : 'TBD'}</dd></div>
+            <div class="meta-item"><dt>Round</dt><dd>${match.stage ? String(match.stage).replaceAll('_', ' ') : 'n/a'}</dd></div>
+          </dl>
+        </section>
+      `;
+    }
+
+    function renderLineAnchor(data) {
+      const line = data.market?.available ? data.market.consensus?.total : null;
+      const average = readAveragePoints(data.form);
+      const lineNumber = typeof line === 'number' ? line : null;
+      const gap = lineNumber != null && average != null ? Number((average - lineNumber).toFixed(1)) : null;
+
+      const gapText = gap == null
+        ? 'Line anchor is not available for this match.'
+        : `Average is ${formatNumber(average)}. Line is ${formatNumber(lineNumber)}. Gap is ${gap > 0 ? '+' : ''}${formatNumber(gap)}.`;
+
+      return `
+        <section class="card">
+          <h2>Line Anchor</h2>
+          <div class="line-anchor">
+            <div class="pill"><span class="label">Rolling Average</span><span class="value">${average == null ? 'n/a' : formatNumber(average)}</span></div>
+            <div class="pill"><span class="label">Tonight's Line</span><span class="value">${lineNumber == null ? 'n/a' : formatNumber(lineNumber)}</span></div>
+            <div class="pill"><span class="label">Gap</span><span class="value">${gap == null ? 'n/a' : `${gap > 0 ? '+' : ''}${formatNumber(gap)}`}</span></div>
+          </div>
+          <p class="line-note">${gapText}</p>
+        </section>
+      `;
+    }
+
+    function renderMarket(data) {
+      if (!data.market?.available) {
+        return `
+          <section class="card">
+            <h2>Market</h2>
+            <p class="muted">Market data is not available for this match.</p>
+          </section>
+        `;
+      }
+
+      const c = data.market.consensus || {};
+      return `
+        <section class="card">
+          <h2>Market ${freshnessBadge(data.metadata?.data_freshness?.market?.status)}</h2>
+          <table>
+            <thead>
+              <tr><th>Field</th><th>Value</th><th>Juice</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Spread</td><td class="mono">${c.spread == null ? 'n/a' : c.spread}</td><td class="mono">${c.spread_juice || 'n/a'}</td></tr>
+              <tr><td>Total</td><td class="mono">${c.total == null ? 'n/a' : c.total}</td><td class="mono">${c.total_juice || 'n/a'}</td></tr>
+              <tr><td>Home ML</td><td class="mono">${c.home_ml == null ? 'n/a' : c.home_ml}</td><td class="mono">-</td></tr>
+              <tr><td>Away ML</td><td class="mono">${c.away_ml == null ? 'n/a' : c.away_ml}</td><td class="mono">-</td></tr>
+              <tr><td>Draw ML</td><td class="mono">${c.draw_ml == null ? 'n/a' : c.draw_ml}</td><td class="mono">-</td></tr>
+            </tbody>
+          </table>
+        </section>
+      `;
+    }
+
+    function renderForm(data, homeName, awayName) {
+      if (!data.form?.available) {
+        return `
+          <section class="card">
+            <h2>Form</h2>
+            <p class="muted">Form data is not available for this match.</p>
+          </section>
+        `;
+      }
+
+      const home = data.form.home || {};
+      const away = data.form.away || {};
+
+      return `
+        <section class="card">
+          <h2>Form</h2>
+          <table>
+            <thead>
+              <tr><th>Team</th><th>Last 5</th><th>Last 10</th><th>Rest</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>${homeName}</td><td class="mono">${home.last_5 || 'n/a'}</td><td class="mono">${home.last_10_record || 'n/a'}</td><td class="mono">${home.rest_days == null ? 'n/a' : `${home.rest_days}d`}</td></tr>
+              <tr><td>${awayName}</td><td class="mono">${away.last_5 || 'n/a'}</td><td class="mono">${away.last_10_record || 'n/a'}</td><td class="mono">${away.rest_days == null ? 'n/a' : `${away.rest_days}d`}</td></tr>
+            </tbody>
+          </table>
+        </section>
+      `;
+    }
+
+    function renderInjuries(data, homeName, awayName) {
+      if (!data.injuries?.available) {
+        return `
+          <section class="card">
+            <h2>Injuries</h2>
+            <p class="muted">Injury data is not available for this match.</p>
+          </section>
+        `;
+      }
+
+      const home = (data.injuries.home?.players || []).map((p) => `${homeName}: ${p.name} (${p.status || 'unknown'})`);
+      const away = (data.injuries.away?.players || []).map((p) => `${awayName}: ${p.name} (${p.status || 'unknown'})`);
+      const rows = [...home, ...away].slice(0, 10);
+
+      return `
+        <section class="card">
+          <h2>Injuries ${freshnessBadge(data.metadata?.data_freshness?.injuries?.status)}</h2>
+          ${rows.length === 0 ? '<p class="muted">No listed injuries in this response.</p>' : `<ul class="list">${rows.map((row) => `<li>${row}</li>`).join('')}</ul>`}
+        </section>
+      `;
+    }
+
+    function renderTrends(data, homeName, awayName) {
+      if (!data.trends?.available) {
+        return `
+          <section class="card">
+            <h2>Trends</h2>
+            <p class="muted">Trend data is not available for this match.</p>
+          </section>
+        `;
+      }
+
+      const home = (data.trends.home?.situational || []).map((t) => `${homeName}: ${t.label} (${t.value || 'n/a'})`);
+      const away = (data.trends.away?.situational || []).map((t) => `${awayName}: ${t.label} (${t.value || 'n/a'})`);
+      const rows = [...home, ...away].slice(0, 8);
+
+      return `
+        <section class="card">
+          <h2>Trends</h2>
+          ${rows.length === 0 ? '<p class="muted">No trends listed in this response.</p>' : `<ul class="list">${rows.map((row) => `<li>${row}</li>`).join('')}</ul>`}
+        </section>
+      `;
+    }
+
+    function renderAvailability(data) {
+      const items = sections.map((key) => {
+        const available = !!data[key]?.available;
+        return `<li>${key.replace('_', ' ')}: <strong>${available ? 'ready' : 'not included'}</strong></li>`;
+      });
+
+      return `
+        <section class="card">
+          <h2>Sections In This Response</h2>
+          <ul class="list">${items.join('')}</ul>
+        </section>
+      `;
+    }
+
+    function renderPage(data) {
+      const match = data.match || {};
+      const home = data.teams?.home || { name: 'Home' };
+      const away = data.teams?.away || { name: 'Away' };
+
+      previewEl.innerHTML = [
+        renderMetaCard(match, home, away),
+        renderLineAnchor(data),
+        renderMarket(data),
+        renderForm(data, home.name, away.name),
+        renderInjuries(data, home.name, away.name),
+        renderTrends(data, home.name, away.name),
+        renderAvailability(data),
+      ].join('');
+    }
+
     async function loadMatch(matchId) {
-      const container = document.getElementById('previewContent');
-      const timeEl = document.getElementById('responseTime');
-      container.innerHTML = '<div class="loading"><div class="spinner"></div> Fetching match context...</div>';
-      timeEl.textContent = '';
+      previewEl.innerHTML = '<div class="loading">Loading match data...</div>';
+      runtimeEl.textContent = '';
 
       try {
-        const startMs = performance.now();
-        const resp = await fetch(`${BASE_URL}?match_id=${matchId}`, {
-          headers: { 'x-api-key': API_KEY }
+        const started = performance.now();
+        const response = await fetch(`${BASE_URL}?match_id=${matchId}`, {
+          headers: { 'x-api-key': API_KEY },
         });
-        const data = await resp.json();
-        const clientMs = Math.round(performance.now() - startMs);
+        const payload = await response.json();
+        const elapsed = Math.round(performance.now() - started);
 
-        if (data.error) {
-          container.innerHTML = `<div class="card card-full"><p style="color:var(--red)">Error: ${data.error.message}</p></div>`;
+        if (!response.ok || payload.error) {
+          const message = payload?.error?.message || `Request failed (${response.status})`;
+          previewEl.innerHTML = `<div class="error">${message}</div>`;
           return;
         }
 
-        timeEl.textContent = `Server: ${data.metadata.response_time_ms}ms · Client RTT: ${clientMs}ms · Generated: ${new Date(data.metadata.generated_at).toLocaleTimeString()}`;
-        renderPreview(data, container);
-      } catch (err) {
-        container.innerHTML = `<div class="card card-full"><p style="color:var(--red)">Request failed: ${err.message}</p></div>`;
+        runtimeEl.textContent = `page ${elapsed}ms · api ${payload.metadata?.response_time_ms ?? 'n/a'}ms · updated ${new Date(payload.metadata?.generated_at || Date.now()).toLocaleTimeString()}`;
+        renderPage(payload);
+      } catch (error) {
+        previewEl.innerHTML = `<div class="error">${error.message || 'Could not load this match.'}</div>`;
       }
     }
 
-    function renderPreview(d, container) {
-      const m = d.match;
-      const home = d.teams.home;
-      const away = d.teams.away;
-
-      let html = '';
-
-      // Match header
-      const kickoff = new Date(m.start_time);
-      html += `
-        <div class="card card-full match-header">
-          <div class="card-header">
-            <span class="card-title">${m.league_name || m.league} · ${m.stage.replace('_',' ')} ${m.matchday ? '· MD ' + m.matchday : ''}</span>
-            <span class="card-status" style="background:var(--surface-3);color:var(--text-muted)">${m.status}</span>
-          </div>
-          <div class="match-teams">
-            <div>
-              <div class="team-name">${home.name}</div>
-              <div class="team-code">${home.code || ''}</div>
-              ${home.record ? `<div class="team-record">${home.record.wins}-${home.record.losses}${home.record.draws != null ? '-' + home.record.draws : ''}</div>` : ''}
-            </div>
-            <div class="vs">VS</div>
-            <div>
-              <div class="team-name">${away.name}</div>
-              <div class="team-code">${away.code || ''}</div>
-              ${away.record ? `<div class="team-record">${away.record.wins}-${away.record.losses}${away.record.draws != null ? '-' + away.record.draws : ''}</div>` : ''}
-            </div>
-          </div>
-          <div class="match-meta">
-            <span>📅 ${kickoff.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}</span>
-            <span>⏰ ${kickoff.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
-            ${m.venue ? `<span>🏟 ${m.venue.name}, ${m.venue.city}</span>` : ''}
-            ${home.ranking ? `<span>🏆 #${home.ranking} vs #${away.ranking}</span>` : ''}
-          </div>
-        </div>
-      `;
-
-      html += '<div class="preview-grid">';
-
-      // Market card
-      if (d.market.available) {
-        const c = d.market.consensus || {};
-        html += `
-          <div class="card card-full">
-            <div class="card-header">
-              <span class="card-title">Market Odds</span>
-              <span class="card-status status-fresh">${d.metadata.data_freshness.market.status}</span>
-            </div>
-            <div class="odds-row">
-              ${c.spread != null ? `<div class="odds-cell"><div class="odds-label">Spread</div><div class="odds-value">${c.spread > 0 ? '+' : ''}${c.spread}</div>${c.spread_juice ? `<div class="odds-juice">${c.spread_juice}</div>` : ''}</div>` : ''}
-              ${c.total != null ? `<div class="odds-cell"><div class="odds-label">Total</div><div class="odds-value">${c.total}</div>${c.total_juice ? `<div class="odds-juice">${c.total_juice}</div>` : ''}</div>` : ''}
-              ${c.home_ml != null ? `<div class="odds-cell"><div class="odds-label">Home ML</div><div class="odds-value">${c.home_ml > 0 ? '+' : ''}${c.home_ml}</div></div>` : ''}
-              ${c.away_ml != null ? `<div class="odds-cell"><div class="odds-label">Away ML</div><div class="odds-value">${c.away_ml > 0 ? '+' : ''}${c.away_ml}</div></div>` : ''}
-              ${c.draw_ml != null ? `<div class="odds-cell"><div class="odds-label">Draw</div><div class="odds-value">+${c.draw_ml}</div></div>` : ''}
-            </div>
-            ${d.market.books && d.market.books.length > 0 ? `<div style="margin-top:12px;font-size:12px;color:var(--text-dim)">${d.market.books.length} additional book${d.market.books.length > 1 ? 's' : ''} available</div>` : ''}
-          </div>
-        `;
-      }
-
-      // Form card
-      if (d.form.available) {
-        const hf = d.form.home;
-        const af = d.form.away;
-        html += `
-          <div class="card">
-            <div class="card-header">
-              <span class="card-title">Team Form</span>
-            </div>
-            <div class="form-comparison">
-              <div class="form-team">
-                <h4>${home.name}</h4>
-                ${hf?.last_5 ? `<div class="form-string">${hf.last_5.split('').map(c => `<div class="form-char form-${c}">${c}</div>`).join('')}</div>` : ''}
-                ${hf?.last_10_record ? `<div class="form-stat"><span class="form-stat-label">Last 10</span><span class="form-stat-value">${hf.last_10_record}</span></div>` : ''}
-                ${hf?.ats_last_10 != null ? `<div class="form-stat"><span class="form-stat-label">ATS L10</span><span class="form-stat-value">${(hf.ats_last_10 * 100).toFixed(0)}%</span></div>` : ''}
-                ${hf?.rest_days != null ? `<div class="form-stat"><span class="form-stat-label">Rest</span><span class="form-stat-value">${hf.rest_days} days</span></div>` : ''}
-                ${hf?.avg_points_scored != null ? `<div class="form-stat"><span class="form-stat-label">Avg Scored</span><span class="form-stat-value">${hf.avg_points_scored}</span></div>` : ''}
-              </div>
-              <div class="form-team">
-                <h4>${away.name}</h4>
-                ${af?.last_5 ? `<div class="form-string">${af.last_5.split('').map(c => `<div class="form-char form-${c}">${c}</div>`).join('')}</div>` : ''}
-                ${af?.last_10_record ? `<div class="form-stat"><span class="form-stat-label">Last 10</span><span class="form-stat-value">${af.last_10_record}</span></div>` : ''}
-                ${af?.ats_last_10 != null ? `<div class="form-stat"><span class="form-stat-label">ATS L10</span><span class="form-stat-value">${(af.ats_last_10 * 100).toFixed(0)}%</span></div>` : ''}
-                ${af?.rest_days != null ? `<div class="form-stat"><span class="form-stat-label">Rest</span><span class="form-stat-value">${af.rest_days} days</span></div>` : ''}
-                ${af?.avg_points_scored != null ? `<div class="form-stat"><span class="form-stat-label">Avg Scored</span><span class="form-stat-value">${af.avg_points_scored}</span></div>` : ''}
-              </div>
-            </div>
-          </div>
-        `;
-      }
-
-      // Injuries card
-      if (d.injuries.available) {
-        const allInjuries = [
-          ...(d.injuries.home?.players || []).map(p => ({ ...p, team: home.name })),
-          ...(d.injuries.away?.players || []).map(p => ({ ...p, team: away.name })),
-        ];
-        html += `
-          <div class="card">
-            <div class="card-header">
-              <span class="card-title">Injury Report</span>
-              <span class="card-status status-fresh">${d.metadata.data_freshness.injuries.status}</span>
-            </div>
-            ${renderImpactBar(home.name, d.injuries.home?.impact_score)}
-            ${renderImpactBar(away.name, d.injuries.away?.impact_score)}
-            <ul class="injury-list" style="margin-top:12px">
-              ${allInjuries.map(p => `
-                <li class="injury-item">
-                  <div class="injury-player">
-                    <div>
-                      <div class="injury-player-name">${p.name} <span class="injury-pos">${p.position || ''}</span></div>
-                      <div class="injury-detail">${p.team} · ${p.injury || 'Undisclosed'}</div>
-                    </div>
-                  </div>
-                  <span class="injury-status injury-${p.status}">${p.status}</span>
-                </li>
-              `).join('')}
-            </ul>
-          </div>
-        `;
-      }
-
-      // H2H card
-      if (d.h2h.available) {
-        html += `
-          <div class="card">
-            <div class="card-header">
-              <span class="card-title">Head to Head</span>
-            </div>
-            <div class="h2h-stats">
-              <div class="h2h-stat"><div class="h2h-stat-value">${d.h2h.home_wins}</div><div class="h2h-stat-label">${home.name}</div></div>
-              <div class="h2h-stat"><div class="h2h-stat-value">${d.h2h.draws || 0}</div><div class="h2h-stat-label">Draws</div></div>
-              <div class="h2h-stat"><div class="h2h-stat-value">${d.h2h.away_wins}</div><div class="h2h-stat-label">${away.name}</div></div>
-            </div>
-            <div style="font-size:12px;color:var(--text-dim);margin-bottom:8px">${d.h2h.total_meetings} total meetings</div>
-            ${(d.h2h.recent_matches || []).slice(0, 3).map(m => `
-              <div class="h2h-match">
-                <span class="h2h-date">${m.date}</span>
-                <span>${m.home_team} <span class="h2h-score">${m.home_score}-${m.away_score}</span> ${m.away_team}</span>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      }
-
-      // Trends card
-      if (d.trends.available) {
-        const allTrends = [
-          ...(d.trends.home?.situational || []).map(t => ({ ...t, team: home.name })),
-          ...(d.trends.away?.situational || []).map(t => ({ ...t, team: away.name })),
-        ];
-        html += `
-          <div class="card">
-            <div class="card-header">
-              <span class="card-title">Key Trends</span>
-            </div>
-            ${allTrends.map(t => `
-              <div class="trend-item">
-                <div class="trend-arrow trend-${t.direction}">${t.direction === 'positive' ? '↑' : t.direction === 'negative' ? '↓' : '→'}</div>
-                <div>
-                  <div class="trend-label">${t.label}</div>
-                  <div class="trend-value">${t.team} — ${t.value}</div>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      }
-
-      // Warnings card (if any)
-      if (d.metadata.warnings && d.metadata.warnings.length > 0) {
-        html += `
-          <div class="card card-full" style="border-color: var(--amber-dim)">
-            <div class="card-header">
-              <span class="card-title">⚠️ Data Warnings</span>
-            </div>
-            ${d.metadata.warnings.map(w => `
-              <div style="font-size:13px;color:var(--amber);padding:4px 0">
-                <strong>[${w.section}]</strong> ${w.message}
-              </div>
-            `).join('')}
-          </div>
-        `;
-      }
-
-      // Missing sections (show which degraded gracefully)
-      const unavail = ['market','form','h2h','injuries','players','trends','live_state'].filter(k => !d[k].available);
-      if (unavail.length > 0 && unavail.length < 7) {
-        html += `
-          <div class="card card-full">
-            <div class="card-header"><span class="card-title">Section Availability</span></div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              ${['market','form','h2h','injuries','players','trends','live_state'].map(k => `
-                <span style="font-size:12px;padding:4px 10px;border-radius:4px;font-weight:600;${d[k].available ? 'background:var(--green-dim);color:var(--green)' : 'background:var(--surface-3);color:var(--text-dim)'}">${k} ${d[k].available ? '✓' : '—'}</span>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      }
-
-      html += '</div>';
-      container.innerHTML = html;
-    }
-
-    function renderImpactBar(teamName, score) {
-      if (score == null) return '';
-      const pct = Math.min(score * 10, 100);
-      const cls = score <= 3 ? 'impact-low' : score <= 6 ? 'impact-medium' : 'impact-high';
-      return `
-        <div class="impact-bar-wrapper">
-          <div class="impact-label-row">
-            <span class="impact-label">${teamName} injury impact</span>
-            <span class="impact-value">${score}/10</span>
-          </div>
-          <div class="impact-bar"><div class="impact-fill ${cls}" style="width:${pct}%"></div></div>
-        </div>
-      `;
-    }
-
-    // Load Arsenal vs Man City by default
     loadMatch('b193b51f-cbed-4398-a297-237dd3322607');
   </script>
 </body>
