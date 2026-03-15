@@ -85,3 +85,127 @@ from dedup d
 where not exists (
   select 1 from closing_lines cl where cl.match_id = d.match_id
 );
+
+-- Step 6: Backfill spread/total fields from Kalshi line markets.
+-- Uses matched winner-side events as the match_id anchor and fills only missing values.
+with matched_events as (
+  select
+    lower(league) as league,
+    split_part(event_ticker, '-', 2) as event_key,
+    max(match_id) as match_id
+  from kalshi_settlements
+  where match_id is not null
+    and result = 'yes'
+  group by 1,2
+),
+line_join as (
+  select
+    lm.*,
+    me.match_id,
+    regexp_replace(lower(trim(split_part(split_part(coalesce(lm.title, ''), ':', 1), ' at ', 1))), '[^a-z0-9]+', '', 'g') as away_key,
+    regexp_replace(lower(trim(split_part(split_part(coalesce(lm.title, ''), ':', 1), ' at ', 2))), '[^a-z0-9]+', '', 'g') as home_key,
+    regexp_replace(lower(trim(regexp_replace(coalesce(lm.line_side, ''), '[[:space:]]+wins[[:space:]]+by[[:space:]]+over.*$', '', 'i'))), '[^a-z0-9]+', '', 'g') as side_key
+  from kalshi_line_markets lm
+  join matched_events me
+    on me.league = lower(lm.league)
+   and me.event_key = split_part(lm.event_ticker, '-', 2)
+),
+ranked_totals as (
+  select
+    match_id,
+    line_value,
+    row_number() over (
+      partition by match_id
+      order by coalesce(volume, 0) desc, coalesce(open_interest, 0) desc, line_value asc
+    ) as rn
+  from line_join
+  where market_kind = 'total'
+    and line_value is not null
+),
+selected_totals as (
+  select match_id, line_value as total
+  from ranked_totals
+  where rn = 1
+),
+ranked_spreads as (
+  select
+    match_id,
+    line_value,
+    case
+      when side_key <> '' and side_key = home_key then -abs(line_value)
+      when side_key <> '' and side_key = away_key then abs(line_value)
+      else null
+    end as home_spread,
+    case
+      when side_key <> '' and side_key = home_key then abs(line_value)
+      when side_key <> '' and side_key = away_key then -abs(line_value)
+      else null
+    end as away_spread,
+    row_number() over (
+      partition by match_id
+      order by coalesce(volume, 0) desc, coalesce(open_interest, 0) desc, line_value asc
+    ) as rn
+  from line_join
+  where market_kind = 'spread'
+    and line_value is not null
+),
+selected_spreads as (
+  select match_id, home_spread, away_spread
+  from ranked_spreads
+  where rn = 1
+    and home_spread is not null
+    and away_spread is not null
+),
+merged_lines as (
+  select
+    coalesce(t.match_id, s.match_id) as match_id,
+    t.total,
+    s.home_spread,
+    s.away_spread
+  from selected_totals t
+  full join selected_spreads s on s.match_id = t.match_id
+)
+update closing_lines cl
+set
+  total = coalesce(cl.total, ml.total),
+  home_spread = coalesce(cl.home_spread, ml.home_spread),
+  away_spread = coalesce(cl.away_spread, ml.away_spread),
+  league_id = coalesce(cl.league_id, m.league_id)
+from merged_lines ml
+join matches m on m.id = ml.match_id
+where cl.match_id = ml.match_id
+  and (
+    (cl.total is null and ml.total is not null)
+    or (cl.home_spread is null and ml.home_spread is not null)
+    or (cl.away_spread is null and ml.away_spread is not null)
+    or (cl.league_id is null and m.league_id is not null)
+  );
+
+insert into closing_lines (
+  id,
+  match_id,
+  total,
+  home_spread,
+  away_spread,
+  home_ml,
+  away_ml,
+  league_id,
+  created_at
+)
+select
+  gen_random_uuid(),
+  ml.match_id,
+  ml.total,
+  ml.home_spread,
+  ml.away_spread,
+  null,
+  null,
+  m.league_id,
+  now()
+from merged_lines ml
+join matches m on m.id = ml.match_id
+where not exists (
+  select 1
+  from closing_lines cl
+  where cl.match_id = ml.match_id
+);
