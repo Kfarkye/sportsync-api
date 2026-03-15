@@ -155,7 +155,7 @@
 
     .meta {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 8px;
       margin-top: 10px;
     }
@@ -496,7 +496,6 @@
           <dl class="meta">
             <div class="meta-item"><dt>Kickoff</dt><dd>${Number.isNaN(kickoff.getTime()) ? 'TBD' : kickoff.toLocaleString()}</dd></div>
             <div class="meta-item"><dt>Score</dt><dd>${match.home_score ?? '-'} : ${match.away_score ?? '-'}</dd></div>
-            <div class="meta-item"><dt>Match ID</dt><dd class="mono">${escapeHtml(match.id || 'n/a')}</dd></div>
           </dl>
         </section>
       `;
