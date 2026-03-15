@@ -30,6 +30,7 @@ type RequestParams = {
   sport: string;
   limit: number;
   maxPages: number;
+  startCursor: string;
   resolveClosingPrices: boolean;
   useCandlesticks: boolean;
   seedTeamMap: boolean;
@@ -370,6 +371,7 @@ async function parseParams(req: Request): Promise<RequestParams> {
   const sport = asString(pickValue("sport"));
   const limit = asNumber(pickValue("limit")) ?? DEFAULT_LIMIT;
   const maxPages = asNumber(pickValue("max_pages")) ?? DEFAULT_MAX_PAGES;
+  const startCursor = asString(pickValue("cursor")) ?? "";
 
   if (!seriesTicker) throw new Error("Missing required param: series_ticker");
   if (!leagueRaw) throw new Error("Missing required param: league");
@@ -383,6 +385,7 @@ async function parseParams(req: Request): Promise<RequestParams> {
     sport,
     limit: Math.max(1, Math.min(200, Math.trunc(limit))),
     maxPages: Math.max(1, Math.min(1000, Math.trunc(maxPages))),
+    startCursor,
     resolveClosingPrices: asBoolean(pickValue("resolve_closing_prices"), true),
     useCandlesticks: asBoolean(pickValue("use_candlesticks"), false),
     seedTeamMap: asBoolean(pickValue("seed_team_map"), true),
@@ -472,7 +475,7 @@ Deno.serve(async (req) => {
     const serviceRoleKey = getRequiredEnv("SUPABASE_SERVICE_ROLE_KEY");
     const supabase = createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } });
 
-    let cursor = "";
+    let cursor = params.startCursor;
     let pages = 0;
     let totalEvents = 0;
     let totalMarkets = 0;
@@ -702,6 +705,8 @@ Deno.serve(async (req) => {
         skipped_no_date: skippedNoDate,
         team_map_upserts: teamMapUpserts,
       },
+      next_cursor: cursor,
+      has_more: Boolean(cursor),
       unmatched_team_map: Array.from(unmatchedTeamMap).slice(0, 100),
     };
 
