@@ -4,6 +4,11 @@ type JsonRecord = Record<string, unknown>;
 
 type KalshiMarket = {
   ticker?: string;
+  title?: string;
+  subtitle?: string;
+  rules_primary?: string;
+  no_sub_title?: string;
+  custom_strike?: JsonRecord;
   yes_sub_title?: string;
   last_price_dollars?: string;
   settlement_value_dollars?: string;
@@ -24,7 +29,11 @@ type KalshiEvent = {
   markets?: KalshiMarket[];
 };
 
+type BackfillMode = "game_winner" | "line_markets";
+
 type RequestParams = {
+  mode: BackfillMode;
+  targetTable: "kalshi_settlements" | "kalshi_line_markets";
   seriesTicker: string;
   league: string;
   sport: string;
@@ -263,6 +272,95 @@ function parseMarketAbbrev(marketTicker: string | null): string {
   return parts[parts.length - 1].trim();
 }
 
+function inferLineMarketKind(
+  seriesTicker: string,
+  eventTitle: string | null,
+  marketTitle: string | null,
+  lineLabel: string | null,
+): string {
+  const seriesSource = seriesTicker.toUpperCase();
+  if (seriesSource.includes("TOTAL") || seriesSource.includes(" OU")) return "total";
+  if (seriesSource.includes("SPREAD")) return "spread";
+
+  const source = `${marketTitle ?? ""} ${lineLabel ?? ""} ${eventTitle ?? ""}`.toUpperCase();
+  if (source.includes("TOTAL") || source.includes("POINTS")) return "total";
+  if (source.includes("SPREAD") || source.includes("WINS BY") || source.includes("MARGIN")) return "spread";
+  return "unknown";
+}
+
+function deepFindFirstNumber(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) return parsed;
+  }
+
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const found = deepFindFirstNumber(item);
+      if (found !== null) return found;
+    }
+    return null;
+  }
+
+  if (value && typeof value === "object") {
+    for (const inner of Object.values(value as JsonRecord)) {
+      const found = deepFindFirstNumber(inner);
+      if (found !== null) return found;
+    }
+  }
+
+  return null;
+}
+
+function extractLineValue(market: KalshiMarket, eventTitle: string | null, marketKind: string): number | null {
+  const fromStrike = deepFindFirstNumber(market.custom_strike);
+  if (fromStrike !== null) return fromStrike;
+
+  const prioritizedSources = [
+    market.yes_sub_title ?? "",
+    market.no_sub_title ?? "",
+    market.title ?? "",
+    market.subtitle ?? "",
+    market.rules_primary ?? "",
+    eventTitle ?? "",
+  ].filter((value) => value.trim().length > 0);
+
+  const patterns = marketKind === "total"
+    ? [
+      /(?:over|under)\s+([+-]?\d+(?:\.\d+)?)/i,
+      /([+-]?\d+(?:\.\d+)?)\s+points?/i,
+      /total[^0-9]*([+-]?\d+(?:\.\d+)?)/i,
+    ]
+    : [
+      /wins\s+by\s+over\s+([+-]?\d+(?:\.\d+)?)/i,
+      /(?:over|under)\s+([+-]?\d+(?:\.\d+)?)/i,
+      /([+-]?\d+(?:\.\d+)?)\s+points?/i,
+    ];
+
+  for (const source of prioritizedSources) {
+    for (const pattern of patterns) {
+      const match = source.match(pattern);
+      if (!match) continue;
+      const parsed = Number(match[1]);
+      if (Number.isFinite(parsed)) return parsed;
+    }
+  }
+
+  const marketTicker = asString(market.ticker);
+  if (marketTicker) {
+    const lastToken = marketTicker.split("-").pop() ?? "";
+    const trailingDigits = lastToken.match(/([+-]?\d+(?:\.\d+)?)$/);
+    if (trailingDigits) {
+      const parsed = Number(trailingDigits[1]);
+      if (Number.isFinite(parsed)) return parsed;
+    }
+  }
+
+  return null;
+}
+
 function normalizeLeague(league: string): string {
   const normalized = league.trim().toLowerCase();
   if (normalized === "ncaab" || normalized === "ncaamb") return "ncaab";
@@ -369,6 +467,7 @@ async function parseParams(req: Request): Promise<RequestParams> {
   const seriesTicker = asString(pickValue("series_ticker"));
   const leagueRaw = asString(pickValue("league"));
   const sport = asString(pickValue("sport"));
+  const modeRaw = asString(pickValue("mode")) ?? "game_winner";
   const limit = asNumber(pickValue("limit")) ?? DEFAULT_LIMIT;
   const maxPages = asNumber(pickValue("max_pages")) ?? DEFAULT_MAX_PAGES;
   const startCursor = asString(pickValue("cursor")) ?? "";
@@ -376,10 +475,17 @@ async function parseParams(req: Request): Promise<RequestParams> {
   if (!seriesTicker) throw new Error("Missing required param: series_ticker");
   if (!leagueRaw) throw new Error("Missing required param: league");
   if (!sport) throw new Error("Missing required param: sport");
+  if (modeRaw !== "game_winner" && modeRaw !== "line_markets") {
+    throw new Error("Invalid mode. Use game_winner or line_markets");
+  }
 
   const league = normalizeLeague(leagueRaw);
+  const mode = modeRaw as BackfillMode;
+  const targetTable = mode === "line_markets" ? "kalshi_line_markets" : "kalshi_settlements";
 
   return {
+    mode,
+    targetTable,
     seriesTicker,
     league,
     sport,
@@ -388,13 +494,14 @@ async function parseParams(req: Request): Promise<RequestParams> {
     startCursor,
     resolveClosingPrices: asBoolean(pickValue("resolve_closing_prices"), true),
     useCandlesticks: asBoolean(pickValue("use_candlesticks"), false),
-    seedTeamMap: asBoolean(pickValue("seed_team_map"), true),
+    seedTeamMap: mode === "line_markets" ? false : asBoolean(pickValue("seed_team_map"), true),
     dryRun: asBoolean(pickValue("dry_run"), false),
   };
 }
 
-async function upsertSettlements(
+async function upsertMarketRows(
   supabase: SupabaseClient,
+  tableName: "kalshi_settlements" | "kalshi_line_markets",
   rows: JsonRecord[],
 ): Promise<{ inserted: number; updated: number }> {
   let inserted = 0;
@@ -406,28 +513,33 @@ async function upsertSettlements(
       .map((row) => asString(row.market_ticker))
       .filter((value): value is string => Boolean(value));
 
-    const { data: existingRows, error: existingError } = await supabase
-      .from("kalshi_settlements")
-      .select("market_ticker")
-      .in("market_ticker", tickers);
+    if (tableName === "kalshi_settlements") {
+      const { data: existingRows, error: existingError } = await supabase
+        .from(tableName)
+        .select("market_ticker")
+        .in("market_ticker", tickers);
 
-    if (existingError) {
-      throw new Error(`Existing ticker lookup failed: ${existingError.message}`);
+      if (existingError) {
+        throw new Error(`Existing ticker lookup failed: ${existingError.message}`);
+      }
+
+      const existingSet = new Set(((existingRows ?? []) as JsonRecord[])
+        .map((row) => asString(row.market_ticker))
+        .filter((value): value is string => Boolean(value)));
+
+      updated += existingSet.size;
+      inserted += Math.max(0, tickers.length - existingSet.size);
+    } else {
+      // Line market tickers are long and numerous; avoid URL-length issues from large IN(...) lookups.
+      inserted += tickers.length;
     }
 
-    const existingSet = new Set(((existingRows ?? []) as JsonRecord[])
-      .map((row) => asString(row.market_ticker))
-      .filter((value): value is string => Boolean(value)));
-
-    updated += existingSet.size;
-    inserted += Math.max(0, tickers.length - existingSet.size);
-
     const { error: upsertError } = await supabase
-      .from("kalshi_settlements")
+      .from(tableName)
       .upsert(chunk, { onConflict: "market_ticker" });
 
     if (upsertError) {
-      throw new Error(`kalshi_settlements upsert failed: ${upsertError.message}`);
+      throw new Error(`${tableName} upsert failed: ${upsertError.message}`);
     }
   }
 
@@ -540,7 +652,7 @@ Deno.serve(async (req) => {
         let winnerClosingPrice: number | null = null;
         const eventErrors: string[] = [];
 
-        if (params.resolveClosingPrices && winnerTicker) {
+        if (params.mode === "game_winner" && params.resolveClosingPrices && winnerTicker) {
           try {
             const detail = await fetchMarketDetail(winnerTicker);
             winnerClosingPrice = clampProbability(asNumber(detail?.previous_price_dollars));
@@ -585,36 +697,92 @@ Deno.serve(async (req) => {
                 : null
             : null;
 
-          let closingPrice: number | null = null;
-          if (winnerClosingPrice !== null && winnerTicker) {
-            if (marketTicker === winnerTicker) {
-              closingPrice = winnerClosingPrice;
-            } else {
-              closingPrice = clampProbability(1 - winnerClosingPrice);
+          if (params.mode === "line_markets") {
+            let lineClosingPrice: number | null = null;
+            if (params.resolveClosingPrices) {
+              try {
+                const detail = await fetchMarketDetail(marketTicker);
+                lineClosingPrice = clampProbability(asNumber(detail?.previous_price_dollars));
+                if (lineClosingPrice === null && params.useCandlesticks) {
+                  lineClosingPrice = await fetchCandlestickClose(
+                    params.seriesTicker,
+                    marketTicker,
+                    asString(detail?.open_time),
+                    asString(detail?.close_time),
+                  );
+                  await sleep(PAGE_DELAY_MS);
+                }
+              } catch (error) {
+                eventErrors.push(`line_market_detail_error:${marketTicker}:${error instanceof Error ? error.message : String(error)}`);
+                lineClosingPrice = null;
+              }
             }
-          }
 
-          rows.push({
-            event_ticker: eventTicker,
-            series_ticker: params.seriesTicker,
-            market_ticker: marketTicker,
-            sport: params.sport,
-            league: params.league,
-            title,
-            subtitle,
-            team_name: teamName,
-            opponent_name: opponentName,
-            is_home_team: isHomeTeam,
-            game_date: date,
-            closing_price: closingPrice,
-            settlement_price: asNumber(market.last_price_dollars),
-            settlement_value: asNumber(market.settlement_value_dollars),
-            result: asString(market.result)?.toLowerCase() ?? null,
-            volume: asNumber(market.volume_fp),
-            open_interest: asNumber(market.open_interest_fp),
-            status: asString(market.status),
-            raw_json: { event, market },
-          });
+            const lineLabel = asString(market.yes_sub_title);
+            const marketTitle = asString(market.title);
+            const inferredLineKind = inferLineMarketKind(
+              params.seriesTicker,
+              title,
+              marketTitle,
+              lineLabel,
+            );
+
+            rows.push({
+              event_ticker: eventTicker,
+              series_ticker: params.seriesTicker,
+              market_ticker: marketTicker,
+              sport: params.sport,
+              league: params.league,
+              market_kind: inferredLineKind,
+              title,
+              subtitle,
+              team_name: teamName,
+              opponent_name: opponentName,
+              is_home_team: isHomeTeam,
+              line_value: extractLineValue(market, title, inferredLineKind),
+              line_side: teamName,
+              game_date: date,
+              closing_price: lineClosingPrice,
+              settlement_price: asNumber(market.last_price_dollars),
+              settlement_value: asNumber(market.settlement_value_dollars),
+              result: asString(market.result)?.toLowerCase() ?? null,
+              volume: asNumber(market.volume_fp),
+              open_interest: asNumber(market.open_interest_fp),
+              status: asString(market.status),
+              raw_json: { event, market },
+            });
+          } else {
+            let closingPrice: number | null = null;
+            if (winnerClosingPrice !== null && winnerTicker) {
+              if (marketTicker === winnerTicker) {
+                closingPrice = winnerClosingPrice;
+              } else {
+                closingPrice = clampProbability(1 - winnerClosingPrice);
+              }
+            }
+
+            rows.push({
+              event_ticker: eventTicker,
+              series_ticker: params.seriesTicker,
+              market_ticker: marketTicker,
+              sport: params.sport,
+              league: params.league,
+              title,
+              subtitle,
+              team_name: teamName,
+              opponent_name: opponentName,
+              is_home_team: isHomeTeam,
+              game_date: date,
+              closing_price: closingPrice,
+              settlement_price: asNumber(market.last_price_dollars),
+              settlement_value: asNumber(market.settlement_value_dollars),
+              result: asString(market.result)?.toLowerCase() ?? null,
+              volume: asNumber(market.volume_fp),
+              open_interest: asNumber(market.open_interest_fp),
+              status: asString(market.status),
+              raw_json: { event, market },
+            });
+          }
 
           if (params.seedTeamMap && teamName) {
             const espnName = resolveEspnTeamName(params.league, teamAbbrev);
@@ -672,7 +840,7 @@ Deno.serve(async (req) => {
       const dedupedMapRows = Array.from(dedupedMapRowsMap.values());
 
       if (!params.dryRun) {
-        const settlementStats = await upsertSettlements(supabase, dedupedRows);
+        const settlementStats = await upsertMarketRows(supabase, params.targetTable, dedupedRows);
         inserted += settlementStats.inserted;
         updated += settlementStats.updated;
 
