@@ -1,0 +1,4 @@
+REFRESH MATERIALIZED VIEW CONCURRENTLY public.mv_mlb_team_f5_scoring;
+REFRESH MATERIALIZED VIEW CONCURRENTLY public.mv_mlb_starter_profiles;
+REFRESH MATERIALIZED VIEW CONCURRENTLY public.mv_mlb_team_bullpen_profile;
+REFRESH MATERIALIZED VIEW CONCURRENTLY public.mv_mlb_venue_weather_factors;
