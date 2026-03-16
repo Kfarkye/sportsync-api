@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SportsSync Portal</title>
+  <style>
+    body { font-family: "Public Sans", Arial, sans-serif; background: #f8f6f1; color: #171510; margin: 0; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px; }
+    h1 { margin: 0 0 10px; }
+    p { color: #524a3f; }
+    .card { background: #fff; border: 1px solid #dfd7c6; border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    label { font-size: 12px; color: #5f574a; text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
+    input, select, button { width: 100%; box-sizing: border-box; border-radius: 8px; border: 1px solid #d8d2c3; padding: 10px; font-size: 14px; }
+    button { background: #0f6b5f; color: #fff; border-color: #0f6b5f; cursor: pointer; font-weight: 600; }
+    button.secondary { background: #fff; color: #1b1812; border-color: #d8d2c3; }
+    pre { background: #1f1d18; color: #f5f1e8; border-radius: 10px; padding: 12px; overflow: auto; }
+    .small { font-size: 12px; color: #61594d; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .actions button { width: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; border-bottom: 1px solid #ece5d8; padding: 8px 6px; font-size: 14px; }
+    th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #6a6257; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>Customer Portal</h1>
+    <p>Manage your plan, billing, API keys, and usage.</p>
+
+    <section class="card">
+      <div class="row">
+        <div>
+          <label for="projectUrl">Supabase Project URL</label>
+          <input id="projectUrl" value="https://hylnixnuabtnmjcdnujm.supabase.co" />
+        </div>
+        <div>
+          <label for="portalToken">Portal Token</label>
+          <input id="portalToken" placeholder="x-portal-token" />
+        </div>
+      </div>
+      <div class="row" style="margin-top:10px;">
+        <div>
+          <label for="customerId">Customer ID</label>
+          <input id="customerId" placeholder="uuid" />
+        </div>
+        <div>
+          <label for="newTier">New Key Tier</label>
+          <select id="newTier">
+            <option value="free">free</option>
+            <option value="builder">builder</option>
+            <option value="pro">pro</option>
+          </select>
+        </div>
+      </div>
+      <div class="actions" style="margin-top:12px;">
+        <button id="loadBtn">Load Account</button>
+        <button id="createKeyBtn" class="secondary">Create Key</button>
+        <button id="billingPortalBtn" class="secondary">Open Billing Portal</button>
+      </div>
+      <p class="small">Keys are shown once on create/rotate. Save immediately.</p>
+    </section>
+
+    <section class="card">
+      <h3>Account</h3>
+      <pre id="accountJson">{}</pre>
+    </section>
+
+    <section class="card">
+      <h3>API Keys</h3>
+      <table>
+        <thead>
+          <tr><th>Prefix</th><th>Tier</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="keysTable"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const el = (id) => document.getElementById(id);
+
+    function base() {
+      return `${el("projectUrl").value.trim()}/functions/v1`;
+    }
+
+    function authHeaders() {
+      return {
+        "content-type": "application/json",
+        "x-portal-token": el("portalToken").value.trim(),
+      };
+    }
+
+    async function request(path, method = "GET", body = null) {
+      const res = await fetch(`${base()}${path}`, {
+        method,
+        headers: authHeaders(),
+        body: body ? JSON.stringify(body) : null,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error?.message || `${res.status}`);
+      return data;
+    }
+
+    async function loadAccount() {
+      const customerId = el("customerId").value.trim();
+      if (!customerId) return;
+      const data = await request(`/api-keys?customer_id=${encodeURIComponent(customerId)}`);
+      el("accountJson").textContent = JSON.stringify(data, null, 2);
+
+      const rows = data.keys || [];
+      const table = el("keysTable");
+      table.innerHTML = "";
+      for (const key of rows) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${key.key_prefix || "-"}</td>
+          <td>${key.tier || "-"}</td>
+          <td>${key.active ? "active" : "revoked"}</td>
+          <td>
+            <button data-action="rotate" data-id="${key.id}" class="secondary">Rotate</button>
+            <button data-action="revoke" data-id="${key.id}" class="secondary">Revoke</button>
+          </td>
+        `;
+        table.appendChild(tr);
+      }
+    }
+
+    el("loadBtn").addEventListener("click", async () => {
+      try { await loadAccount(); } catch (e) { alert(e.message); }
+    });
+
+    el("createKeyBtn").addEventListener("click", async () => {
+      try {
+        const customerId = el("customerId").value.trim();
+        const tier = el("newTier").value;
+        const data = await request("/api-keys/create", "POST", { customer_id: customerId, tier, name: "Portal key" });
+        alert(`New API key (shown once): ${data.raw_key}`);
+        await loadAccount();
+      } catch (e) { alert(e.message); }
+    });
+
+    el("billingPortalBtn").addEventListener("click", async () => {
+      try {
+        const customerId = el("customerId").value.trim();
+        const data = await request("/billing-portal", "POST", { customer_id: customerId });
+        if (data.portal_url) window.open(data.portal_url, "_blank");
+      } catch (e) { alert(e.message); }
+    });
+
+    el("keysTable").addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+      const id = button.getAttribute("data-id");
+      const action = button.getAttribute("data-action");
+      const customerId = el("customerId").value.trim();
+      try {
+        if (action === "rotate") {
+          const data = await request(`/api-keys/${id}/rotate`, "POST", { customer_id: customerId });
+          alert(`Rotated key (shown once): ${data.raw_key}`);
+        } else if (action === "revoke") {
+          await request(`/api-keys/${id}/revoke`, "POST", { customer_id: customerId });
+        }
+        await loadAccount();
+      } catch (e) { alert(e.message); }
+    });
+  </script>
+</body>
+</html>
