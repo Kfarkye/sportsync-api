@@ -78,7 +78,7 @@ function normalizeLeagueName(value) {
 }
 
 function normalizeSignal(value) {
-  if (!value) return "trend";
+  if (!value) return "neutral";
   const normalized = String(value).trim().toLowerCase();
   if (normalized.startsWith("fade") || normalized === "negative") return "fade";
   if (normalized.startsWith("trend") || normalized === "positive") return "trend";
@@ -86,7 +86,10 @@ function normalizeSignal(value) {
 }
 
 function normalizeDirection(signalType, trendText) {
-  const candidate = `${signalType} ${trendText}`.toLowerCase();
+  if (signalType === "fade") return "FADE";
+  if (signalType === "trend") return "TREND";
+
+  const candidate = `${trendText}`.toLowerCase();
   if (/\b(fade|under|down|away|sell|against|lay|negative|off)\b/.test(candidate)) return "FADE";
   if (/\b(trend|over|up|home|positive|buy|for|long)\b/.test(candidate)) return "TREND";
   return "NEUTRAL";

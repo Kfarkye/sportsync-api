@@ -10,7 +10,6 @@
       name="description"
       content="SportsSync internal trend board for edge quality, layers, and directional signals."
     />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Code+Pro:wght@500&display=swap" />
     <style>
       *,
       *::before,
@@ -32,14 +31,14 @@
         --warn: #f4be60;
         --bad: #ff7575;
         --track: #1e2d56;
-        --mono: "Source Code Pro", "SF Mono", Menlo, monospace;
-        --body: "Inter", "SF Pro Text", "Avenir Next", system-ui, -apple-system, sans-serif;
+        --mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, monospace;
+        --body: "SF Pro Text", "SF Pro Display", "Avenir Next", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       }
 
       body {
         margin: 0;
         min-height: 100vh;
-        background: radial-gradient(circle at 0% 0%, #0d1938 0%, var(--bg) 45%, #070c19 100%);
+        background: #070c18;
         color: var(--text);
         font-family: var(--body);
       }
@@ -545,7 +544,6 @@
               <option value="all">All</option>
               <option value="trend">Trend</option>
               <option value="fade">Fade</option>
-              <option value="neutral">Neutral</option>
             </select>
           </div>
           <div class="field">
@@ -634,6 +632,7 @@
         ];
 
         let rows = [];
+        const logoStatusByUrl = new Map();
         let metrics = {
           avgGoals: null,
           avgCorners: null,
@@ -647,6 +646,14 @@
         let loading = false;
         let activeRequest = 0;
         let activeController = null;
+        let reloadTimer = null;
+        const SPORT_LEAGUE_HINTS = {
+          nba: "nba",
+          nhl: "nhl",
+          mlb: "mlb",
+          ncaab: "ncaab",
+          mls: "mls",
+        };
 
         function sportFromLeague(league) {
           const value = String(league || "").toLowerCase();
@@ -674,6 +681,17 @@
           if (value >= 80) return "high";
           if (value >= 65) return "mid";
           return "low";
+        }
+
+        function directionFromRow(row) {
+          const signal = String(row.signal_type || "").toLowerCase();
+          if (signal === "fade") return "FADE";
+          if (signal === "trend") return "TREND";
+          return String(row.direction || "NEUTRAL").toUpperCase();
+        }
+
+        function loadHintLeagueForSport(sport) {
+          return SPORT_LEAGUE_HINTS[sport] || "";
         }
 
         function directionClass(direction) {
@@ -836,7 +854,7 @@
           const q = state.search.trim().toLowerCase();
 
           return rows.filter((row) => {
-            const direction = String(row.direction || "NEUTRAL").toUpperCase();
+            const direction = directionFromRow(row);
             const layerMatch = state.layer === "all" || (row.layer || "Unspecified") === state.layer;
             const signalMatch = state.signal === "all" || String(row.signal_type || "").toLowerCase() === state.signal;
             const directionMatch = state.direction === "all" || direction.toLowerCase() === state.direction;
@@ -923,7 +941,7 @@
             sortedRows.forEach((row, index) => {
               const tr = document.createElement("tr");
 
-              const direction = String(row.direction || "NEUTRAL").toUpperCase();
+              const direction = directionFromRow(row);
               const hit = parseNum(row.hit_rate);
               const level = quality(hit);
 
@@ -937,7 +955,8 @@
               logoImg.className = "team-logo";
               logoImg.referrerPolicy = "no-referrer";
               logoImg.loading = "eager";
-              logoImg.decoding = "async";
+              logoImg.decoding = "sync";
+              logoImg.fetchPriority = "low";
               logoImg.alt = "Team logo";
 
               const logoFallback = document.createElement("span");
@@ -959,14 +978,28 @@
 
               if (row.logo_url) {
                 logoImg.src = row.logo_url;
-                logoImg.addEventListener("load", () => {
+                const status = logoStatusByUrl.get(row.logo_url);
+
+                if (status === "ok") {
                   logoImg.style.display = "block";
                   logoFallback.style.display = "none";
-                });
-                logoImg.addEventListener("error", () => {
+                } else if (status === "error") {
                   logoImg.style.display = "none";
                   logoFallback.style.display = "grid";
-                });
+                } else {
+                  logoImg.addEventListener("load", () => {
+                    logoStatusByUrl.set(row.logo_url, "ok");
+                    logoImg.style.display = "block";
+                    logoFallback.style.display = "none";
+                  });
+                  logoImg.addEventListener("error", () => {
+                    logoStatusByUrl.set(row.logo_url, "error");
+                    logoImg.style.display = "none";
+                    logoFallback.style.display = "grid";
+                  });
+                }
+              } else {
+                logoFallback.style.display = "grid";
               }
 
               const teamTd = document.createElement("td");
@@ -1012,20 +1045,7 @@
               heldTd.className = row.last_held ? "mono held held-ok" : "mono held held-bad";
               heldTd.textContent = row.last_held ? "✓" : "✕";
 
-              const tdValues = [
-                String(index + 1),
-                teamTd,
-                document.createElement("td"),
-                signalTd,
-                document.createElement("td"),
-                signalQualityTd,
-                hitTd,
-                sampleTd,
-                directionTd,
-                heldTd,
-              ];
-
-              const leagueTd = tdValues[2];
+              const leagueTd = document.createElement("td");
               leagueTd.textContent = row.league || "--";
 
               const layerTd = document.createElement("td");
@@ -1100,6 +1120,11 @@
             params.set("p_layer", state.layer);
           }
 
+          const leagueHint = loadHintLeagueForSport(state.sport);
+          if (leagueHint) {
+            params.set("p_league", leagueHint);
+          }
+
           try {
             const response = await fetch(`/api/trends?${params.toString()}`, {
               method: "GET",
@@ -1148,6 +1173,17 @@
           render();
         }
 
+        function scheduleReload() {
+          if (reloadTimer) {
+            window.clearTimeout(reloadTimer);
+          }
+
+          reloadTimer = window.setTimeout(() => {
+            reloadTimer = null;
+            loadData({ force: true });
+          }, 140);
+        }
+
         layerFilter.addEventListener("change", (event) => {
           state.layer = event.target.value;
           loadData({ force: true });
@@ -1155,7 +1191,7 @@
 
         sportFilter.addEventListener("change", (event) => {
           state.sport = event.target.value;
-          onChangeState();
+          scheduleReload();
         });
 
         signalFilter.addEventListener("change", (event) => {
@@ -1183,7 +1219,7 @@
         });
 
         minHitFilter.addEventListener("change", () => {
-          loadData({ force: true });
+          scheduleReload();
         });
 
         minSampleFilter.addEventListener("input", (event) => {
