@@ -37,6 +37,7 @@ const SYNC_INTERVAL_MINUTES: Record<string, number> = {
   trends: 30,
   daily_picks: 30,
   prop_edges: 30,
+  mlb_bullpen_kit: 30,
   team_ou_splits: 30,
   team_ats_splits: 30,
   last_game_results: 120,
@@ -536,6 +537,96 @@ async function syncPropEdges(local: SupabaseClient, boltsks: SupabaseClient): Pr
     payload,
     "player_name,bet_type,side,match_id,pick_date",
   );
+
+  return {
+    rowsRead: sourceRows.length,
+    rowsUpserted: payload.length,
+    rowsSkipped: skipped,
+  };
+}
+
+async function syncMlbBullpenKit(
+  local: SupabaseClient,
+  boltsks: SupabaseClient,
+): Promise<SyncExecutionResult> {
+  const sourceRows = await fetchAllFromTable(boltsks, "mv_mlb_matchup_betting_kit", "*");
+  const syncedAt = new Date().toISOString();
+
+  const payload: JsonRecord[] = [];
+  let skipped = 0;
+
+  for (const row of sourceRows) {
+    const matchId = asString(row.match_id);
+    const homeTeam = asString(row.home_team);
+    const awayTeam = asString(row.away_team);
+
+    if (!matchId || !homeTeam || !awayTeam) {
+      skipped += 1;
+      continue;
+    }
+
+    payload.push({
+      match_id: matchId,
+      start_time: asIsoTimestamp(row.start_time),
+      home_team: homeTeam,
+      away_team: awayTeam,
+      home_team_abbr: asString(row.home_team_abbr),
+      away_team_abbr: asString(row.away_team_abbr),
+      home_probable_starter_name: asString(row.home_probable_starter_name),
+      away_probable_starter_name: asString(row.away_probable_starter_name),
+      home_starter_last5_era: asNumber(row.home_starter_last5_era),
+      away_starter_last5_era: asNumber(row.away_starter_last5_era),
+      home_starter_last5_whip: asNumber(row.home_starter_last5_whip),
+      away_starter_last5_whip: asNumber(row.away_starter_last5_whip),
+      home_starter_last5_avg_ip: asNumber(row.home_starter_last5_avg_ip),
+      away_starter_last5_avg_ip: asNumber(row.away_starter_last5_avg_ip),
+      home_starter_k_per_9: asNumber(row.home_starter_k_per_9),
+      away_starter_k_per_9: asNumber(row.away_starter_k_per_9),
+      home_bullpen_stress_score: asNumber(row.home_bullpen_stress_score),
+      away_bullpen_stress_score: asNumber(row.away_bullpen_stress_score),
+      home_bullpen_era: asNumber(row.home_bullpen_era),
+      away_bullpen_era: asNumber(row.away_bullpen_era),
+      home_bullpen_rolling10_era: asNumber(row.home_bullpen_rolling10_era),
+      away_bullpen_rolling10_era: asNumber(row.away_bullpen_rolling10_era),
+      home_bullpen_ip_last3d: asNumber(row.home_bullpen_ip_last3d),
+      away_bullpen_ip_last3d: asNumber(row.away_bullpen_ip_last3d),
+      home_high_leverage_back_to_back: asInteger(row.home_high_leverage_back_to_back),
+      away_high_leverage_back_to_back: asInteger(row.away_high_leverage_back_to_back),
+      home_injured_relief_pitchers: asInteger(row.home_injured_relief_pitchers),
+      away_injured_relief_pitchers: asInteger(row.away_injured_relief_pitchers),
+      home_lead_conversion_after5: asNumber(row.home_lead_conversion_after5),
+      away_lead_conversion_after5: asNumber(row.away_lead_conversion_after5),
+      home_one_run_hold_rate_after5: asNumber(row.home_one_run_hold_rate_after5),
+      away_one_run_hold_rate_after5: asNumber(row.away_one_run_hold_rate_after5),
+      home_last5_record: asString(row.home_last5_record),
+      away_last5_record: asString(row.away_last5_record),
+      home_last5_win_pct: asNumber(row.home_last5_win_pct),
+      away_last5_win_pct: asNumber(row.away_last5_win_pct),
+      home_ats_summary: asString(row.home_ats_summary),
+      away_ats_summary: asString(row.away_ats_summary),
+      home_injury_count: asInteger(row.home_injury_count),
+      away_injury_count: asInteger(row.away_injury_count),
+      home_bullpen_injury_count: asInteger(row.home_bullpen_injury_count),
+      away_bullpen_injury_count: asInteger(row.away_bullpen_injury_count),
+      series_summary: asString(row.series_summary),
+      venue: asString(row.venue),
+      weather_temp: asNumber(row.weather_temp),
+      weather_gust: asNumber(row.weather_gust),
+      dk_home_moneyline: asNumber(row.dk_home_moneyline),
+      dk_away_moneyline: asNumber(row.dk_away_moneyline),
+      dk_spread: asNumber(row.dk_spread),
+      dk_total: asNumber(row.dk_total),
+      dk_over_price: asNumber(row.dk_over_price),
+      dk_under_price: asNumber(row.dk_under_price),
+      bullpen_stress_delta_favors_home: asNumber(row.bullpen_stress_delta_favors_home),
+      bullpen_quality_delta_favors_home: asNumber(row.bullpen_quality_delta_favors_home),
+      lead_protection_delta_favors_home: asNumber(row.lead_protection_delta_favors_home),
+      starter_era_delta_favors_home: asNumber(row.starter_era_delta_favors_home),
+      synced_at: syncedAt,
+    });
+  }
+
+  await fullReplace(local, "mlb_bullpen_kit", payload, "match_id");
 
   return {
     rowsRead: sourceRows.length,
@@ -1136,6 +1227,7 @@ Deno.serve(async (req) => {
       { table: "trends", run: () => syncTrends(local, boltsks) },
       { table: "daily_picks", run: () => syncDailyPicks(local, boltsks) },
       { table: "prop_edges", run: () => syncPropEdges(local, boltsks) },
+      { table: "mlb_bullpen_kit", run: () => syncMlbBullpenKit(local, boltsks) },
       { table: "team_ou_splits", run: () => syncTeamOuSplits(local, boltsks) },
       { table: "team_ats_splits", run: () => syncTeamAtsSplits(local, boltsks) },
       { table: "last_game_results", run: () => syncLastGameResults(local, boltsks) },
