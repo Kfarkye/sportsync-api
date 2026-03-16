@@ -26,6 +26,7 @@
         --border: #253057;
         --text: #eef2ff;
         --muted: #9babc8;
+        --muted-2: #7c8cb0;
         --accent: #6fd0ff;
         --ok: #4ecb8f;
         --warn: #f4be60;
@@ -111,8 +112,9 @@
       .panel {
         border: 1px solid var(--border);
         border-radius: 14px;
-        background: color-mix(in oklab, var(--panel), white 4%);
+        background: #0f1a34;
         padding: 14px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
       }
 
       .panel-head {
@@ -243,6 +245,27 @@
 
       .table-wrap {
         overflow-x: auto;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: #0a1430;
+      }
+
+      .table-wrap::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+
+      .table-wrap::-webkit-scrollbar-track {
+        background: #0a1733;
+      }
+
+      .table-wrap::-webkit-scrollbar-thumb {
+        border-radius: 999px;
+        background: #23366b;
+      }
+
+      .table-wrap::-webkit-scrollbar-thumb:hover {
+        background: #35509a;
       }
 
       table {
@@ -257,6 +280,7 @@
         text-align: left;
         font-size: 14px;
         padding: 10px 12px;
+        line-height: 1.18;
         vertical-align: middle;
       }
 
@@ -265,10 +289,19 @@
         font-size: 11px;
         text-transform: uppercase;
         letter-spacing: 0.05em;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: #121b38;
+        border-bottom-color: #2a3a6f;
       }
 
       tbody tr:hover {
         background: rgba(99, 147, 255, 0.08);
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
       }
 
       .team-cell {
@@ -301,6 +334,8 @@
         font-size: 11px;
         font-family: var(--mono);
         color: #d5ddf7;
+        font-weight: 600;
+        letter-spacing: 0.02em;
       }
 
       .team-name {
