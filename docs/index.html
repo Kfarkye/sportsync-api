@@ -34,7 +34,7 @@
     }
 
     .layout {
-      max-width: 1240px;
+      max-width: 1280px;
       margin: 0 auto;
       padding: 24px;
       display: grid;
@@ -73,17 +73,19 @@
     .sidebar a {
       text-decoration: none;
       color: #3f392f;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 600;
-      padding: 7px 8px;
+      padding: 8px 10px;
       border-radius: 9px;
       transition: background 0.15s ease, color 0.15s ease;
+      border-left: 3px solid transparent;
     }
 
     .sidebar a.active,
     .sidebar a:hover {
-      background: var(--panel-soft);
+      background: var(--accent-soft);
       color: var(--accent);
+      border-left-color: var(--accent);
     }
 
     .sidebar .links {
@@ -279,7 +281,7 @@
         <a href="#endpoint">Endpoint</a>
         <a href="#response">Response</a>
         <a href="#errors">Errors</a>
-        <a href="#trust">Version & Trust</a>
+        <a href="#trust">Version & Status</a>
       </nav>
       <p class="links">
         <a href="/">Main site</a> ·
@@ -290,7 +292,7 @@
     <main class="content">
       <section id="overview">
         <h2>Overview</h2>
-        <p>SportsSync Match Context API returns pre-joined game intelligence in one response for previews, research, and automation workflows.</p>
+        <p>One call returns match identity, market context, injuries, and line-anchor data in a stable JSON shape.</p>
         <div class="callout">
           Every response keeps the same top-level structure. If data is unavailable, the section remains present and returns <code>{ "available": false, "reason": "..." }</code>.
         </div>
@@ -344,7 +346,7 @@
       <section id="auth">
         <h2>Authentication</h2>
         <p>Include your API key in the <code>x-api-key</code> header for every request.</p>
-        <pre><code>x-api-key: sk_live_••••••••••••••••</code></pre>
+        <pre><code>x-api-key: sk_test_••••••••••••••••</code></pre>
         <p>Use masked examples in docs and client snippets. Never embed full keys in public pages or screenshots.</p>
       </section>
 
@@ -396,7 +398,7 @@
       </section>
 
       <section id="trust">
-        <h2>Version & Trust</h2>
+        <h2>Version & Status</h2>
         <div class="status-grid">
           <div class="status-item">
             <div class="label">API Version</div>
