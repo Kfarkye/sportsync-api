@@ -49,20 +49,20 @@
       border: 1px solid var(--border);
       border-radius: 14px;
       background: var(--panel);
-      padding: 16px;
+      padding: 14px;
     }
 
     .sidebar h1 {
       font-family: var(--display);
-      font-size: 32px;
+      font-size: 30px;
       line-height: 1.04;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .sidebar p {
       color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 14px;
+      font-size: 13px;
+      margin-bottom: 10px;
     }
 
     .sidebar nav {
@@ -205,6 +205,10 @@
       color: #f6f2e9;
     }
 
+    .compact-example {
+      max-height: 210px;
+    }
+
     .callout {
       border: 1px solid var(--border);
       border-left: 4px solid var(--accent);
@@ -341,6 +345,13 @@
           <li><code>market.total</code> → total line when available</li>
           <li><code>metadata.generated_at</code> → payload generation timestamp</li>
         </ul>
+        <div class="copy-wrap"><strong class="mono">Success excerpt</strong><button class="copy-btn" data-copy="json_success">Copy</button></div>
+        <pre id="json_success"><code>{
+  "match": { "status": "scheduled", "kickoff": "2026-03-17T23:30:00Z" },
+  "market": { "total": 225.5, "home_ml": -145, "away_ml": 122 },
+  "injuries": { "available": true },
+  "metadata": { "api_version": "v1", "generated_at": "2026-03-15T20:44:18Z" }
+}</code></pre>
       </section>
 
       <section id="auth">
@@ -368,18 +379,14 @@
         <h2>Response</h2>
         <p>Parse the top-level sections first, then read the fields your workflow depends on.</p>
         <div class="copy-wrap"><strong class="mono">JSON outline</strong><button class="copy-btn" data-copy="json_outline">Copy</button></div>
-        <pre id="json_outline"><code>{
+        <pre id="json_outline" class="compact-example"><code>{
   "match": { ... },
   "teams": { ... },
   "market": { ... },
   "opening_lines": { ... },
   "injuries": { ... },
   "intel": { ... },
-  "metadata": {
-    "api_version": "v1",
-    "generated_at": "ISO-8601",
-    "data_freshness": { ... }
-  }
+  "metadata": { "api_version": "v1", "generated_at": "ISO-8601" }
 }</code></pre>
       </section>
 
