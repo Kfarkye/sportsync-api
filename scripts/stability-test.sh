@@ -2,12 +2,15 @@
 set -euo pipefail
 
 API_ENDPOINT="${API_ENDPOINT:-https://hylnixnuabtnmjcdnujm.supabase.co/functions/v1/match-context}"
-API_KEY="${API_KEY:-sk_test_sportsync_beta_001}"
+API_KEY="${API_KEY:-}"
 REQUEST_COUNT="${REQUEST_COUNT:-20}"
 
-USA_MEXICO_MATCH_ID="${USA_MEXICO_MATCH_ID:-b42fe447-b2b1-485f-ae6d-1559ee2b57c7}"
-EPL_MATCH_ID="${EPL_MATCH_ID:-}"
-NBA_MATCH_ID="${NBA_MATCH_ID:-}"
+SAMPLES=(
+  "epl-arsenal-man-city:b193b51f-cbed-4398-a297-237dd3322607"
+  "wc26-usa-mexico:b42fe447-b2b1-485f-ae6d-1559ee2b57c7"
+  "nba-lakers-celtics:d6742e61-2457-43fd-aa3f-e61f6a76c7af"
+  "wc26-england-brazil:c94d7e01-333d-41cd-a67d-cc0285fa7f28"
+)
 
 if ! command -v curl >/dev/null 2>&1; then
   echo "Missing dependency: curl" >&2
@@ -19,14 +22,9 @@ if ! command -v jq >/dev/null 2>&1; then
   exit 1
 fi
 
-if [[ -z "$EPL_MATCH_ID" || -z "$NBA_MATCH_ID" ]]; then
-  cat >&2 <<'EOF'
-Set EPL_MATCH_ID and NBA_MATCH_ID before running this script.
-The seed SQL files generate UUIDs with gen_random_uuid() and print each match_id via NOTICE when applied.
-
-Example:
-  EPL_MATCH_ID=<uuid> NBA_MATCH_ID=<uuid> ./scripts/stability-test.sh
-EOF
+if [[ -z "$API_KEY" ]]; then
+  echo "Set API_KEY before running this script." >&2
+  echo "Example: API_KEY=your_key ./scripts/stability-test.sh" >&2
   exit 1
 fi
 
@@ -38,7 +36,8 @@ normalize_response() {
   jq -S '
     del(
       .metadata.generated_at,
-      .metadata.response_time_ms
+      .metadata.response_time_ms,
+      .metadata.data_freshness
     )
   ' "$input_file"
 }
@@ -74,15 +73,12 @@ run_match_test() {
       has("match") and
       has("teams") and
       has("market") and
-      has("form") and
-      has("h2h") and
+      has("opening_lines") and
       has("injuries") and
-      has("players") and
-      has("trends") and
-      has("live_state") and
+      has("intel") and
       has("metadata")
     ' "$raw_file" >/dev/null; then
-      echo "  FAIL call $attempt is missing one or more mandatory top-level sections" >&2
+      echo "  FAIL call $attempt missing one or more mandatory top-level sections" >&2
       pass=false
       continue
     fi
@@ -114,9 +110,11 @@ run_match_test() {
 
 overall_pass=true
 
-run_match_test "usa-mexico" "$USA_MEXICO_MATCH_ID" || overall_pass=false
-run_match_test "epl-arsenal-man-city" "$EPL_MATCH_ID" || overall_pass=false
-run_match_test "nba-lakers-celtics" "$NBA_MATCH_ID" || overall_pass=false
+for pair in "${SAMPLES[@]}"; do
+  label="${pair%%:*}"
+  match_id="${pair##*:}"
+  run_match_test "$label" "$match_id" || overall_pass=false
+done
 
 if [[ "$overall_pass" == true ]]; then
   echo "OVERALL PASS"
