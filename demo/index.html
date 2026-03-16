@@ -3,115 +3,147 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SportsSync Match Context Demo</title>
-  <meta name="description" content="Interactive demo of one SportsSync match-context response rendered as a real page.">
+  <title>SportsSync Demo</title>
+  <meta name="description" content="See one SportsSync match context response rendered as a readable game page.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; }
 
     :root {
-      --bg: #f8f6f1;
-      --panel: #ffffff;
-      --panel-soft: #f3efe6;
-      --border: #e3dccd;
-      --text: #1f1d18;
-      --muted: #5f574a;
-      --accent: #0f6b5f;
-      --good: #1b7a3b;
-      --warn: #9a6a14;
-      --bad: #8b2d2d;
-      --body: "Public Sans", "Avenir Next", sans-serif;
-      --display: "Newsreader", Georgia, serif;
+      --bg: #f4f6f9;
+      --surface: rgba(255, 255, 255, 0.78);
+      --panel-soft: #f1f4f9;
+      --border: rgba(17, 24, 39, 0.08);
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #1d4ed8;
+      --good: #16a34a;
+      --warn: #b45309;
+      --bad: #be123c;
+      --shadow: 0 16px 40px rgba(2, 6, 23, 0.08);
+      --body: "Inter", "Avenir Next", "SF Pro Text", sans-serif;
+      --display: "Newsreader", "Times New Roman", serif;
       --mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
     }
 
+    html {
+      background: radial-gradient(1200px 700px at 25% -5%, #dbeafe 0%, transparent 55%),
+                  radial-gradient(1100px 600px at 90% 0%, #e9d5ff 0%, transparent 45%),
+                  #f4f6f9;
+    }
+
     body {
-      background: var(--bg);
-      color: var(--text);
+      margin: 0;
       font-family: var(--body);
-      line-height: 1.5;
+      color: var(--text);
+      line-height: 1.45;
       -webkit-font-smoothing: antialiased;
     }
 
+    .shell {
+      min-height: 100vh;
+      padding: 28px 16px 40px;
+    }
+
     .container {
-      max-width: 920px;
+      max-width: 980px;
       margin: 0 auto;
-      padding: 0 20px 28px;
     }
 
     header {
-      padding: 20px 0;
-      border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
+      margin-bottom: 16px;
       flex-wrap: wrap;
     }
 
     .brand {
-      color: var(--text);
       text-decoration: none;
       font-family: var(--display);
-      font-size: 30px;
       font-weight: 700;
+      font-size: 34px;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1;
     }
 
-    .back {
-      font-size: 14px;
+    .links {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .links a {
       color: var(--accent);
       text-decoration: none;
+      font-size: 14px;
       font-weight: 600;
     }
 
     .hero {
-      padding: 24px 0 14px;
+      border-radius: 18px;
+      background: linear-gradient(160deg, rgba(30, 64, 175, 0.1), rgba(255, 255, 255, 0.65));
+      border: 1px solid var(--border);
+      padding: 18px;
+      backdrop-filter: blur(6px);
     }
 
     .hero h1 {
+      margin: 0;
       font-family: var(--display);
-      font-size: clamp(32px, 5.6vw, 52px);
-      line-height: 1.06;
-      margin-bottom: 8px;
+      font-size: clamp(34px, 5.5vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -0.015em;
     }
 
     .hero p {
+      margin: 8px 0 0;
       color: var(--muted);
-      max-width: 60ch;
+      max-width: 68ch;
+      font-size: 16px;
     }
 
     .controls {
-      margin: 16px 0 20px;
       display: flex;
-      gap: 8px;
       flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
     }
 
     .match-btn {
       border: 1px solid var(--border);
-      background: var(--panel);
-      color: var(--text);
-      padding: 10px 12px;
-      border-radius: 10px;
-      font-size: 14px;
+      background: var(--surface);
+      color: #0f172a;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       font-family: inherit;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .match-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(29, 78, 216, 0.5);
     }
 
     .match-btn.active {
       border-color: var(--accent);
-      background: var(--panel-soft);
-      color: var(--accent);
+      background: #e0ecff;
+      color: #1e3a8a;
     }
 
     .runtime {
-      font-size: 12px;
+      margin-top: 12px;
+      margin-bottom: 12px;
+      min-height: 22px;
       color: var(--muted);
-      margin-bottom: 10px;
-      min-height: 18px;
+      font-size: 12px;
       font-family: var(--mono);
     }
 
@@ -121,97 +153,98 @@
     }
 
     .card {
+      border-radius: 16px;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--panel);
-      padding: 16px;
+      background: var(--surface);
+      padding: 16px 16px 14px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
     }
 
     .card h2 {
+      margin: 0 0 12px;
       font-size: 17px;
-      margin-bottom: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .muted {
+      color: var(--muted);
     }
 
     .matchup-title {
+      margin: 2px 0 8px;
       font-family: var(--display);
-      font-size: 40px;
-      line-height: 1.03;
-      margin-bottom: 6px;
+      font-size: clamp(28px, 5vw, 44px);
+      line-height: 1.04;
+      letter-spacing: -0.015em;
     }
 
-    .meta {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+    .status-row {
+      display: inline-flex;
+      align-items: center;
       gap: 8px;
-      margin-top: 10px;
-    }
-
-    .meta-item {
-      background: var(--panel-soft);
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 8px;
-    }
-
-    .meta-item dt {
-      font-size: 11px;
+      margin-bottom: 6px;
       color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 2px;
+      font-size: 13px;
     }
 
-    .meta-item dd {
-      font-size: 14px;
-      color: var(--text);
-      font-weight: 600;
-      margin: 0;
-    }
-
+    .meta,
     .line-anchor {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-      margin-bottom: 8px;
+      gap: 10px;
     }
 
-    .line-anchor .pill {
-      background: var(--panel-soft);
+    .meta-item,
+    .pill {
       border: 1px solid var(--border);
-      border-radius: 9px;
+      border-radius: 12px;
       padding: 10px;
+      background: var(--panel-soft);
+      min-height: 64px;
     }
 
-    .line-anchor .label {
-      display: block;
+    .meta-item dt,
+    .pill .label {
+      margin: 0 0 4px;
       font-size: 11px;
       color: var(--muted);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 2px;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+      font-family: var(--mono);
     }
 
-    .line-anchor .value {
+    .meta-item dd,
+    .pill .value {
+      margin: 0;
+      font-weight: 700;
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.2;
+    }
+
+    .pill .value {
       font-family: var(--mono);
       font-size: 22px;
-      color: var(--text);
-    }
-
-    .line-note {
-      font-size: 14px;
-      color: var(--muted);
     }
 
     table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       font-size: 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
     }
 
     th, td {
-      text-align: left;
-      padding: 9px 6px;
+      padding: 11px 12px;
       border-bottom: 1px solid var(--border);
+      vertical-align: top;
     }
 
     th {
@@ -219,49 +252,63 @@
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.06em;
+      text-align: left;
+      background: #f8fbff;
       font-weight: 700;
+      border-bottom: 1px solid var(--border);
     }
 
-    td.mono { font-family: var(--mono); }
+    tr:last-child td {
+      border-bottom: none;
+    }
 
-    .muted { color: var(--muted); }
-
-    .status {
-      display: inline-flex;
-      align-items: center;
-      font-size: 12px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      padding: 4px 9px;
+    td.mono {
       font-family: var(--mono);
+      color: #334155;
     }
-
-    .status-fresh { color: var(--good); border-color: #c6e2cf; background: #eff8f2; }
-    .status-older { color: var(--warn); border-color: #eadbbb; background: #fbf6ea; }
-    .status-unavailable { color: var(--bad); border-color: #e8c2c2; background: #fbefef; }
 
     .list {
+      margin: 0;
+      padding: 0;
       list-style: none;
       display: grid;
       gap: 8px;
     }
 
     .list li {
-      padding: 8px;
+      margin: 0;
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 10px;
       background: var(--panel-soft);
-      font-size: 15px;
+      padding: 10px;
+      font-size: 14px;
     }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      font-size: 11px;
+      font-family: var(--mono);
+      font-weight: 600;
+      text-transform: lowercase;
+    }
+
+    .status-fresh { color: #166534; background: #ecfdf3; border-color: #bbf7d0; }
+    .status-older { color: #92400e; background: #fffbeb; border-color: #fde68a; }
+    .status-unavailable { color: #be123c; background: #fef2f2; border-color: #fecdd3; }
 
     .loading,
     .error {
-      padding: 18px;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--panel);
+      border-radius: 14px;
+      background: var(--surface);
+      padding: 18px;
       color: var(--muted);
       font-size: 14px;
+      box-shadow: var(--shadow);
     }
 
     .error { color: var(--bad); }
@@ -273,46 +320,56 @@
       }
 
       .matchup-title {
-        font-size: 34px;
+        font-size: 30px;
+      }
+
+      .hero {
+        padding: 14px;
+      }
+
+      .hero h1 {
+        font-size: clamp(30px, 9vw, 42px);
       }
 
       th, td {
-        padding-left: 4px;
-        padding-right: 4px;
+        padding: 10px 8px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <a class="brand" href="/">SportsSync</a>
-      <a class="back" href="/">Back to main site</a>
-    </header>
+  <div class="shell">
+    <div class="container">
+      <header>
+        <a class="brand" href="/">SportsSync</a>
+        <nav class="links">
+          <a href="/">Main Site</a>
+          <a href="/docs/index.html">Docs</a>
+          <a href="mailto:api@sportsync.io?subject=SportsSync%20Sandbox%20Access">Start Free</a>
+        </nav>
+      </header>
 
-    <section class="hero">
-      <h1>Live Match Context Demo</h1>
-      <p>Pick a match and watch one response render into a usable game view.</p>
-    </section>
+      <section class="hero">
+        <h1>Live Match Context Demo</h1>
+        <p>Pick a sample match to see a real v1 response rendered in a product-style view. This demo uses a locked server proxy, so no key is shown in browser code.</p>
+        <div class="controls">
+          <button class="match-btn active" data-match="b193b51f-cbed-4398-a297-237dd3322607">EPL · Arsenal vs Man City</button>
+          <button class="match-btn" data-match="b42fe447-b2b1-485f-ae6d-1559ee2b57c7">WC26 · USA vs Mexico</button>
+          <button class="match-btn" data-match="d6742e61-2457-43fd-aa3f-e61f6a76c7af">NBA · Lakers vs Celtics</button>
+          <button class="match-btn" data-match="c94d7e01-333d-41cd-a67d-cc0285fa7f28">WC26 · England vs Brazil</button>
+        </div>
+        <p id="runtime" class="runtime"></p>
+      </section>
 
-    <div class="controls">
-      <button class="match-btn active" data-match="b193b51f-cbed-4398-a297-237dd3322607">EPL · Arsenal vs Man City</button>
-      <button class="match-btn" data-match="b42fe447-b2b1-485f-ae6d-1559ee2b57c7">WC26 · USA vs Mexico</button>
-      <button class="match-btn" data-match="d6742e61-2457-43fd-aa3f-e61f6a76c7af">NBA · Lakers vs Celtics</button>
-      <button class="match-btn" data-match="c94d7e01-333d-41cd-a67d-cc0285fa7f28">WC26 · England vs Brazil</button>
+      <main id="preview" class="stack"></main>
     </div>
-
-    <div id="runtime" class="runtime"></div>
-    <main id="preview" class="stack"></main>
   </div>
 
   <script>
-    const API_KEY = 'sk_test_sportsync_beta_001';
-    const BASE_URL = 'https://hylnixnuabtnmjcdnujm.supabase.co/functions/v1/match-context';
+    const BASE_URL = '/api/demo-match-context';
     const previewEl = document.getElementById('preview');
     const runtimeEl = document.getElementById('runtime');
-
-    const sections = ['market', 'form', 'h2h', 'injuries', 'players', 'trends', 'live_state'];
+    const sections = ['match', 'teams', 'market', 'opening_lines', 'injuries', 'intel'];
 
     document.querySelectorAll('.match-btn').forEach((button) => {
       button.addEventListener('click', () => {
@@ -321,14 +378,6 @@
         loadMatch(button.dataset.match);
       });
     });
-
-    function readAveragePoints(formSection) {
-      if (!formSection || !formSection.available) return null;
-      const home = formSection.home?.avg_points_scored;
-      const away = formSection.away?.avg_points_scored;
-      if (typeof home !== 'number' || typeof away !== 'number') return null;
-      return Number((home + away).toFixed(1));
-    }
 
     function formatNumber(value, digits = 1) {
       if (typeof value !== 'number' || !Number.isFinite(value)) return 'n/a';
@@ -342,117 +391,103 @@
       return `<span class="status ${cls}">${label}</span>`;
     }
 
-    function renderMetaCard(match, home, away) {
+    function renderMetaCard(data) {
+      const match = data.match || {};
+      const home = data.teams?.home || { name: 'Home', score: null };
+      const away = data.teams?.away || { name: 'Away', score: null };
       const kickoff = new Date(match.start_time);
+
       return `
         <section class="card">
           <h2>Match</h2>
+          <div class="status-row">
+            ${freshnessBadge(data.metadata?.data_freshness?.match?.status)}
+            <span>${match.league || 'League'} · ${String(match.status || 'scheduled').replaceAll('_', ' ')}</span>
+          </div>
           <div class="matchup-title">${home.name} vs ${away.name}</div>
-          <p class="muted">${match.league_name || match.league || 'League'} · ${String(match.status || 'scheduled').replaceAll('_', ' ')}</p>
           <dl class="meta">
             <div class="meta-item"><dt>Kickoff</dt><dd>${Number.isNaN(kickoff.getTime()) ? 'TBD' : kickoff.toLocaleString()}</dd></div>
-            <div class="meta-item"><dt>Venue</dt><dd>${match.venue ? `${match.venue.name}, ${match.venue.city}` : 'TBD'}</dd></div>
-            <div class="meta-item"><dt>Round</dt><dd>${match.stage ? String(match.stage).replaceAll('_', ' ') : 'n/a'}</dd></div>
+            <div class="meta-item"><dt>Score</dt><dd>${home.score ?? '-'} : ${away.score ?? '-'}</dd></div>
+            <div class="meta-item"><dt>Source ID</dt><dd style="font-family: var(--mono);">${match.source_id || 'n/a'}</dd></div>
           </dl>
         </section>
       `;
     }
 
     function renderLineAnchor(data) {
-      const line = data.market?.available ? data.market.consensus?.total : null;
-      const average = readAveragePoints(data.form);
-      const lineNumber = typeof line === 'number' ? line : null;
-      const gap = lineNumber != null && average != null ? Number((average - lineNumber).toFixed(1)) : null;
-
-      const gapText = gap == null
-        ? 'Line anchor is not available for this match.'
-        : `Average is ${formatNumber(average)}. Line is ${formatNumber(lineNumber)}. Gap is ${gap > 0 ? '+' : ''}${formatNumber(gap)}.`;
+      const opening = data.opening_lines?.lines?.[0] || null;
+      const total = opening?.total;
+      const spread = opening?.spread;
+      const card = data.intel?.cards?.[0] || null;
+      const note = card?.detail || data.intel?.pick_summary || 'No line-anchor summary in this response.';
 
       return `
         <section class="card">
           <h2>Line Anchor</h2>
           <div class="line-anchor">
-            <div class="pill"><span class="label">Rolling Average</span><span class="value">${average == null ? 'n/a' : formatNumber(average)}</span></div>
-            <div class="pill"><span class="label">Tonight's Line</span><span class="value">${lineNumber == null ? 'n/a' : formatNumber(lineNumber)}</span></div>
-            <div class="pill"><span class="label">Gap</span><span class="value">${gap == null ? 'n/a' : `${gap > 0 ? '+' : ''}${formatNumber(gap)}`}</span></div>
+            <div class="pill"><span class="label">Total</span><span class="value">${total == null ? 'n/a' : formatNumber(total)}</span></div>
+            <div class="pill"><span class="label">Spread</span><span class="value">${spread == null ? 'n/a' : formatNumber(spread, 2)}</span></div>
+            <div class="pill"><span class="label">Pick</span><span class="value" style="font-size:16px">${data.intel?.recommended_pick || 'n/a'}</span></div>
           </div>
-          <p class="line-note">${gapText}</p>
+          <p class="muted">${note}</p>
         </section>
       `;
     }
 
     function renderMarket(data) {
       if (!data.market?.available) {
-        return `
-          <section class="card">
-            <h2>Market</h2>
-            <p class="muted">Market data is not available for this match.</p>
-          </section>
-        `;
+        return '<section class="card"><h2>Market</h2><p class="muted">Market data is not available for this match.</p></section>';
       }
 
       const c = data.market.consensus || {};
       return `
         <section class="card">
-          <h2>Market ${freshnessBadge(data.metadata?.data_freshness?.market?.status)}</h2>
+          <h2>Market ${freshnessBadge(data.metadata?.data_freshness?.match?.status)}</h2>
           <table>
             <thead>
-              <tr><th>Field</th><th>Value</th><th>Juice</th></tr>
+              <tr><th>Field</th><th>Value</th></tr>
             </thead>
             <tbody>
-              <tr><td>Spread</td><td class="mono">${c.spread == null ? 'n/a' : c.spread}</td><td class="mono">${c.spread_juice || 'n/a'}</td></tr>
-              <tr><td>Total</td><td class="mono">${c.total == null ? 'n/a' : c.total}</td><td class="mono">${c.total_juice || 'n/a'}</td></tr>
-              <tr><td>Home ML</td><td class="mono">${c.home_ml == null ? 'n/a' : c.home_ml}</td><td class="mono">-</td></tr>
-              <tr><td>Away ML</td><td class="mono">${c.away_ml == null ? 'n/a' : c.away_ml}</td><td class="mono">-</td></tr>
-              <tr><td>Draw ML</td><td class="mono">${c.draw_ml == null ? 'n/a' : c.draw_ml}</td><td class="mono">-</td></tr>
+              <tr><td>Spread</td><td class="mono">${c.spread == null ? 'n/a' : c.spread}</td></tr>
+              <tr><td>Total</td><td class="mono">${c.total == null ? 'n/a' : c.total}</td></tr>
+              <tr><td>Home ML</td><td class="mono">${c.home_ml == null ? 'n/a' : c.home_ml}</td></tr>
+              <tr><td>Away ML</td><td class="mono">${c.away_ml == null ? 'n/a' : c.away_ml}</td></tr>
+              <tr><td>Draw ML</td><td class="mono">${c.draw_ml == null ? 'n/a' : c.draw_ml}</td></tr>
             </tbody>
           </table>
         </section>
       `;
     }
 
-    function renderForm(data, homeName, awayName) {
-      if (!data.form?.available) {
-        return `
-          <section class="card">
-            <h2>Form</h2>
-            <p class="muted">Form data is not available for this match.</p>
-          </section>
-        `;
+    function renderIntel(data) {
+      if (!data.intel?.available) {
+        return '<section class="card"><h2>Intel</h2><p class="muted">No pregame intel is available for this match.</p></section>';
       }
 
-      const home = data.form.home || {};
-      const away = data.form.away || {};
+      const cards = (data.intel.cards || []).map((card) => `<li><strong>${card.title || 'Card'}:</strong> ${card.detail || 'n/a'}</li>`);
 
       return `
         <section class="card">
-          <h2>Form</h2>
-          <table>
-            <thead>
-              <tr><th>Team</th><th>Last 5</th><th>Last 10</th><th>Rest</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>${homeName}</td><td class="mono">${home.last_5 || 'n/a'}</td><td class="mono">${home.last_10_record || 'n/a'}</td><td class="mono">${home.rest_days == null ? 'n/a' : `${home.rest_days}d`}</td></tr>
-              <tr><td>${awayName}</td><td class="mono">${away.last_5 || 'n/a'}</td><td class="mono">${away.last_10_record || 'n/a'}</td><td class="mono">${away.rest_days == null ? 'n/a' : `${away.rest_days}d`}</td></tr>
-            </tbody>
-          </table>
+          <h2>Intel ${freshnessBadge(data.metadata?.data_freshness?.intel?.status)}</h2>
+          <p class="muted">${data.intel.headline || 'Pregame context'}</p>
+          <ul class="list">
+            <li><strong>Recommended pick:</strong> ${data.intel.recommended_pick || 'n/a'}</li>
+            <li><strong>Confidence tier:</strong> ${data.intel.confidence_tier || 'n/a'}</li>
+            <li><strong>Summary:</strong> ${data.intel.pick_summary || 'n/a'}</li>
+            ${cards.join('')}
+          </ul>
         </section>
       `;
     }
 
     function renderInjuries(data, homeName, awayName) {
       if (!data.injuries?.available) {
-        return `
-          <section class="card">
-            <h2>Injuries</h2>
-            <p class="muted">Injury data is not available for this match.</p>
-          </section>
-        `;
+        return '<section class="card"><h2>Injuries</h2><p class="muted">Injury data is not available for this match.</p></section>';
       }
 
-      const home = (data.injuries.home?.players || []).map((p) => `${homeName}: ${p.name} (${p.status || 'unknown'})`);
-      const away = (data.injuries.away?.players || []).map((p) => `${awayName}: ${p.name} (${p.status || 'unknown'})`);
-      const rows = [...home, ...away].slice(0, 10);
+      const homeRows = (data.injuries.home || []).map((p) => `${homeName}: ${p.player_name} (${p.status})`);
+      const awayRows = (data.injuries.away || []).map((p) => `${awayName}: ${p.player_name} (${p.status})`);
+      const rows = [...homeRows, ...awayRows].slice(0, 12);
 
       return `
         <section class="card">
@@ -462,67 +497,39 @@
       `;
     }
 
-    function renderTrends(data, homeName, awayName) {
-      if (!data.trends?.available) {
-        return `
-          <section class="card">
-            <h2>Trends</h2>
-            <p class="muted">Trend data is not available for this match.</p>
-          </section>
-        `;
-      }
-
-      const home = (data.trends.home?.situational || []).map((t) => `${homeName}: ${t.label} (${t.value || 'n/a'})`);
-      const away = (data.trends.away?.situational || []).map((t) => `${awayName}: ${t.label} (${t.value || 'n/a'})`);
-      const rows = [...home, ...away].slice(0, 8);
-
-      return `
-        <section class="card">
-          <h2>Trends</h2>
-          ${rows.length === 0 ? '<p class="muted">No trends listed in this response.</p>' : `<ul class="list">${rows.map((row) => `<li>${row}</li>`).join('')}</ul>`}
-        </section>
-      `;
-    }
-
     function renderAvailability(data) {
-      const items = sections.map((key) => {
-        const available = !!data[key]?.available;
-        return `<li>${key.replace('_', ' ')}: <strong>${available ? 'ready' : 'not included'}</strong></li>`;
-      });
+      const sectionFlags = data.metadata?.sections_available || {};
+      const items = sections.map((key) => `<li>${key.replace('_', ' ')}: <strong>${sectionFlags[key] ? 'ready' : 'not included'}</strong></li>`);
 
       return `
         <section class="card">
-          <h2>Sections In This Response</h2>
+          <h2>What Came Back In This Call</h2>
           <ul class="list">${items.join('')}</ul>
         </section>
       `;
     }
 
     function renderPage(data) {
-      const match = data.match || {};
       const home = data.teams?.home || { name: 'Home' };
       const away = data.teams?.away || { name: 'Away' };
 
       previewEl.innerHTML = [
-        renderMetaCard(match, home, away),
+        renderMetaCard(data),
         renderLineAnchor(data),
         renderMarket(data),
-        renderForm(data, home.name, away.name),
+        renderIntel(data),
         renderInjuries(data, home.name, away.name),
-        renderTrends(data, home.name, away.name),
-        renderAvailability(data),
+        renderAvailability(data)
       ].join('');
     }
 
     async function loadMatch(matchId) {
-      previewEl.innerHTML = '<div class="loading">Loading match data...</div>';
+      previewEl.innerHTML = '<div class="loading">Pulling match context...</div>';
       runtimeEl.textContent = '';
 
       try {
         const started = performance.now();
-        const response = await fetch(`${BASE_URL}?match_id=${matchId}`, {
-          headers: { 'x-api-key': API_KEY },
-        });
+        const response = await fetch(`${BASE_URL}?match_id=${matchId}`);
         const payload = await response.json();
         const elapsed = Math.round(performance.now() - started);
 
@@ -532,7 +539,7 @@
           return;
         }
 
-        runtimeEl.textContent = `page ${elapsed}ms · api ${payload.metadata?.response_time_ms ?? 'n/a'}ms · updated ${new Date(payload.metadata?.generated_at || Date.now()).toLocaleTimeString()}`;
+        runtimeEl.textContent = `loaded ${elapsed}ms via demo proxy · response ${payload.metadata?.response_time_ms ?? 'n/a'}ms · updated ${new Date(payload.metadata?.generated_at || Date.now()).toLocaleTimeString()}`;
         renderPage(payload);
       } catch (error) {
         previewEl.innerHTML = `<div class="error">${error.message || 'Could not load this match.'}</div>`;
