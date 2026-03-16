@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0b1328" />
+    <title>SportsSync Trends | API</title>
+    <meta
+      name="description"
+      content="SportsSync internal trend board for edge quality, layers, and directional signals."
+    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Code+Pro:wght@500&display=swap" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #090f20;
+        --panel: #101a34;
+        --panel-soft: #131e3f;
+        --border: #253057;
+        --text: #eef2ff;
+        --muted: #9babc8;
+        --accent: #6fd0ff;
+        --ok: #4ecb8f;
+        --warn: #f4be60;
+        --bad: #ff7575;
+        --track: #1e2d56;
+        --mono: "Source Code Pro", "SF Mono", Menlo, monospace;
+        --body: "Inter", "SF Pro Text", "Avenir Next", system-ui, -apple-system, sans-serif;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: radial-gradient(circle at 0% 0%, #0d1938 0%, var(--bg) 45%, #070c19 100%);
+        color: var(--text);
+        font-family: var(--body);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .container {
+        max-width: 1600px;
+        margin: 0 auto;
+        padding: 18px;
+        display: grid;
+        gap: 16px;
+      }
+
+      .topbar {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: rgba(16, 26, 52, 0.88);
+        padding: 12px 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      .brand {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        text-decoration: none;
+      }
+
+      .topbar a {
+        text-decoration: none;
+        color: var(--muted);
+      }
+
+      .topbar nav {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      .btn {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 8px 12px;
+        background: var(--panel-soft);
+        font-weight: 600;
+      }
+
+      .hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      h1 {
+        font-size: clamp(26px, 4vw, 38px);
+        line-height: 1.04;
+      }
+
+      .panel {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: color-mix(in oklab, var(--panel), white 4%);
+        padding: 14px;
+      }
+
+      .panel-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: baseline;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+
+      .panel-head h2 {
+        font-size: 18px;
+      }
+
+      .sub {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .grid-scroll {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(150px, 1fr);
+        gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+
+      .metric-card,
+      .layer-card {
+        min-width: 150px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--panel-soft);
+        padding: 10px;
+      }
+
+      .metric-card p {
+        color: var(--muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .metric-card strong {
+        margin-top: 4px;
+        display: block;
+        font-size: 22px;
+        font-family: var(--mono);
+      }
+
+      .toolbar {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      }
+
+      .field {
+        background: var(--panel-soft);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px;
+      }
+
+      .field label {
+        display: block;
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      select,
+      input[type="text"] {
+        width: 100%;
+        border: 1px solid #2c3f7a;
+        background: #0a142e;
+        color: var(--text);
+        border-radius: 8px;
+        padding: 8px 10px;
+        font: inherit;
+      }
+
+      input[type="text"] {
+        border-radius: 8px;
+      }
+
+      .range-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        margin-top: 5px;
+      }
+
+      .range-line span {
+        min-width: 36px;
+        text-align: right;
+        font-family: var(--mono);
+      }
+
+      input[type="range"] {
+        width: 100%;
+      }
+
+      .chip-row {
+        grid-column: 1 / -1;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .chip {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 6px 10px;
+        background: #0c1635;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .chip.is-active {
+        border-color: var(--accent);
+        color: #fff;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        min-width: 1240px;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid #1f2a4b;
+        text-align: left;
+        font-size: 14px;
+        padding: 10px 12px;
+        vertical-align: middle;
+      }
+
+      th {
+        color: #d6deed;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      tbody tr:hover {
+        background: rgba(99, 147, 255, 0.08);
+      }
+
+      .team-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo-wrap {
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        border: 1px solid #334272;
+        position: relative;
+        overflow: hidden;
+        background: #0e1834;
+        display: grid;
+        place-items: center;
+        flex: 0 0 28px;
+      }
+
+      .team-logo {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: none;
+      }
+
+      .team-fallback {
+        font-size: 11px;
+        font-family: var(--mono);
+        color: #d5ddf7;
+      }
+
+      .team-name {
+        font-weight: 600;
+      }
+
+      .record {
+        font-family: var(--mono);
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .mono {
+        font-family: var(--mono);
+      }
+
+      .signal {
+        max-width: 360px;
+      }
+
+      .signal-quality {
+        display: grid;
+        gap: 4px;
+        width: 170px;
+      }
+
+      .quality-track {
+        width: 100%;
+        height: 9px;
+        border-radius: 999px;
+        background: var(--track);
+        overflow: hidden;
+      }
+
+      .quality-fill {
+        height: 100%;
+      }
+
+      .quality-high {
+        background: linear-gradient(90deg, #3ee08b, #19b96f);
+      }
+
+      .quality-mid {
+        background: linear-gradient(90deg, #f3be61, #f7a93f);
+      }
+
+      .quality-low {
+        background: linear-gradient(90deg, #ff8585, #ff5f5f);
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 999px;
+        border: 1px solid #2f3e72;
+        padding: 4px 9px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .pill-trend {
+        color: #84efb8;
+        border-color: rgba(78, 203, 143, 0.5);
+        background: rgba(78, 203, 143, 0.08);
+      }
+
+      .pill-fade {
+        color: #ff9797;
+        border-color: rgba(255, 117, 117, 0.5);
+        background: rgba(255, 117, 117, 0.07);
+      }
+
+      .pill-neutral {
+        color: #cfd9f8;
+        border-color: rgba(180, 198, 240, 0.4);
+        background: rgba(180, 198, 240, 0.05);
+      }
+
+      .hit-high {
+        color: #78e6a3;
+      }
+
+      .hit-mid {
+        color: #f5c86d;
+      }
+
+      .hit-low {
+        color: #ff8f8f;
+      }
+
+      .held {
+        font-family: var(--mono);
+        font-size: 18px;
+      }
+
+      .held-ok {
+        color: #83f4ad;
+      }
+
+      .held-bad {
+        color: #ff9f9f;
+      }
+
+      .state {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .skeleton {
+        color: transparent;
+        border-radius: 6px;
+        position: relative;
+        overflow: hidden;
+        background: #16244a;
+      }
+
+      .skeleton::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        transform: translateX(-100%);
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+        animation: shimmer 1.1s infinite;
+      }
+
+      .skeleton-cell {
+        height: 16px;
+        width: 100%;
+      }
+
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-100%);
+        }
+
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      .error {
+        color: #ff9191;
+        font-size: 13px;
+      }
+
+      .empty {
+        text-align: center;
+        color: var(--muted);
+        padding: 22px;
+      }
+
+      @media (max-width: 980px) {
+        .container {
+          padding: 12px;
+        }
+
+        .signal {
+          max-width: 260px;
+        }
+      }
+
+      @media (max-width: 700px) {
+        .toolbar {
+          grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+        }
+
+        .hero {
+          gap: 4px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="topbar">
+        <a class="brand" href="/">SportsSync API</a>
+        <nav>
+          <a href="/docs/index.html">Docs</a>
+          <a href="/demo/index.html">Demo</a>
+          <a href="/trends/">Trends</a>
+          <a href="mailto:api@sportsync.io?subject=SportsSync%20Request">Request Access</a>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <div>
+          <h1>Trends Board</h1>
+          <p class="sub">Internal trend ledger for match intelligence and edge signals.</p>
+        </div>
+        <p class="sub" id="statusText">Connecting to trends feed...</p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Summary stats</h2>
+          <p class="sub">From finished `match_feed` rows</p>
+        </div>
+        <div class="grid-scroll" id="metricCards"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Layer quality</h2>
+          <p class="sub">Current trend set quality by layer</p>
+        </div>
+        <div class="grid-scroll" id="layerCards"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Filters</h2>
+          <p class="sub">Server refreshes on layer / min % changes; other filters are local.</p>
+        </div>
+        <div class="toolbar">
+          <div class="field">
+            <label for="layerFilter">Layer</label>
+            <select id="layerFilter"></select>
+          </div>
+          <div class="field">
+            <label for="sportFilter">Sport</label>
+            <select id="sportFilter">
+              <option value="all">All</option>
+              <option value="soccer">Soccer</option>
+              <option value="nba">NBA</option>
+              <option value="nhl">NHL</option>
+              <option value="mlb">MLB</option>
+              <option value="ncaab">NCAAB</option>
+              <option value="mls">MLS</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="signalFilter">Signal</label>
+            <select id="signalFilter">
+              <option value="all">All</option>
+              <option value="trend">Trend</option>
+              <option value="fade">Fade</option>
+              <option value="neutral">Neutral</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="sortFilter">Sort</label>
+            <select id="sortFilter">
+              <option value="strength">Strength</option>
+              <option value="sample">Sample</option>
+              <option value="alphabetical">Alphabetical</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="minHitFilter">Min Hit %</label>
+            <input id="minHitFilter" type="range" min="50" max="100" value="80" step="1" />
+            <div class="range-line"><span>50</span><span id="minHitValue">80</span></div>
+          </div>
+          <div class="field">
+            <label for="minSampleFilter">Min Games</label>
+            <input id="minSampleFilter" type="range" min="1" max="10" value="10" step="1" />
+            <div class="range-line"><span>1</span><span id="minSampleValue">10</span></div>
+          </div>
+          <div class="field" style="grid-column: span 2;">
+            <label for="signalSearch">Signal search</label>
+            <input id="signalSearch" type="text" placeholder="Search team or trend" />
+          </div>
+          <div class="field">
+            <label>Direction</label>
+            <div class="chip-row" id="directionTabs">
+              <button class="chip is-active" data-direction="all" type="button">ALL</button>
+              <button class="chip" data-direction="trend" type="button">TREND</button>
+              <button class="chip" data-direction="fade" type="button">FADE</button>
+              <button class="chip" data-direction="neutral" type="button">NEUTRAL</button>
+            </div>
+          </div>
+        </div>
+        <p id="errorText" class="error" aria-live="polite"></p>
+        <p class="state" id="metaText"></p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Trends</h2>
+          <p class="sub">Rows are live from `get_trends` with client-side sorting/filtering.</p>
+        </div>
+        <div class="table-wrap" id="tableWrap" role="region" aria-live="polite" aria-label="trends table"></div>
+      </section>
+    </div>
+
+    <script>
+      (function () {
+        const state = {
+          layer: "all",
+          sport: "all",
+          signal: "all",
+          sort: "strength",
+          direction: "all",
+          minHit: 80,
+          minSample: 10,
+          search: "",
+        };
+
+        const metricCards = document.getElementById("metricCards");
+        const layerCards = document.getElementById("layerCards");
+        const layerFilter = document.getElementById("layerFilter");
+        const sportFilter = document.getElementById("sportFilter");
+        const signalFilter = document.getElementById("signalFilter");
+        const sortFilter = document.getElementById("sortFilter");
+        const directionTabs = document.getElementById("directionTabs");
+        const minHitFilter = document.getElementById("minHitFilter");
+        const minSampleFilter = document.getElementById("minSampleFilter");
+        const minHitValue = document.getElementById("minHitValue");
+        const minSampleValue = document.getElementById("minSampleValue");
+        const signalSearch = document.getElementById("signalSearch");
+        const statusText = document.getElementById("statusText");
+        const metaText = document.getElementById("metaText");
+        const errorText = document.getElementById("errorText");
+        const tableWrap = document.getElementById("tableWrap");
+
+        const METRICS = [
+          { key: "avgGoals", label: "AVG GOALS", suffix: "" },
+          { key: "avgCorners", label: "AVG CORNERS", suffix: "" },
+          { key: "avgCards", label: "AVG CARDS", suffix: "" },
+          { key: "avgPassPct", label: "AVG PASS %", suffix: "%" },
+          { key: "avgShotAccuracy", label: "AVG SHOT ACCURACY", suffix: "%" },
+          { key: "overRoi", label: "OVER ROI", suffix: "%" },
+          { key: "homeAtsRoi", label: "HOME ATS ROI", suffix: "%" },
+        ];
+
+        let rows = [];
+        let metrics = {
+          avgGoals: null,
+          avgCorners: null,
+          avgCards: null,
+          avgPassPct: null,
+          avgShotAccuracy: null,
+          overRoi: null,
+          homeAtsRoi: null,
+        };
+
+        let loading = false;
+        let activeRequest = 0;
+        let activeController = null;
+
+        function sportFromLeague(league) {
+          const value = String(league || "").toLowerCase();
+          if (value.includes("nba")) return "nba";
+          if (value.includes("nhl")) return "nhl";
+          if (value.includes("mlb")) return "mlb";
+          if (value.includes("ncaab") || value.includes("mens-college") || value.includes("college")) return "ncaab";
+          if (value.includes("mls") || value.includes("usa.1") || value.includes("mex")) return "mls";
+          return "soccer";
+        }
+
+        function parseNum(value) {
+          const raw = Number.parseFloat(value);
+          return Number.isFinite(raw) ? raw : 0;
+        }
+
+        function formatValue(value, suffix = "") {
+          if (!Number.isFinite(value)) return "--";
+          const asNumber = parseNum(value);
+          if (!Number.isFinite(asNumber)) return "--";
+          return `${asNumber.toFixed(1)}${suffix}`;
+        }
+
+        function quality(value) {
+          if (value >= 80) return "high";
+          if (value >= 65) return "mid";
+          return "low";
+        }
+
+        function directionClass(direction) {
+          if (direction === "TREND") return "pill-trend";
+          if (direction === "FADE") return "pill-fade";
+          return "pill-neutral";
+        }
+
+        function uniqueSorted(values) {
+          return Array.from(new Set(values.filter(Boolean))).sort((left, right) => left.localeCompare(right));
+        }
+
+        function buildLayerSummary(sourceRows) {
+          const summary = new Map();
+
+          for (const row of sourceRows) {
+            const layer = row.layer || "Unspecified";
+            const hit = parseNum(row.hit_rate);
+            const sample = parseNum(row.sample);
+
+            if (!summary.has(layer)) {
+              summary.set(layer, {
+                layer,
+                count: 0,
+                totalHit: 0,
+                above80: 0,
+                sampleAtLeast10: 0,
+                perfect: 0,
+              });
+            }
+
+            const bucket = summary.get(layer);
+            if (!bucket) continue;
+
+            bucket.count += 1;
+            bucket.totalHit += hit;
+            if (hit >= 80) bucket.above80 += 1;
+            if (sample >= 10) bucket.sampleAtLeast10 += 1;
+            if (hit >= 100) bucket.perfect += 1;
+          }
+
+          return Array.from(summary.values())
+            .map((item) => ({
+              ...item,
+              avgHit: item.count === 0 ? 0 : item.totalHit / item.count,
+            }))
+            .sort((left, right) => left.layer.localeCompare(right.layer));
+        }
+
+        function renderMetricCards() {
+          metricCards.textContent = "";
+          for (const metric of METRICS) {
+            const el = document.createElement("article");
+            el.className = "metric-card";
+
+            const label = document.createElement("p");
+            label.textContent = metric.label;
+
+            const value = document.createElement("strong");
+            value.textContent = formatValue(metrics[metric.key], metric.suffix);
+
+            el.append(label, value);
+            metricCards.append(el);
+          }
+        }
+
+        function renderLayerCards() {
+          layerCards.textContent = "";
+          const layerSummary = buildLayerSummary(rows);
+
+          for (const row of layerSummary) {
+            const card = document.createElement("article");
+            card.className = "layer-card";
+
+            const layerName = document.createElement("div");
+            layerName.textContent = row.layer;
+            layerName.style.fontWeight = "600";
+            layerName.style.marginBottom = "6px";
+
+            const total = document.createElement("div");
+            total.textContent = `${row.count} active signals`;
+            total.className = "sub";
+            total.style.marginBottom = "6px";
+
+            const avg = document.createElement("strong");
+            avg.textContent = `${row.avgHit.toFixed(1)}%`;
+            avg.style.fontFamily = "var(--mono)";
+            avg.style.fontSize = "20px";
+
+            const stats = document.createElement("div");
+            stats.style.marginTop = "8px";
+            stats.style.fontSize = "12px";
+            stats.style.display = "grid";
+            stats.style.gap = "4px";
+            stats.style.color = "var(--muted)";
+
+            const a = document.createElement("span");
+            const b = document.createElement("span");
+            const c = document.createElement("span");
+            a.innerHTML = `+80% hit: <b>${row.above80}</b>`;
+            b.innerHTML = `sample 10+: <b>${row.sampleAtLeast10}</b>`;
+            c.innerHTML = `perfect: <b>${row.perfect}</b>`;
+            stats.append(a, b, c);
+
+            card.append(layerName, total, avg, stats);
+            layerCards.append(card);
+          }
+
+          if (!layerSummary.length) {
+            const empty = document.createElement("p");
+            empty.className = "empty";
+            empty.textContent = "No layer stats available yet.";
+            layerCards.append(empty);
+          }
+        }
+
+        function renderLayerOptions() {
+          const layers = uniqueSorted(rows.map((row) => row.layer || "Unspecified"));
+          const prev = layerFilter.value;
+
+          layerFilter.textContent = "";
+          const all = document.createElement("option");
+          all.value = "all";
+          all.textContent = "All layers";
+          layerFilter.append(all);
+
+          for (const layer of layers) {
+            const option = document.createElement("option");
+            option.value = layer;
+            option.textContent = layer;
+            layerFilter.append(option);
+          }
+
+          if (layers.includes(prev)) {
+            layerFilter.value = prev;
+          } else {
+            layerFilter.value = "all";
+            state.layer = "all";
+          }
+        }
+
+        function renderFilters() {
+          minHitValue.textContent = `${state.minHit}`;
+          minSampleValue.textContent = `${state.minSample}`;
+
+          sportFilter.value = state.sport;
+          signalFilter.value = state.signal;
+          sortFilter.value = state.sort;
+          minHitFilter.value = String(state.minHit);
+          minSampleFilter.value = String(state.minSample);
+
+          const tabs = Array.from(directionTabs.querySelectorAll("[data-direction]"));
+          for (const tab of tabs) {
+            const active = tab.dataset.direction === state.direction;
+            tab.classList.toggle("is-active", active);
+          }
+        }
+
+        function filterRows() {
+          const q = state.search.trim().toLowerCase();
+
+          return rows.filter((row) => {
+            const direction = String(row.direction || "NEUTRAL").toUpperCase();
+            const layerMatch = state.layer === "all" || (row.layer || "Unspecified") === state.layer;
+            const signalMatch = state.signal === "all" || String(row.signal_type || "").toLowerCase() === state.signal;
+            const directionMatch = state.direction === "all" || direction.toLowerCase() === state.direction;
+            const sportMatch = state.sport === "all" || sportFromLeague(row.league) === state.sport;
+            const hitMatch = parseNum(row.hit_rate) >= state.minHit;
+            const sampleMatch = parseNum(row.sample) >= state.minSample;
+            const searchMatch = q.length === 0 || String(row.team || "").toLowerCase().includes(q) || String(row.trend || "").toLowerCase().includes(q);
+
+            return layerMatch && signalMatch && directionMatch && sportMatch && hitMatch && sampleMatch && searchMatch;
+          });
+        }
+
+        function sortRows(sortedRows) {
+          if (state.sort === "sample") {
+            return [...sortedRows].sort((left, right) => parseNum(right.sample) - parseNum(left.sample) || parseNum(right.hit_rate) - parseNum(left.hit_rate));
+          }
+
+          if (state.sort === "alphabetical") {
+            return [...sortedRows].sort((left, right) =>
+              String(left.team || "").localeCompare(String(right.team || "")) || String(left.league || "").localeCompare(String(right.league || ""))
+            );
+          }
+
+          return [...sortedRows].sort((left, right) => parseNum(right.hit_rate) - parseNum(left.hit_rate) || parseNum(right.sample) - parseNum(left.sample));
+        }
+
+        function createSkeletonRows() {
+          const count = 8;
+          const rows = Array.from({ length: count }, (_, index) => index);
+
+          const rowHtml = `
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th><th>Team / Entity</th><th>League</th><th>Signal</th><th>Layer</th><th>Signal Quality</th><th>Hit %</th><th>Sample</th><th>Direction</th><th>Last Held</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows.map((i) => `
+                  <tr>
+                    <td><span class="skeleton skeleton-cell" style="width: 16px;"></span></td>
+                    <td><span class="skeleton skeleton-cell" style="width: 220px;"></span></td>
+                    <td><span class="skeleton skeleton-cell" style="width: 66px;"></span></td>
+                    <td><span class="skeleton skeleton-cell" style="width: 300px;"></span></td>
+                    <td><span class="skeleton skeleton-cell" style="width: 120px;"></span></td>
+                    <td><span class="skeleton skeleton-cell" style="width: 150px;"></span></td>
+                    <td><span class="skeleton skeleton-cell" style="width: 60px;"></span></td>
+                    <td><span class="skeleton skeleton-cell" style="width: 40px;"></span></td>
+                    <td><span class="skeleton skeleton-cell" style="width: 90px;"></span></td>
+                    <td><span class="skeleton skeleton-cell" style="width: 24px;"></span></td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          `;
+
+          tableWrap.innerHTML = rowHtml;
+        }
+
+        function createTable(filteredRows) {
+          const sortedRows = sortRows(filteredRows);
+          const table = document.createElement("table");
+          const head = document.createElement("thead");
+          const body = document.createElement("tbody");
+          const headerRow = document.createElement("tr");
+
+          ["#", "Team / Entity", "League", "Signal", "Layer", "Signal Quality", "Hit %", "Sample", "Direction", "Last Held"].forEach((text) => {
+            const th = document.createElement("th");
+            th.textContent = text;
+            headerRow.append(th);
+          });
+
+          head.append(headerRow);
+
+          if (!sortedRows.length) {
+            const tr = document.createElement("tr");
+            const td = document.createElement("td");
+            td.colSpan = 10;
+            td.className = "empty";
+            td.textContent = "No rows match your filters.";
+            tr.append(td);
+            body.append(tr);
+          } else {
+            sortedRows.forEach((row, index) => {
+              const tr = document.createElement("tr");
+
+              const direction = String(row.direction || "NEUTRAL").toUpperCase();
+              const hit = parseNum(row.hit_rate);
+              const level = quality(hit);
+
+              const logoCell = document.createElement("div");
+              logoCell.className = "team-cell";
+
+              const logoWrap = document.createElement("span");
+              logoWrap.className = "logo-wrap";
+
+              const logoImg = document.createElement("img");
+              logoImg.className = "team-logo";
+              logoImg.referrerPolicy = "no-referrer";
+              logoImg.loading = "eager";
+              logoImg.decoding = "async";
+              logoImg.alt = "Team logo";
+
+              const logoFallback = document.createElement("span");
+              logoFallback.className = "team-fallback";
+              logoFallback.textContent = String(row.team || "").slice(0, 2).toUpperCase();
+
+              logoWrap.append(logoImg, logoFallback);
+              logoCell.append(logoWrap);
+
+              const nameWrap = document.createElement("div");
+              const teamName = document.createElement("div");
+              teamName.className = "team-name";
+              teamName.textContent = row.team || "Unknown";
+              const record = document.createElement("div");
+              record.className = "record";
+              record.textContent = row.record || "--";
+              nameWrap.append(teamName, record);
+              logoCell.append(nameWrap);
+
+              if (row.logo_url) {
+                logoImg.src = row.logo_url;
+                logoImg.addEventListener("load", () => {
+                  logoImg.style.display = "block";
+                  logoFallback.style.display = "none";
+                });
+                logoImg.addEventListener("error", () => {
+                  logoImg.style.display = "none";
+                  logoFallback.style.display = "grid";
+                });
+              }
+
+              const teamTd = document.createElement("td");
+              teamTd.append(logoCell);
+
+              const signalTd = document.createElement("td");
+              signalTd.textContent = row.trend || "No signal";
+              signalTd.className = "signal";
+
+              const signalQualityTd = document.createElement("td");
+              signalQualityTd.className = "signal-quality";
+              const qualityTrack = document.createElement("div");
+              qualityTrack.className = "quality-track";
+              const qualityFill = document.createElement("span");
+              qualityFill.className = `quality-fill quality-${level}`;
+              qualityFill.style.width = `${Math.min(100, Math.max(0, hit))}%`;
+              qualityTrack.append(qualityFill);
+
+              const qualityValue = document.createElement("span");
+              qualityValue.className = `mono hit-${level}`;
+              qualityValue.textContent = `${formatValue(hit, "%")}`;
+              signalQualityTd.append(qualityTrack, qualityValue);
+
+              const hitTd = document.createElement("td");
+              hitTd.className = `mono hit-${level}`;
+              hitTd.textContent = formatValue(hit, "%");
+
+              const sampleTd = document.createElement("td");
+              sampleTd.className = "mono";
+              sampleTd.textContent = String(Math.round(parseNum(row.sample)));
+
+              const directionTd = document.createElement("td");
+              let arrow = "→";
+              if (direction === "TREND") arrow = "↑";
+              if (direction === "FADE") arrow = "↓";
+              const dirPill = document.createElement("span");
+              dirPill.className = `pill ${directionClass(direction)}`;
+              dirPill.textContent = `${arrow} ${direction}`;
+              directionTd.append(dirPill);
+
+              const heldTd = document.createElement("td");
+              heldTd.className = "mono held";
+              heldTd.className = row.last_held ? "mono held held-ok" : "mono held held-bad";
+              heldTd.textContent = row.last_held ? "✓" : "✕";
+
+              const tdValues = [
+                String(index + 1),
+                teamTd,
+                document.createElement("td"),
+                signalTd,
+                document.createElement("td"),
+                signalQualityTd,
+                hitTd,
+                sampleTd,
+                directionTd,
+                heldTd,
+              ];
+
+              const leagueTd = tdValues[2];
+              leagueTd.textContent = row.league || "--";
+
+              const layerTd = document.createElement("td");
+              layerTd.textContent = row.layer || "Unspecified";
+
+              const indexCell = document.createElement("td");
+              indexCell.className = "mono";
+              indexCell.textContent = String(index + 1);
+
+              tr.append(
+                indexCell,
+                teamTd,
+                leagueTd,
+                signalTd,
+                layerTd,
+                signalQualityTd,
+                hitTd,
+                sampleTd,
+                directionTd,
+                heldTd,
+              );
+
+              body.append(tr);
+            });
+          }
+
+          table.append(head, body);
+          tableWrap.textContent = "";
+          tableWrap.append(table);
+        }
+
+        function render() {
+          const filtered = filterRows();
+          const visibleCount = filtered.length;
+
+          if (loading) {
+            createSkeletonRows();
+            return;
+          }
+
+          metaText.textContent = `${rows.length} loaded • ${visibleCount} visible`;
+          renderMetricCards();
+          renderLayerCards();
+          renderLayerOptions();
+          renderFilters();
+          createTable(filtered);
+        }
+
+        async function loadData({force = false} = {}) {
+          if (!force && !rows.length) {
+            return;
+          }
+
+          if (activeController) {
+            activeController.abort();
+          }
+
+          const requestId = ++activeRequest;
+          const controller = new AbortController();
+          activeController = controller;
+          loading = true;
+          statusText.textContent = "Loading trends...";
+          errorText.textContent = "";
+          render();
+
+          const params = new URLSearchParams({
+            p_min_rate: String(state.minHit),
+            p_limit: "250",
+          });
+
+          if (state.layer !== "all") {
+            params.set("p_layer", state.layer);
+          }
+
+          try {
+            const response = await fetch(`/api/trends?${params.toString()}`, {
+              method: "GET",
+              headers: { accept: "application/json" },
+              signal: controller.signal,
+            });
+
+            if (!response.ok) {
+              throw new Error(`Server returned ${response.status}`);
+            }
+
+            const payload = await response.json();
+
+            if (requestId !== activeRequest) {
+              return;
+            }
+
+            rows = Array.isArray(payload.rows) ? payload.rows : [];
+            metrics = payload.metrics || metrics;
+            statusText.textContent = payload.sourceLabel || "Trends data loaded";
+            render();
+          } catch (error) {
+            if (requestId !== activeRequest) {
+              return;
+            }
+
+            if (error.name !== "AbortError") {
+              statusText.textContent = "Trends data unavailable";
+              errorText.textContent = error.message || "Unable to load trends.";
+              rows = [];
+              metrics = {};
+              render();
+            }
+          } finally {
+            if (requestId === activeRequest) {
+              loading = false;
+              if (activeController === controller) {
+                activeController = null;
+              }
+              render();
+            }
+          }
+        }
+
+        function onChangeState() {
+          render();
+        }
+
+        layerFilter.addEventListener("change", (event) => {
+          state.layer = event.target.value;
+          loadData({ force: true });
+        });
+
+        sportFilter.addEventListener("change", (event) => {
+          state.sport = event.target.value;
+          onChangeState();
+        });
+
+        signalFilter.addEventListener("change", (event) => {
+          state.signal = event.target.value;
+          onChangeState();
+        });
+
+        sortFilter.addEventListener("change", (event) => {
+          state.sort = event.target.value;
+          onChangeState();
+        });
+
+        directionTabs.addEventListener("click", (event) => {
+          const button = event.target.closest("button[data-direction]");
+          if (!button) return;
+
+          state.direction = button.dataset.direction;
+          onChangeState();
+        });
+
+        minHitFilter.addEventListener("input", (event) => {
+          state.minHit = Number(event.target.value);
+          minHitValue.textContent = `${state.minHit}`;
+          onChangeState();
+        });
+
+        minHitFilter.addEventListener("change", () => {
+          loadData({ force: true });
+        });
+
+        minSampleFilter.addEventListener("input", (event) => {
+          state.minSample = Number(event.target.value);
+          minSampleValue.textContent = `${state.minSample}`;
+          onChangeState();
+        });
+
+        signalSearch.addEventListener("input", (event) => {
+          state.search = String(event.target.value || "");
+          onChangeState();
+        });
+
+        render();
+        loadData({ force: true });
+      })();
+    </script>
+  </body>
+</html>
