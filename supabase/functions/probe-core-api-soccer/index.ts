@@ -405,6 +405,18 @@ Deno.serve(async (req: Request) => {
     .filter(([, value]: any) => value?.endpoints?.odds?.has_data)
     .map(([code]) => code);
   const leaguesWithoutOdds = Object.keys(resultsByLeague).filter((code) => !leaguesWithOdds.includes(code));
+  const leaguesWithProbabilities = Object.entries(resultsByLeague)
+    .filter(([, value]: any) => value?.endpoints?.probabilities?.has_data)
+    .map(([code]) => code);
+  const leaguesWithMovement = Object.entries(resultsByLeague)
+    .filter(([, value]: any) => value?.endpoints?.movement?.has_data)
+    .map(([code]) => code);
+  const leaguesWithAts = Object.entries(resultsByLeague)
+    .filter(([, value]: any) => value?.endpoints?.ats?.has_data)
+    .map(([code]) => code);
+  const leaguesWithPastPerformances = Object.entries(resultsByLeague)
+    .filter(([, value]: any) => value?.endpoints?.["past-performances"]?.has_data)
+    .map(([code]) => code);
   const providersAll = new Set<number>();
   for (const value of Object.values(resultsByLeague) as any[]) {
     for (const id of value?.endpoints?.odds?.provider_ids_found ?? []) providersAll.add(Number(id));
@@ -418,9 +430,16 @@ Deno.serve(async (req: Request) => {
     soccer_has_odds_parity_with_nfl:
       leaguesWithOdds.length >= 5 &&
       providersAll.size >= 4 &&
-      Object.values(resultsByLeague).every((entry: any) => typeof entry?.endpoints?.odds?.status === "number"),
+      (leaguesWithProbabilities.length > 0 ||
+        leaguesWithMovement.length > 0 ||
+        leaguesWithAts.length > 0 ||
+        leaguesWithPastPerformances.length > 0),
     leagues_with_odds: leaguesWithOdds,
     leagues_without_odds: leaguesWithoutOdds,
+    leagues_with_probabilities: leaguesWithProbabilities,
+    leagues_with_movement: leaguesWithMovement,
+    leagues_with_ats: leaguesWithAts,
+    leagues_with_past_performances: leaguesWithPastPerformances,
     wc_league_code_found: wcResolved[0] ?? null,
     wc_leagues_with_odds: wcResolved,
     provider_ids_found_across_all: Array.from(providersAll).sort((a, b) => a - b),
