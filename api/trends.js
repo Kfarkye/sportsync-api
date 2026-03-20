@@ -249,7 +249,12 @@ async function loadTrends(pLeague, pLayer, pMinRate, pLimit) {
 
   const rows = Array.isArray(rpc.payload) ? rpc.payload.map(sanitizeRow) : [];
   const deduped = Array.from(
-    new Map(rows.map((row) => [`${row.team.toLowerCase()}|${row.league.toLowerCase()}|${row.layer}|${row.trend}`, row]).values(),
+    new Map(
+      rows.map((row) => [
+        `${row.team.toLowerCase()}|${row.league.toLowerCase()}|${row.layer}|${row.trend}`,
+        row,
+      ]),
+    ).values(),
   );
   deduped.sort(sortByLeagueAndLayer);
   return deduped;

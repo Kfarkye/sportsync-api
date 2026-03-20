@@ -4,45 +4,59 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SportsSync Match Context API</title>
-  <meta name="description" content="One API call for the full match picture: odds, form, injuries, trends, and live state.">
+  <meta name="description" content="One call for the full match picture: market, form, injuries, player context, trends, and live state.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
-      --bg: #f8f6f1;
-      --panel: #ffffff;
-      --panel-soft: #f3efe6;
-      --border: #e3dccd;
-      --text: #1f1d18;
-      --muted: #5f574a;
-      --accent: #0f6b5f;
-      --accent-soft: #e2f0ed;
-      --ok: #237a42;
-      --mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
-      --body: "Public Sans", "Avenir Next", sans-serif;
-      --display: "Newsreader", Georgia, serif;
+      --bg: #f6f8fc;
+      --bg-soft: #edf2fb;
+      --panel: rgba(255, 255, 255, 0.92);
+      --panel-strong: #ffffff;
+      --border: rgba(24, 39, 75, 0.12);
+      --border-strong: rgba(33, 84, 255, 0.2);
+      --text: #101828;
+      --muted: #667085;
+      --accent: #2554ff;
+      --accent-deep: #1637b8;
+      --accent-soft: rgba(37, 84, 255, 0.08);
+      --success: #0b8f55;
+      --shadow: 0 18px 44px rgba(16, 24, 40, 0.08);
+      --mono: "IBM Plex Mono", "SF Mono", Menlo, monospace;
+      --body: "Manrope", "Avenir Next", sans-serif;
+      --display: "Space Grotesk", "Avenir Next", sans-serif;
     }
 
     body {
-      background: var(--bg);
+      background:
+        radial-gradient(circle at top left, rgba(37, 84, 255, 0.08), transparent 28%),
+        linear-gradient(180deg, #f6f8fc 0%, #fbfcff 26%, #f7f9fc 100%);
       color: var(--text);
       font-family: var(--body);
-      line-height: 1.6;
+      line-height: 1.55;
       -webkit-font-smoothing: antialiased;
     }
 
-    .container {
-      max-width: 920px;
+    .shell {
+      width: min(1120px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 0 20px;
     }
 
-    header {
-      padding: 20px 0;
+    .topbar {
       border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+      background: rgba(246, 248, 252, 0.86);
+    }
+
+    .topbar-inner {
+      min-height: 72px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -51,18 +65,18 @@
     }
 
     .brand {
-      font-family: var(--display);
-      font-size: 30px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      text-decoration: none;
       color: var(--text);
+      text-decoration: none;
+      font-family: var(--display);
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
     }
 
     .nav {
       display: flex;
-      gap: 16px;
       align-items: center;
+      gap: 18px;
       flex-wrap: wrap;
     }
 
@@ -70,7 +84,7 @@
       color: var(--muted);
       text-decoration: none;
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .btn {
@@ -78,49 +92,67 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      border-radius: 12px;
+      min-height: 46px;
+      border-radius: 14px;
       border: 1px solid var(--border);
-      padding: 10px 14px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 15px;
+      background: var(--panel-strong);
       color: var(--text);
-      background: var(--panel);
-      transition: border-color 140ms ease, color 140ms ease, background-color 140ms ease;
+      padding: 0 16px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
     }
 
     .btn-primary {
-      border-color: var(--accent);
+      border-color: transparent;
       background: var(--accent);
       color: #fff;
-    }
-
-    .btn:hover {
-      border-color: #c8bea9;
+      box-shadow: 0 16px 30px rgba(37, 84, 255, 0.2);
     }
 
     .hero {
-      padding: 56px 0 40px;
+      padding: 44px 0 28px;
     }
 
-    .hero h1 {
-      font-family: var(--display);
-      font-size: clamp(34px, 6vw, 58px);
-      line-height: 1.05;
-      letter-spacing: -0.02em;
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .hero-copy {
+      padding-top: 12px;
+    }
+
+    .hero-note {
       margin-bottom: 14px;
-      max-width: 14ch;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
     }
 
-    .hero p {
+    h1 {
+      max-width: 10ch;
+      margin-bottom: 16px;
+      font-family: var(--display);
+      font-size: clamp(46px, 7vw, 78px);
+      line-height: 0.94;
+      letter-spacing: -0.055em;
+    }
+
+    .hero-copy p {
+      max-width: 58ch;
+      margin-bottom: 18px;
       color: var(--muted);
-      font-size: 18px;
-      max-width: 60ch;
-      margin-bottom: 20px;
+      font-size: 19px;
     }
 
-    .hero strong {
-      font-weight: 700;
+    .hero-copy strong {
       color: var(--text);
     }
 
@@ -128,101 +160,339 @@
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
+      margin-bottom: 18px;
     }
 
-    .proof {
-      margin: 8px 0 32px;
-      background: var(--panel-soft);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px;
+    .hero-footnote {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .board {
+      border: 1px solid var(--border-strong);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 250, 255, 0.96));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .board-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.94);
+    }
+
+    .board-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .board-id {
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .board-main {
+      padding: 20px;
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .match-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .matchup {
+      font-family: var(--display);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
+    .match-sub {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .live-pill {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.84);
+    }
+
+    .metric-label {
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .metric-value {
+      font-family: var(--display);
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.05em;
+    }
+
+    .metric-value.mono {
+      font-family: var(--mono);
+      font-size: 24px;
+      letter-spacing: -0.02em;
+    }
+
+    .board-footer {
+      display: grid;
+      gap: 8px;
+      padding-top: 4px;
+    }
+
+    .board-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .board-row span:last-child {
+      color: var(--text);
+      font-family: var(--mono);
+      font-weight: 600;
+    }
+
+    .rail {
+      margin: 26px 0 0;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.74);
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
     }
 
-    .proof-item strong {
+    .rail-item strong {
       display: block;
+      margin-bottom: 4px;
+      color: var(--text);
+      font-family: var(--display);
       font-size: 24px;
-      line-height: 1.1;
-      font-family: var(--mono);
-      font-weight: 500;
-      color: var(--accent);
-      margin-bottom: 5px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
     }
 
-    .proof-item span {
-      display: block;
+    .rail-item span {
       color: var(--muted);
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
     }
 
-    section {
-      margin-bottom: 28px;
-      background: var(--panel);
+    .section {
+      margin-bottom: 18px;
+      padding: 22px 22px 24px;
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 24px;
+      border-radius: 24px;
+      background: var(--panel);
+      box-shadow: 0 10px 24px rgba(16, 24, 40, 0.04);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
     }
 
     h2 {
       font-family: var(--display);
-      font-size: 30px;
-      line-height: 1.15;
-      margin-bottom: 10px;
+      font-size: 34px;
+      line-height: 1;
+      letter-spacing: -0.05em;
     }
 
-    .sub {
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    .checks {
-      list-style: none;
-      display: grid;
-      gap: 8px;
-    }
-
-    .checks li {
-      display: flex;
-      gap: 8px;
-      align-items: flex-start;
+    .section-head p {
+      max-width: 60ch;
       color: var(--muted);
       font-size: 15px;
+      font-weight: 600;
     }
 
-    .checks li::before {
-      content: "\2713";
-      color: var(--ok);
-      font-weight: 700;
-      margin-top: 1px;
+    .cap {
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .payload-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .payload-card {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #fff;
+    }
+
+    .payload-card h3 {
+      margin-bottom: 8px;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .payload-card p {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .board-table {
+      display: grid;
+      gap: 10px;
+    }
+
+    .board-row-head,
+    .board-entry {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(160px, 0.95fr) 110px;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .board-row-head {
+      padding: 0 14px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .board-entry {
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #fff;
+    }
+
+    .entry-main {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .entry-main img {
+      width: 30px;
+      height: 30px;
+      object-fit: cover;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
       flex-shrink: 0;
     }
 
-    .use-cases {
+    .entry-text strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .entry-text span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .entry-id {
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.35;
+      word-break: break-all;
+    }
+
+    .entry-link {
+      justify-self: end;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .use-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
     }
 
-    .use-case {
+    .use-card {
+      padding: 18px;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      background: var(--panel-soft);
+      border-radius: 18px;
+      background: #fff;
     }
 
-    .use-case h3 {
+    .use-card h3 {
+      margin-bottom: 8px;
       font-size: 16px;
-      margin-bottom: 6px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
     }
 
-    .use-case p {
+    .use-card p {
       color: var(--muted);
-      font-size: 15px;
+      font-size: 14px;
+      font-weight: 600;
     }
 
     .pricing {
@@ -232,49 +502,67 @@
     }
 
     .plan {
+      display: grid;
+      align-content: start;
+      gap: 14px;
+      padding: 18px;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      background: var(--panel);
+      border-radius: 20px;
+      background: #fff;
+    }
+
+    .plan-highlight {
+      border-color: var(--border-strong);
+      background: linear-gradient(180deg, rgba(37, 84, 255, 0.08), rgba(255, 255, 255, 0.96) 42%);
+      box-shadow: 0 14px 32px rgba(37, 84, 255, 0.08);
+    }
+
+    .plan-tag {
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
     }
 
     .plan h3 {
-      font-size: 15px;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
     }
 
     .price {
       font-family: var(--display);
-      font-size: 34px;
-      line-height: 1;
-      margin-bottom: 6px;
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.06em;
     }
 
     .plan p {
       color: var(--muted);
-      font-size: 15px;
-      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 600;
     }
 
     .plan ul {
       list-style: none;
       display: grid;
-      gap: 6px;
-      margin-bottom: 12px;
+      gap: 8px;
     }
 
     .plan li {
-      font-size: 15px;
       color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
     }
 
     footer {
-      padding: 14px 0 24px;
+      padding: 8px 0 28px;
       color: var(--muted);
       font-size: 13px;
+      font-weight: 700;
       text-align: center;
     }
 
@@ -283,127 +571,329 @@
       text-decoration: none;
     }
 
-    @media (max-width: 760px) {
-      .proof,
-      .use-cases,
+    @media (max-width: 960px) {
+      .hero-grid,
+      .payload-grid,
+      .use-grid,
       .pricing {
         grid-template-columns: 1fr;
       }
 
-      .hero p {
+      .rail {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .board-row-head,
+      .board-entry {
+        grid-template-columns: 1fr;
+      }
+
+      .entry-link {
+        justify-self: start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        width: min(100% - 20px, 1120px);
+      }
+
+      .topbar-inner {
+        padding: 12px 0;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      h1 {
+        font-size: 48px;
+      }
+
+      .hero-copy p {
         font-size: 17px;
+      }
+
+      .rail,
+      .metric-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
+  <header class="topbar">
+    <div class="shell topbar-inner">
       <a class="brand" href="/">SportsSync</a>
       <nav class="nav">
         <a href="docs/index.html">Docs</a>
         <a href="demo/index.html">Demo</a>
-        <a class="btn btn-primary" href="mailto:api@sportsync.io?subject=SportsSync%20API%20Key">Request Access</a>
+        <a href="mailto:api@sportsync.io?subject=SportsSync%20Builder%20Questions">Contact</a>
+        <a class="btn btn-primary" href="mailto:api@sportsync.io?subject=SportsSync%20Sandbox%20Access">Start Free</a>
       </nav>
-    </header>
-
-    <section class="hero">
-      <h1>The full match picture in one call.</h1>
-      <p><strong>SportsSync Match Context API</strong> gives you one consistent response with odds, form, injuries, player props, and live state so your product can answer right away.</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="demo/index.html">Open Live Demo</a>
-        <a class="btn" href="docs/index.html">Read Docs</a>
-      </div>
-    </section>
-
-    <div class="proof">
-      <div class="proof-item">
-        <strong>10</strong>
-        <span>Sections Per Response</span>
-      </div>
-      <div class="proof-item">
-        <strong>1</strong>
-        <span>Call To Start</span>
-      </div>
-      <div class="proof-item">
-        <strong>&lt; 1 min</strong>
-        <span>First Call Setup</span>
-      </div>
     </div>
+  </header>
 
-    <section>
-      <h2>What You Get</h2>
-      <p class="sub">Every request keeps the same response shape. If a section has no feed, you still get a usable object back.</p>
-      <ul class="checks">
-        <li>Match identity, kickoff, venue, and status in one place.</li>
-        <li>Odds and lines next to team form and head-to-head context.</li>
-        <li>Injury and player context ready for preview pages and tools.</li>
-        <li>Live state when the match is in progress.</li>
-      </ul>
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="hero-note">Market-grade match context</div>
+          <h1>Ship the full match board in one call.</h1>
+          <p><strong>SportsSync Match Context API</strong> returns market, form, injuries, player context, trends, and live state in one response, so your product can move from request to answer without hand-built feed glue.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="demo/index.html">Open Live Demo</a>
+            <a class="btn" href="docs/index.html">Read Quickstart</a>
+          </div>
+          <div class="hero-footnote">Sandbox is free. Production starts at $149/month.</div>
+        </div>
+
+        <aside class="board" aria-label="Sample payload board">
+          <div class="board-head">
+            <div>
+              <div class="board-label">Sample payload</div>
+              <div class="board-id">match_id: b193b51f-cbed-4398-a297-237dd3322607</div>
+            </div>
+            <div class="live-pill">10/10 sections</div>
+          </div>
+          <div class="board-main">
+            <div class="match-row">
+              <div>
+                <div class="matchup">Arsenal vs Man City</div>
+                <div class="match-sub">EPL · scheduled · 2026-03-15 16:30 UTC</div>
+              </div>
+              <div class="live-pill">response 182ms</div>
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">Total</div>
+                <div class="metric-value mono">2.5</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Spread</div>
+                <div class="metric-value mono">-0.25</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Rolling Avg</div>
+                <div class="metric-value mono">4.1</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Gap</div>
+                <div class="metric-value mono">+1.6</div>
+              </div>
+            </div>
+
+            <div class="board-footer">
+              <div class="board-row"><span>market</span><span>ready</span></div>
+              <div class="board-row"><span>form</span><span>ready</span></div>
+              <div class="board-row"><span>injuries</span><span>1 questionable</span></div>
+              <div class="board-row"><span>metadata.api_version</span><span>v1</span></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="rail">
+        <div class="rail-item">
+          <strong>10</strong>
+          <span>fixed sections</span>
+        </div>
+        <div class="rail-item">
+          <strong>4</strong>
+          <span>public sample IDs</span>
+        </div>
+        <div class="rail-item">
+          <strong>&lt;1 min</strong>
+          <span>to first call</span>
+        </div>
+        <div class="rail-item">
+          <strong>v1</strong>
+          <span>frozen contract</span>
+        </div>
+      </div>
     </section>
 
-    <section>
-      <h2>Where It Fits</h2>
-      <p class="sub">Built for teams that need dependable match context without stitching feeds by hand.</p>
-      <div class="use-cases">
-        <article class="use-case">
-          <h3>Preview Apps</h3>
-          <p>Publish previews with line context, form, and injuries already attached.</p>
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="cap">Payload surface</div>
+          <h2>What lands in every response</h2>
+        </div>
+        <p>The point is not more data. The point is getting the pieces that matter in one stable shape, without making the buyer stitch the board together.</p>
+      </div>
+
+      <div class="payload-grid">
+        <article class="payload-card">
+          <h3>Match + teams</h3>
+          <p>Identity, kickoff, venue, status, home side, and away side are all packaged up front.</p>
         </article>
-        <article class="use-case">
-          <h3>Betting Tools</h3>
-          <p>Show bettors the line anchor, recent form, and trend context in one view.</p>
+        <article class="payload-card">
+          <h3>Market + form</h3>
+          <p>Consensus line sits next to recent scoring context, so the gap is readable immediately.</p>
         </article>
-        <article class="use-case">
-          <h3>Content Teams</h3>
-          <p>Generate match cards and recap drafts from a single payload.</p>
+        <article class="payload-card">
+          <h3>Injuries + players</h3>
+          <p>Absences, impact summaries, and player context show up in the same call as the market.</p>
+        </article>
+        <article class="payload-card">
+          <h3>Trends + live state</h3>
+          <p>Pre-match signals and in-progress state are already shaped for preview cards and game views.</p>
         </article>
       </div>
     </section>
 
-    <section>
-      <h2>Pricing</h2>
-      <p class="sub">Straightforward monthly plans with direct email support from day one.</p>
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="cap">Quickstart board</div>
+          <h2>Public sample IDs</h2>
+        </div>
+        <p>These are the onboarding IDs. They belong in docs, demo, and release validation, and they should always resolve.</p>
+      </div>
+
+      <div class="board-table">
+        <div class="board-row-head">
+          <div>Match</div>
+          <div>match_id</div>
+          <div>Path</div>
+        </div>
+
+        <div class="board-entry">
+          <div class="entry-main">
+            <img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg" alt="Arsenal logo">
+            <div class="entry-text">
+              <strong>EPL · Arsenal vs Man City</strong>
+              <span>Stable quickstart fixture</span>
+            </div>
+          </div>
+          <div class="entry-id">b193b51f-cbed-4398-a297-237dd3322607</div>
+          <a class="entry-link" href="demo/index.html">Open demo</a>
+        </div>
+
+        <div class="board-entry">
+          <div class="entry-main">
+            <img src="https://flagcdn.com/us.svg" alt="United States flag">
+            <div class="entry-text">
+              <strong>WC26 · USA vs Mexico</strong>
+              <span>World Cup sample</span>
+            </div>
+          </div>
+          <div class="entry-id">b42fe447-b2b1-485f-ae6d-1559ee2b57c7</div>
+          <a class="entry-link" href="docs/index.html#endpoint">See docs</a>
+        </div>
+
+        <div class="board-entry">
+          <div class="entry-main">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Los_Angeles_Lakers_logo.svg" alt="Lakers logo">
+            <div class="entry-text">
+              <strong>NBA · Lakers vs Celtics</strong>
+              <span>Basketball line anchor sample</span>
+            </div>
+          </div>
+          <div class="entry-id">d6742e61-2457-43fd-aa3f-e61f6a76c7af</div>
+          <a class="entry-link" href="demo/index.html">Open demo</a>
+        </div>
+
+        <div class="board-entry">
+          <div class="entry-main">
+            <img src="https://flagcdn.com/gb-eng.svg" alt="England flag">
+            <div class="entry-text">
+              <strong>WC26 · England vs Brazil</strong>
+              <span>High-interest international sample</span>
+            </div>
+          </div>
+          <div class="entry-id">c94d7e01-333d-41cd-a67d-cc0285fa7f28</div>
+          <a class="entry-link" href="docs/index.html#examples">Use in code</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="cap">Buyer fit</div>
+          <h2>Where it earns its keep</h2>
+        </div>
+        <p>Best for products that need fast, legible match context and cannot afford brittle joins or half-finished first-call experiences.</p>
+      </div>
+
+      <div class="use-grid">
+        <article class="use-card">
+          <h3>Preview products</h3>
+          <p>Ship match pages with market, form, and injury context already aligned.</p>
+        </article>
+        <article class="use-card">
+          <h3>Betting tools</h3>
+          <p>Anchor the line against recent scoring and make the gap obvious in one glance.</p>
+        </article>
+        <article class="use-card">
+          <h3>Content systems</h3>
+          <p>Generate cards, briefs, and recap prompts from a consistent payload instead of raw feed fragments.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="cap">Pricing</div>
+          <h2>Start free, move to production when ready</h2>
+        </div>
+        <p>One pricing story across the whole surface: sandbox is free, production starts at $149/month.</p>
+      </div>
+
       <div class="pricing">
+        <article class="plan plan-highlight">
+          <div class="plan-tag">Sandbox</div>
+          <div>
+            <h3>Free</h3>
+            <div class="price">$0</div>
+          </div>
+          <p>For first calls, proof of concept work, and internal review.</p>
+          <ul>
+            <li>Published sample IDs</li>
+            <li>1,000 requests / month</li>
+            <li>Email support</li>
+          </ul>
+          <a class="btn btn-primary" href="mailto:api@sportsync.io?subject=SportsSync%20Sandbox%20Access">Start Free</a>
+        </article>
+
         <article class="plan">
-          <h3>Builder</h3>
-          <div class="price">$149/mo</div>
-          <p>For one product in active build.</p>
+          <div class="plan-tag">Builder</div>
+          <div>
+            <h3>Production</h3>
+            <div class="price">$149</div>
+          </div>
+          <p>For one live product in active build.</p>
           <ul>
             <li>10,000 requests / month</li>
             <li>15 requests / minute</li>
             <li>Full v1 payload</li>
           </ul>
-          <a class="btn" href="mailto:api@sportsync.io?subject=Builder%20Plan">Start Builder</a>
+          <a class="btn" href="mailto:api@sportsync.io?subject=SportsSync%20Builder%20Plan">Start Builder</a>
         </article>
+
         <article class="plan">
-          <h3>Pro</h3>
-          <div class="price">$599/mo</div>
-          <p>For live products with steady customer traffic.</p>
+          <div class="plan-tag">Pro</div>
+          <div>
+            <h3>Scale</h3>
+            <div class="price">$599</div>
+          </div>
+          <p>For products with steady traffic and higher throughput needs.</p>
           <ul>
             <li>50,000 requests / month</li>
             <li>30 requests / minute</li>
             <li>Priority support</li>
           </ul>
-          <a class="btn btn-primary" href="mailto:api@sportsync.io?subject=Pro%20Plan">Start Pro</a>
-        </article>
-        <article class="plan">
-          <h3>Operator</h3>
-          <div class="price">Custom</div>
-          <p>For teams that need higher volume and onboarding help.</p>
-          <ul>
-            <li>Higher request caps</li>
-            <li>Dedicated onboarding</li>
-            <li>Commercial terms by need</li>
-          </ul>
-          <a class="btn" href="mailto:api@sportsync.io?subject=Operator%20Plan">Talk With Us</a>
+          <a class="btn" href="mailto:api@sportsync.io?subject=SportsSync%20Pro%20Plan">Talk Through Scale</a>
         </article>
       </div>
     </section>
+  </main>
 
-    <footer>
-      <p>&copy; 2026 SportsSync · <a href="docs/index.html">Documentation</a></p>
-    </footer>
-  </div>
+  <footer class="shell">
+    <p>&copy; 2026 SportsSync · <a href="docs/index.html">Docs</a> · <a href="demo/index.html">Demo</a> · <a href="mailto:api@sportsync.io?subject=SportsSync%20API%20Question">Contact</a></p>
+  </footer>
 </body>
 </html>
