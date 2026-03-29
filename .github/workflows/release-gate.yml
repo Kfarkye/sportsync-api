@@ -21,11 +21,19 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Ensure jq is available
+      - name: Ensure required CLI deps are available
         run: |
+          set -euo pipefail
+          missing=0
           if ! command -v jq >/dev/null 2>&1; then
+            missing=1
+          fi
+          if ! command -v rg >/dev/null 2>&1; then
+            missing=1
+          fi
+          if [ "$missing" -eq 1 ]; then
             sudo apt-get update
-            sudo apt-get install -y jq
+            sudo apt-get install -y jq ripgrep
           fi
 
       - name: Run release gate
