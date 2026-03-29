@@ -1,0 +1,44 @@
+name: release-gate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  release-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Ensure required CLI deps are available
+        run: |
+          set -euo pipefail
+          missing=0
+          if ! command -v jq >/dev/null 2>&1; then
+            missing=1
+          fi
+          if ! command -v rg >/dev/null 2>&1; then
+            missing=1
+          fi
+          if [ "$missing" -eq 1 ]; then
+            sudo apt-get update
+            sudo apt-get install -y jq ripgrep
+          fi
+
+      - name: Run release gate
+        env:
+          API_ENDPOINT: https://sportsync-api.vercel.app/api/match-context
+          API_KEY: ${{ secrets.SPORTSYNC_PUBLIC_CHECK_API_KEY }}
+          REQUEST_COUNT: "3"
+        run: bash ./scripts/release-gate.sh

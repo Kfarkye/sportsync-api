@@ -1,391 +1,205 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://api.sportsync.io/schemas/match-context/v1",
-  "title": "AI Match Context API — v1 Response",
-  "description": "Frozen v1 contract for the AI Match Context API. One endpoint, one payload, one buyer pain solved.",
+  "$id": "https://api.sportsync.io/schemas/match-context/v1-live",
+  "title": "SportsSync Match Context API — v1 Live Contract",
+  "description": "Canonical public contract aligned to the live match-context runtime.",
   "type": "object",
-  "required": ["match", "teams", "market", "form", "h2h", "injuries", "players", "trends", "live_state", "metadata"],
+  "required": [
+    "match",
+    "teams",
+    "intel",
+    "injuries",
+    "opening_lines",
+    "market",
+    "metadata"
+  ],
   "additionalProperties": false,
   "properties": {
     "match": {
       "type": "object",
-      "description": "Core match identity and scheduling",
-      "required": ["id", "sport", "league", "status", "start_time", "venue"],
+      "required": ["id", "source_id", "external_ids", "sport", "league", "season", "status", "start_time"],
+      "additionalProperties": false,
       "properties": {
-        "id": { "type": "string", "format": "uuid", "description": "Canonical match identifier" },
+        "id": { "type": "string" },
+        "source_id": { "type": "string" },
         "external_ids": {
           "type": "object",
-          "description": "Provider-specific IDs for cross-referencing",
+          "additionalProperties": false,
           "properties": {
             "espn": { "type": ["string", "null"] },
             "odds_api": { "type": ["string", "null"] },
             "sofascore": { "type": ["string", "null"] }
           }
         },
-        "sport": { "type": "string", "enum": ["soccer", "basketball", "football", "hockey", "baseball", "tennis"] },
-        "league": { "type": "string", "description": "Canonical league identifier (e.g., 'eng.1', 'nba', 'nfl')" },
-        "league_name": { "type": "string", "description": "Human-readable league name" },
-        "season": { "type": "string", "description": "Season identifier (e.g., '2025-26')" },
-        "matchday": { "type": ["integer", "null"], "description": "Matchday/week number if applicable" },
-        "stage": { "type": "string", "enum": ["group", "round_of_16", "quarterfinal", "semifinal", "final", "regular_season", "playoff"], "default": "regular_season" },
-        "status": { "type": "string", "enum": ["scheduled", "live", "halftime", "finished", "postponed", "cancelled"] },
-        "start_time": { "type": "string", "format": "date-time", "description": "ISO 8601 kickoff time in UTC" },
-        "venue": {
-          "type": ["object", "null"],
-          "properties": {
-            "name": { "type": "string" },
-            "city": { "type": "string" },
-            "country": { "type": "string" },
-            "capacity": { "type": ["integer", "null"] }
-          }
+        "sport": { "type": "string" },
+        "league": { "type": "string" },
+        "season": { "type": "string" },
+        "status": { "type": "string" },
+        "start_time": { "type": "string", "format": "date-time" }
+      }
+    },
+    "teams": {
+      "type": "object",
+      "required": ["home", "away"],
+      "additionalProperties": false,
+      "properties": {
+        "home": { "$ref": "#/definitions/TeamSide" },
+        "away": { "$ref": "#/definitions/TeamSide" }
+      }
+    },
+    "intel": {
+      "type": "object",
+      "required": ["available"],
+      "additionalProperties": false,
+      "properties": {
+        "available": { "type": "boolean" },
+        "headline": { "type": ["string", "null"] },
+        "recommended_pick": { "type": ["string", "null"] },
+        "confidence_tier": { "type": ["string", "null"] },
+        "logic_group": { "type": ["string", "null"] },
+        "briefing": { "type": ["string", "null"] },
+        "pick_summary": { "type": ["string", "null"] },
+        "cards": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/IntelCard" }
+        },
+        "grading_metadata": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "generated_at": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
+    "injuries": {
+      "type": "object",
+      "required": ["available", "home", "away"],
+      "additionalProperties": false,
+      "properties": {
+        "available": { "type": "boolean" },
+        "home": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/InjuryItem" }
+        },
+        "away": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/InjuryItem" }
         }
       }
     },
-
-    "teams": {
+    "opening_lines": {
       "type": "object",
-      "description": "Home and away team profiles with normalized identities",
-      "required": ["home", "away"],
-      "properties": {
-        "home": { "$ref": "#/definitions/TeamProfile" },
-        "away": { "$ref": "#/definitions/TeamProfile" }
-      }
-    },
-
-    "market": {
-      "type": "object",
-      "description": "Current betting market snapshot",
-      "required": ["available", "generated_at"],
+      "required": ["available", "lines"],
+      "additionalProperties": false,
       "properties": {
         "available": { "type": "boolean" },
-        "generated_at": { "type": ["string", "null"], "format": "date-time" },
+        "lines": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/OpeningLine" }
+        }
+      }
+    },
+    "market": {
+      "type": "object",
+      "required": ["available", "consensus", "books", "source", "fetched_at"],
+      "additionalProperties": false,
+      "properties": {
+        "available": { "type": "boolean" },
         "consensus": {
           "type": ["object", "null"],
-          "description": "Consensus line across books",
+          "additionalProperties": false,
           "properties": {
             "spread": { "type": ["number", "null"] },
-            "spread_juice": { "type": ["number", "null"] },
             "total": { "type": ["number", "null"] },
-            "total_juice": { "type": ["number", "null"] },
             "home_ml": { "type": ["integer", "null"] },
             "away_ml": { "type": ["integer", "null"] },
-            "draw_ml": { "type": ["integer", "null"], "description": "Soccer/hockey 3-way market" }
+            "draw_ml": { "type": ["integer", "null"] }
           }
         },
         "books": {
           "type": "array",
-          "description": "Per-book odds if available",
-          "items": {
-            "type": "object",
-            "properties": {
-              "source": { "type": "string" },
-              "spread": { "type": ["number", "null"] },
-              "total": { "type": ["number", "null"] },
-              "home_ml": { "type": ["integer", "null"] },
-              "away_ml": { "type": ["integer", "null"] }
-            }
-          }
+          "items": { "type": "object", "additionalProperties": true }
         },
-        "prediction_markets": {
-          "type": ["object", "null"],
-          "description": "Polymarket / prediction market anchors",
-          "properties": {
-            "home_win_prob": { "type": ["number", "null"] },
-            "draw_prob": { "type": ["number", "null"] },
-            "away_win_prob": { "type": ["number", "null"] },
-            "volume_usd": { "type": ["number", "null"] },
-            "source": { "type": "string" },
-            "fetched_at": { "type": ["string", "null"], "format": "date-time" }
-          }
-        },
-        "valuation": {
-          "type": ["object", "null"],
-          "description": "Model-derived fair value vs market",
-          "properties": {
-            "fair_line": { "type": ["number", "null"] },
-            "market_line": { "type": ["number", "null"] },
-            "delta": { "type": ["number", "null"] },
-            "has_model": { "type": "boolean", "description": "True if a proprietary model generated this valuation" }
-          }
-        }
+        "source": { "type": ["string", "null"] },
+        "fetched_at": { "type": ["string", "null"], "format": "date-time" }
       }
     },
-
-    "form": {
-      "type": "object",
-      "description": "Recent team performance and trends",
-      "required": ["available"],
-      "properties": {
-        "available": { "type": "boolean" },
-        "home": { "$ref": "#/definitions/TeamForm" },
-        "away": { "$ref": "#/definitions/TeamForm" }
-      }
-    },
-
-    "h2h": {
-      "type": "object",
-      "description": "Head-to-head history between the two teams",
-      "required": ["available"],
-      "properties": {
-        "available": { "type": "boolean" },
-        "total_meetings": { "type": ["integer", "null"] },
-        "home_wins": { "type": ["integer", "null"] },
-        "away_wins": { "type": ["integer", "null"] },
-        "draws": { "type": ["integer", "null"] },
-        "recent_matches": {
-          "type": "array",
-          "maxItems": 5,
-          "items": {
-            "type": "object",
-            "properties": {
-              "date": { "type": "string", "format": "date" },
-              "home_team": { "type": "string" },
-              "away_team": { "type": "string" },
-              "home_score": { "type": "integer" },
-              "away_score": { "type": "integer" },
-              "venue": { "type": ["string", "null"] }
-            }
-          }
-        }
-      }
-    },
-
-    "injuries": {
-      "type": "object",
-      "description": "Injury reports per team with impact scoring",
-      "required": ["available", "generated_at"],
-      "properties": {
-        "available": { "type": "boolean" },
-        "generated_at": { "type": ["string", "null"], "format": "date-time" },
-        "home": { "$ref": "#/definitions/TeamInjuries" },
-        "away": { "$ref": "#/definitions/TeamInjuries" }
-      }
-    },
-
-    "players": {
-      "type": "object",
-      "description": "Key player context and prop-relevant stats",
-      "required": ["available"],
-      "properties": {
-        "available": { "type": "boolean" },
-        "home_key_players": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/PlayerContext" }
-        },
-        "away_key_players": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/PlayerContext" }
-        }
-      }
-    },
-
-    "trends": {
-      "type": "object",
-      "description": "Statistical and situational trends",
-      "required": ["available"],
-      "properties": {
-        "available": { "type": "boolean" },
-        "home": { "$ref": "#/definitions/TeamTrends" },
-        "away": { "$ref": "#/definitions/TeamTrends" }
-      }
-    },
-
-    "live_state": {
-      "type": "object",
-      "description": "Current game state if match is live, null if not started or finished",
-      "required": ["available"],
-      "properties": {
-        "available": { "type": "boolean" },
-        "clock": { "type": ["string", "null"], "description": "Game clock (e.g., '34:12', 'Q3 5:42')" },
-        "period": { "type": ["string", "null"] },
-        "home_score": { "type": ["integer", "null"] },
-        "away_score": { "type": ["integer", "null"] },
-        "possession": { "type": ["string", "null"], "enum": ["home", "away", null] },
-        "momentum": { "type": ["string", "null"], "enum": ["home", "away", "neutral", null] },
-        "key_events": {
-          "type": "array",
-          "description": "Recent in-game events",
-          "items": {
-            "type": "object",
-            "properties": {
-              "minute": { "type": ["integer", "null"] },
-              "type": { "type": "string" },
-              "team": { "type": "string" },
-              "player": { "type": ["string", "null"] },
-              "description": { "type": "string" }
-            }
-          }
-        }
-      }
-    },
-
     "metadata": {
       "type": "object",
-      "description": "Response metadata, freshness, and versioning",
-      "required": ["api_version", "generated_at", "response_time_ms"],
+      "required": ["api_version", "generated_at", "response_time_ms", "data_freshness", "sections_available", "warnings"],
+      "additionalProperties": false,
       "properties": {
         "api_version": { "type": "string", "const": "v1" },
-        "generated_at": { "type": "string", "format": "date-time", "description": "ISO 8601 timestamp of response generation" },
-        "response_time_ms": { "type": "integer", "description": "Server-side response time in milliseconds" },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "response_time_ms": { "type": "integer" },
         "data_freshness": {
           "type": "object",
-          "description": "Per-section freshness indicators",
-          "properties": {
-            "market": { "$ref": "#/definitions/FreshnessIndicator" },
-            "injuries": { "$ref": "#/definitions/FreshnessIndicator" },
-            "form": { "$ref": "#/definitions/FreshnessIndicator" },
-            "h2h": { "$ref": "#/definitions/FreshnessIndicator" },
-            "players": { "$ref": "#/definitions/FreshnessIndicator" },
-            "live_state": { "$ref": "#/definitions/FreshnessIndicator" }
-          }
+          "additionalProperties": { "$ref": "#/definitions/FreshnessIndicator" }
+        },
+        "sections_available": {
+          "type": "object",
+          "additionalProperties": { "type": "boolean" }
         },
         "warnings": {
           "type": "array",
-          "description": "Non-fatal issues (stale data, partial coverage, etc.)",
           "items": {
             "type": "object",
-            "properties": {
-              "code": { "type": "string" },
-              "section": { "type": "string" },
-              "message": { "type": "string" }
-            }
+            "additionalProperties": true
           }
         }
       }
     }
   },
-
   "definitions": {
-    "TeamProfile": {
+    "TeamSide": {
       "type": "object",
-      "required": ["name", "canonical_name"],
-      "properties": {
-        "name": { "type": "string", "description": "Display name" },
-        "canonical_name": { "type": "string", "description": "Normalized canonical identifier" },
-        "code": { "type": ["string", "null"], "description": "Short code (e.g., 'LAL', 'ARS')" },
-        "logo_url": { "type": ["string", "null"] },
-        "conference": { "type": ["string", "null"] },
-        "division": { "type": ["string", "null"] },
-        "record": {
-          "type": ["object", "null"],
-          "properties": {
-            "wins": { "type": "integer" },
-            "losses": { "type": "integer" },
-            "draws": { "type": ["integer", "null"] },
-            "win_pct": { "type": ["number", "null"] }
-          }
-        },
-        "ranking": { "type": ["integer", "null"], "description": "League/FIFA ranking" }
-      }
-    },
-
-    "TeamForm": {
-      "type": ["object", "null"],
-      "properties": {
-        "last_5": { "type": "string", "description": "Form string, e.g. 'WWLDW'" },
-        "last_10_record": { "type": ["string", "null"], "description": "e.g. '7-3'" },
-        "ats_last_10": { "type": ["number", "null"], "description": "Against-the-spread record last 10" },
-        "ats_season": { "type": ["number", "null"] },
-        "over_under_pct": { "type": ["number", "null"], "description": "Over rate in last 10" },
-        "avg_points_scored": { "type": ["number", "null"] },
-        "avg_points_allowed": { "type": ["number", "null"] },
-        "home_away_split": {
-          "type": ["object", "null"],
-          "properties": {
-            "home_record": { "type": ["string", "null"] },
-            "away_record": { "type": ["string", "null"] }
-          }
-        },
-        "rest_days": { "type": ["integer", "null"], "description": "Days since last game" },
-        "fatigue_score": { "type": ["number", "null"], "description": "0-100 fatigue indicator" },
-        "situation": { "type": ["string", "null"], "description": "e.g., 'B2B', '3IN4', 'Normal'" }
-      }
-    },
-
-    "TeamInjuries": {
-      "type": ["object", "null"],
-      "properties": {
-        "impact_score": { "type": ["number", "null"], "description": "Aggregate injury impact 0-10" },
-        "summary": { "type": ["string", "null"], "description": "Human-readable injury summary" },
-        "players": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": { "type": "string" },
-              "position": { "type": ["string", "null"] },
-              "status": { "type": "string", "enum": ["out", "doubtful", "questionable", "probable", "day-to-day"] },
-              "injury": { "type": ["string", "null"] },
-              "impact": { "type": ["string", "null"], "enum": ["high", "medium", "low", null] }
-            }
-          }
-        }
-      }
-    },
-
-    "PlayerContext": {
-      "type": "object",
+      "required": ["name", "score"],
+      "additionalProperties": false,
       "properties": {
         "name": { "type": "string" },
-        "position": { "type": ["string", "null"] },
-        "stats_season": {
-          "type": ["object", "null"],
-          "description": "Season averages — sport-specific fields",
-          "additionalProperties": true
-        },
-        "stats_recent": {
-          "type": ["object", "null"],
-          "description": "Last 5 game averages",
-          "additionalProperties": true
-        },
-        "prop_lines": {
-          "type": "array",
-          "description": "Current prop lines for this player",
-          "items": {
-            "type": "object",
-            "properties": {
-              "stat_type": { "type": "string" },
-              "line": { "type": "number" },
-              "over_odds": { "type": ["integer", "null"] },
-              "under_odds": { "type": ["integer", "null"] },
-              "source": { "type": ["string", "null"] }
-            }
-          }
-        }
+        "score": { "type": ["integer", "null"] }
       }
     },
-
-    "TeamTrends": {
-      "type": ["object", "null"],
+    "IntelCard": {
+      "type": "object",
+      "required": ["title", "detail"],
+      "additionalProperties": false,
       "properties": {
-        "offensive_rating": { "type": ["number", "null"] },
-        "defensive_rating": { "type": ["number", "null"] },
-        "pace": { "type": ["number", "null"] },
-        "scoring_splits": {
-          "type": ["object", "null"],
-          "description": "Scoring distribution by quarter/half/period",
-          "additionalProperties": true
-        },
-        "situational": {
-          "type": "array",
-          "description": "Situational trend narratives",
-          "items": {
-            "type": "object",
-            "properties": {
-              "label": { "type": "string" },
-              "value": { "type": "string" },
-              "direction": { "type": "string", "enum": ["positive", "negative", "neutral"] }
-            }
-          }
-        }
+        "title": { "type": "string" },
+        "detail": { "type": "string" }
       }
     },
-
+    "InjuryItem": {
+      "type": "object",
+      "required": ["player_name", "status", "report", "report_date"],
+      "additionalProperties": false,
+      "properties": {
+        "player_name": { "type": "string" },
+        "status": { "type": "string" },
+        "report": { "type": ["string", "null"] },
+        "report_date": { "type": ["string", "null"] }
+      }
+    },
+    "OpeningLine": {
+      "type": "object",
+      "required": ["source", "spread", "total", "home_ml", "away_ml", "draw_ml", "captured_at"],
+      "additionalProperties": false,
+      "properties": {
+        "source": { "type": ["string", "null"] },
+        "spread": { "type": ["number", "null"] },
+        "total": { "type": ["number", "null"] },
+        "home_ml": { "type": ["integer", "null"] },
+        "away_ml": { "type": ["integer", "null"] },
+        "draw_ml": { "type": ["integer", "null"] },
+        "captured_at": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
     "FreshnessIndicator": {
       "type": "object",
+      "required": ["last_updated", "status", "source"],
+      "additionalProperties": false,
       "properties": {
         "last_updated": { "type": ["string", "null"], "format": "date-time" },
-        "status": { "type": "string", "enum": ["fresh", "stale", "unavailable"] },
+        "status": { "type": "string" },
         "source": { "type": ["string", "null"] }
       }
     }

@@ -1,11 +1,15 @@
+const { CACHE, handleOptions, sendError, sendJson, setApiHeaders } = require("./_lib/http");
+
 const SUPABASE_URL =
   process.env.SUPABASE_URL || "https://hylnixnuabtnmjcdnujm.supabase.co";
 const SUPABASE_KEY =
   process.env.SUPABASE_ANON_KEY ||
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
   process.env.VITE_SUPABASE_ANON_KEY ||
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
   process.env.SUPABASE_API_KEY ||
   "";
+const REQUEST_TIMEOUT_MS = 12000;
 
 const DEFAULT_LIMIT = 250;
 const DEFAULT_MIN_RATE = 80;
@@ -201,21 +205,33 @@ function latestUpdatedAt(rows) {
 }
 
 async function fetchJson(url, init) {
-  const response = await fetch(url, init);
-  const text = await response.text();
-  let payload = null;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
   try {
-    payload = text ? JSON.parse(text) : null;
-  } catch {
-    payload = text;
-  }
+    const response = await fetch(url, { ...init, signal: controller.signal });
+    const text = await response.text();
+    let payload = null;
 
-  return {
-    ok: response.ok,
-    status: response.status,
-    payload,
-  };
+    try {
+      payload = text ? JSON.parse(text) : null;
+    } catch {
+      payload = text;
+    }
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      payload,
+    };
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      return { ok: false, status: 504, payload: { error: "Request timed out" } };
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
 
 function buildHeaders() {
@@ -346,29 +362,26 @@ async function loadTeamLogos(rows) {
   return rows;
 }
 
-function errorResponse(message, status = 500) {
-  return {
-    statusCode: status,
-    body: {
-      error: {
-        code: "TREND_API_ERROR",
-        message,
-      },
-    },
-  };
-}
-
 module.exports = async function handler(req, res) {
+  if (handleOptions(req, res, CACHE.TRENDS)) {
+    return;
+  }
+
+  setApiHeaders(res, CACHE.TRENDS);
+
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
-    return res.status(405).json({
-      error: { code: "METHOD_NOT_ALLOWED", message: "Use GET for this endpoint." },
-    });
+    return sendError(res, 405, "METHOD_NOT_ALLOWED", "Use GET for this endpoint.", CACHE.TRENDS);
   }
 
   if (!SUPABASE_KEY || !SUPABASE_URL) {
-    const response = errorResponse("SUPABASE credentials are missing. Set SUPABASE_URL and SUPABASE_ANON_KEY.", 500);
-    return res.status(response.statusCode).json(response.body);
+    return sendError(
+      res,
+      503,
+      "TREND_API_ERROR",
+      "SUPABASE credentials are missing. Set SUPABASE_URL and one of SUPABASE_ANON_KEY or SUPABASE_SERVICE_ROLE_KEY.",
+      CACHE.NO_STORE,
+    );
   }
 
   const query = req.query || {};
@@ -382,16 +395,20 @@ module.exports = async function handler(req, res) {
     const rowsWithLogos = await loadTeamLogos(rows);
     const metrics = await loadMatchFeedSummary();
 
-    return res.status(200).json({
-      updatedAt: latestUpdatedAt(rowsWithLogos),
-      sourceLabel: rowsWithLogos.length > 0 ? "Powered by get_trends RPC" : "Trend feed unavailable",
-      metrics,
-      rows: rowsWithLogos,
-      layers: uniqueSorted(rowsWithLogos.map((row) => row.layer)),
-      leagues: uniqueSorted(rowsWithLogos.map((row) => row.league)),
-    });
+    return sendJson(
+      res,
+      200,
+      {
+        updatedAt: latestUpdatedAt(rowsWithLogos),
+        sourceLabel: rowsWithLogos.length > 0 ? "Powered by get_trends RPC" : "Trend feed unavailable",
+        metrics,
+        rows: rowsWithLogos,
+        layers: uniqueSorted(rowsWithLogos.map((row) => row.layer)),
+        leagues: uniqueSorted(rowsWithLogos.map((row) => row.league)),
+      },
+      CACHE.TRENDS,
+    );
   } catch (error) {
-    const response = errorResponse(error?.message || "Trend service error", 502);
-    return res.status(response.statusCode).json(response.body);
+    return sendError(res, 502, "TREND_API_ERROR", error?.message || "Trend service error", CACHE.NO_STORE);
   }
 };

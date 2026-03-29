@@ -373,7 +373,7 @@
           <span>contract</span>
         </div>
         <div class="side-stat">
-          <strong>10</strong>
+          <strong>7</strong>
           <span>sections</span>
         </div>
         <div class="side-stat">
@@ -406,13 +406,13 @@
       <section class="section" id="overview">
         <div class="cap">Overview</div>
         <h2>One stable payload for the whole match picture</h2>
-        <p class="lead">SportsSync returns match identity, market, form, injuries, player context, trends, and live state in one response, so the buyer does not need to stitch feeds or normalize partial data by hand.</p>
+        <p class="lead">SportsSync returns match identity, teams, intel, opening lines, market, injuries, and metadata in one response, so the buyer does not need to stitch feeds or normalize partial data by hand.</p>
         <div class="callout">Canonical v1 metadata key is <code>api_version</code>. Public examples in these docs use placeholders, not exposed live credentials.</div>
 
         <div class="quick-grid">
           <div class="quick-card">
             <strong>Fixed top-level shape</strong>
-            <span>Every response includes the same 10 sections.</span>
+            <span>Every response includes the same 7 sections.</span>
           </div>
           <div class="quick-card">
             <strong>Graceful degradation</strong>
@@ -431,7 +431,7 @@
       <section class="section" id="quickstart">
         <div class="cap">Quickstart</div>
         <h2>First successful call</h2>
-        <p>Use a sandbox key, pick one of the published sample IDs, then hit <code>/match-context</code>. The browser demo at <a href="/demo/index.html">/demo/index.html</a> is the fastest way to see the payload rendered as a product surface.</p>
+        <p>Use a sandbox key, pick one of the published sample IDs, then hit <code>/match-context</code>. The browser demo at <a href="/demo/index.html">/demo/index.html</a> calls a server proxy that only serves the published sample IDs, so no production integration key is exposed client-side.</p>
 
         <table>
           <thead>
@@ -484,7 +484,7 @@
       <section class="section" id="endpoint">
         <div class="cap">Endpoint</div>
         <h2>Request shape</h2>
-        <p><code>GET /match-context?match_id=&lt;uuid&gt;&amp;league=&lt;optional&gt;</code></p>
+        <p><code>GET /match-context?match_id=&lt;source_or_uuid&gt;&amp;league=&lt;optional&gt;</code></p>
 
         <table>
           <thead>
@@ -496,7 +496,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td><code>match_id</code></td><td>uuid</td><td>Yes</td><td>The target match.</td></tr>
+            <tr><td><code>match_id</code></td><td>string</td><td>Yes</td><td>Published source ID or canonical UUID.</td></tr>
             <tr><td><code>league</code></td><td>string</td><td>No</td><td>Optional filter when the client already knows the league.</td></tr>
           </tbody>
         </table>
@@ -512,7 +512,7 @@
       <section class="section" id="response">
         <div class="cap">Response</div>
         <h2>Top-level contract</h2>
-        <p>All top-level sections are always present. When a feed is unavailable, the section remains in place with <code>available: false</code>, which keeps typed clients predictable.</p>
+        <p>All top-level sections are always present. When intel or injuries are unavailable, the section remains in place with <code>available: false</code>, which keeps typed clients predictable.</p>
 
         <div class="copy-wrap">
           <strong>JSON outline</strong>
@@ -521,18 +521,16 @@
         <pre id="json_outline"><code>{
   "match": { ... },
   "teams": { ... },
-  "market": { ... },
-  "form": { ... },
-  "h2h": { ... },
+  "intel": { ... },
   "injuries": { ... },
-  "players": { ... },
-  "trends": { ... },
-  "live_state": { ... },
+  "opening_lines": { ... },
+  "market": { ... },
   "metadata": {
     "api_version": "v1",
     "generated_at": "ISO-8601",
     "response_time_ms": 182,
-    "data_freshness": { ... }
+    "data_freshness": { ... },
+    "sections_available": { ... }
   }
 }</code></pre>
       </section>
