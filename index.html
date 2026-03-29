@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SportsSync Match Context API</title>
-  <meta name="description" content="One call for the full match picture: market, form, injuries, player context, trends, and live state.">
+  <meta name="description" content="One call for the full match picture: match identity, teams, intel, opening lines, market, injuries, and metadata.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -640,7 +640,7 @@
         <div class="hero-copy">
           <div class="hero-note">Market-grade match context</div>
           <h1>Ship the full match board in one call.</h1>
-          <p><strong>SportsSync Match Context API</strong> returns market, form, injuries, player context, trends, and live state in one response, so your product can move from request to answer without hand-built feed glue.</p>
+          <p><strong>SportsSync Match Context API</strong> returns match identity, teams, intel, opening lines, market, injuries, and metadata in one response, so your product can move from request to answer without hand-built feed glue.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="demo/index.html">Open Live Demo</a>
             <a class="btn" href="docs/index.html">Read Quickstart</a>
@@ -654,7 +654,7 @@
               <div class="board-label">Sample payload</div>
               <div class="board-id">match_id: b193b51f-cbed-4398-a297-237dd3322607</div>
             </div>
-            <div class="live-pill">10/10 sections</div>
+            <div class="live-pill">7/7 sections</div>
           </div>
           <div class="board-main">
             <div class="match-row">
@@ -675,19 +675,20 @@
                 <div class="metric-value mono">-0.25</div>
               </div>
               <div class="metric">
-                <div class="metric-label">Rolling Avg</div>
-                <div class="metric-value mono">4.1</div>
+                <div class="metric-label">Intel Tier</div>
+                <div class="metric-value mono">A</div>
               </div>
               <div class="metric">
                 <div class="metric-label">Gap</div>
-                <div class="metric-value mono">+1.6</div>
+                <div class="metric-value mono">-0.1</div>
               </div>
             </div>
 
             <div class="board-footer">
               <div class="board-row"><span>market</span><span>ready</span></div>
-              <div class="board-row"><span>form</span><span>ready</span></div>
+              <div class="board-row"><span>intel</span><span>ready</span></div>
               <div class="board-row"><span>injuries</span><span>1 questionable</span></div>
+              <div class="board-row"><span>opening_lines</span><span>ready</span></div>
               <div class="board-row"><span>metadata.api_version</span><span>v1</span></div>
             </div>
           </div>
@@ -696,7 +697,7 @@
 
       <div class="rail">
         <div class="rail-item">
-          <strong>10</strong>
+          <strong>7</strong>
           <span>fixed sections</span>
         </div>
         <div class="rail-item">
@@ -729,16 +730,16 @@
           <p>Identity, kickoff, venue, status, home side, and away side are all packaged up front.</p>
         </article>
         <article class="payload-card">
-          <h3>Market + form</h3>
-          <p>Consensus line sits next to recent scoring context, so the gap is readable immediately.</p>
+          <h3>Market + opening lines</h3>
+          <p>Consensus and captured opens are packaged together for line-anchor reads without extra joins.</p>
         </article>
         <article class="payload-card">
-          <h3>Injuries + players</h3>
-          <p>Absences, impact summaries, and player context show up in the same call as the market.</p>
+          <h3>Intel + injuries</h3>
+          <p>Pick framing and absence context ship in the same payload as the market.</p>
         </article>
         <article class="payload-card">
-          <h3>Trends + live state</h3>
-          <p>Pre-match signals and in-progress state are already shaped for preview cards and game views.</p>
+          <h3>Metadata + freshness</h3>
+          <p>Section availability and freshness arrive with each response so clients can render honest state.</p>
         </article>
       </div>
     </section>
@@ -821,7 +822,7 @@
       <div class="use-grid">
         <article class="use-card">
           <h3>Preview products</h3>
-          <p>Ship match pages with market, form, and injury context already aligned.</p>
+          <p>Ship match pages with market, intel, and injury context already aligned.</p>
         </article>
         <article class="use-card">
           <h3>Betting tools</h3>

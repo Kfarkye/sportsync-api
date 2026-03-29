@@ -1,210 +1,113 @@
 {
-    "match": {
-        "id": "b42fe447-b2b1-485f-ae6d-1559ee2b57c7",
-        "external_ids": {
-            "espn": null,
-            "odds_api": null,
-            "sofascore": null
-        },
-        "sport": "soccer",
-        "league": "fifa.wc",
-        "league_name": "FIFA World Cup 2026",
-        "season": "2025-26",
-        "matchday": 1,
-        "stage": "group",
-        "status": "scheduled",
-        "start_time": "2026-06-11T20:00:00+00:00",
-        "venue": {
-            "name": "MetLife Stadium",
-            "city": "East Rutherford",
-            "country": "United States",
-            "capacity": 82500
-        }
+  "match": {
+    "id": "5e6c960a-58bc-4eec-a379-37c48a3ab975",
+    "source_id": "b193b51f-cbed-4398-a297-237dd3322607",
+    "external_ids": {
+      "espn": "401835812",
+      "odds_api": "arsenal-vs-manchester-city-2026-03-15",
+      "sofascore": null
     },
-    "teams": {
-        "home": {
-            "name": "United States",
-            "canonical_name": "United States",
-            "code": "USA",
-            "logo_url": null,
-            "conference": null,
-            "division": null,
-            "record": {
-                "wins": 0,
-                "losses": 0,
-                "draws": null,
-                "win_pct": null
-            },
-            "ranking": 11
-        },
-        "away": {
-            "name": "Mexico",
-            "canonical_name": "Mexico",
-            "code": "MEX",
-            "logo_url": null,
-            "conference": null,
-            "division": null,
-            "record": {
-                "wins": 0,
-                "losses": 0,
-                "draws": null,
-                "win_pct": null
-            },
-            "ranking": 15
-        }
+    "sport": "soccer",
+    "league": "eng.1",
+    "season": "2025-26",
+    "status": "scheduled",
+    "start_time": "2026-03-15T16:30:00+00:00"
+  },
+  "teams": {
+    "home": {
+      "name": "Arsenal",
+      "score": null
     },
-    "market": {
-        "available": true,
-        "generated_at": "2026-03-12T05:27:20.438437+00:00",
-        "consensus": {
-            "spread": -0.5,
-            "spread_juice": -110,
-            "total": 2.5,
-            "total_juice": -110,
-            "home_ml": -125,
-            "away_ml": 350,
-            "draw_ml": 280
-        },
-        "books": [],
-        "prediction_markets": null,
-        "valuation": null
-    },
-    "form": {
-        "available": true,
-        "home": {
-            "last_5": "WWDWW",
-            "last_10_record": "7-2-1",
-            "ats_last_10": 0.65,
-            "ats_season": null,
-            "over_under_pct": null,
-            "avg_points_scored": 2.1,
-            "avg_points_allowed": 0.8,
-            "home_away_split": {
-                "home_record": null,
-                "away_record": null
-            },
-            "rest_days": 5,
-            "fatigue_score": 12,
-            "situation": "Normal"
-        },
-        "away": {
-            "last_5": "WLDWL",
-            "last_10_record": "5-3-2",
-            "ats_last_10": 0.45,
-            "ats_season": null,
-            "over_under_pct": null,
-            "avg_points_scored": 1.4,
-            "avg_points_allowed": 1.2,
-            "home_away_split": {
-                "home_record": null,
-                "away_record": null
-            },
-            "rest_days": 3,
-            "fatigue_score": 28,
-            "situation": "Normal"
-        }
-    },
-    "h2h": {
-        "available": false,
-        "total_meetings": null,
-        "home_wins": null,
-        "away_wins": null,
-        "draws": null,
-        "recent_matches": []
-    },
-    "injuries": {
-        "available": true,
-        "generated_at": "2026-03-12T05:27:20.438437+00:00",
-        "home": {
-            "impact_score": 4.2,
-            "summary": "Pulisic questionable (hamstring) significantly impacts attacking output. McKennie probable.",
-            "players": [
-                {
-                    "name": "Christian Pulisic",
-                    "position": "FW",
-                    "status": "questionable",
-                    "injury": "Hamstring tightness",
-                    "impact": "high"
-                },
-                {
-                    "name": "Weston McKennie",
-                    "position": "MF",
-                    "status": "probable",
-                    "injury": "Ankle",
-                    "impact": "medium"
-                }
-            ]
-        },
-        "away": {
-            "impact_score": 6.8,
-            "summary": "Lozano OUT (ACL) is a major blow to counter-attacking threat.",
-            "players": [
-                {
-                    "name": "Hirving Lozano",
-                    "position": "FW",
-                    "status": "out",
-                    "injury": "Knee ACL",
-                    "impact": "high"
-                }
-            ]
-        }
-    },
-    "players": {
-        "available": false,
-        "home_key_players": [],
-        "away_key_players": []
-    },
-    "trends": {
-        "available": false,
-        "home": null,
-        "away": null
-    },
-    "live_state": {
-        "available": false,
-        "clock": null,
-        "period": null,
-        "home_score": null,
-        "away_score": null,
-        "possession": null,
-        "momentum": null,
-        "key_events": []
-    },
-    "metadata": {
-        "api_version": "v1",
-        "generated_at": "2026-03-12T05:29:14.893Z",
-        "response_time_ms": 1197,
-        "data_freshness": {
-            "market": {
-                "last_updated": "2026-03-12T05:27:20.438437+00:00",
-                "status": "fresh",
-                "source": "odds_api"
-            },
-            "injuries": {
-                "last_updated": "2026-03-12T05:27:20.438437+00:00",
-                "status": "fresh",
-                "source": "espn"
-            },
-            "form": {
-                "last_updated": null,
-                "status": "unavailable",
-                "source": "computed"
-            },
-            "h2h": {
-                "last_updated": null,
-                "status": "unavailable",
-                "source": "computed"
-            },
-            "players": {
-                "last_updated": null,
-                "status": "unavailable",
-                "source": "espn"
-            },
-            "live_state": {
-                "last_updated": null,
-                "status": "unavailable",
-                "source": "espn"
-            }
-        },
-        "warnings": []
+    "away": {
+      "name": "Manchester City",
+      "score": null
     }
+  },
+  "intel": {
+    "available": true,
+    "headline": "Arsenal vs Manchester City line anchor",
+    "recommended_pick": "Under 2.5",
+    "confidence_tier": "A",
+    "logic_group": "line_anchor",
+    "briefing": "Arsenal and City profile as a tight total with two elite defenses.",
+    "pick_summary": "Average profile sits near the posted total.",
+    "cards": [
+      {
+        "title": "Line anchor",
+        "detail": "Average 2.4 vs line 2.5"
+      }
+    ],
+    "grading_metadata": {},
+    "generated_at": "2026-03-15T01:14:21.446812+00:00"
+  },
+  "injuries": {
+    "available": true,
+    "home": [
+      {
+        "player_name": "Bukayo Saka",
+        "status": "questionable",
+        "report": "Hamstring tightness",
+        "report_date": "2026-03-15"
+      }
+    ],
+    "away": []
+  },
+  "opening_lines": {
+    "available": true,
+    "lines": [
+      {
+        "source": "market-open",
+        "spread": -0.25,
+        "total": 2.5,
+        "home_ml": 135,
+        "away_ml": 190,
+        "draw_ml": 240,
+        "captured_at": "2026-03-15T01:14:21.446812+00:00"
+      }
+    ]
+  },
+  "market": {
+    "available": true,
+    "consensus": {
+      "spread": -0.25,
+      "total": 2.5,
+      "home_ml": 135,
+      "away_ml": 190,
+      "draw_ml": 240
+    },
+    "books": [],
+    "source": "opening_lines",
+    "fetched_at": "2026-03-15T01:14:21.446812+00:00"
+  },
+  "metadata": {
+    "api_version": "v1",
+    "generated_at": "2026-03-29T06:02:10.000Z",
+    "response_time_ms": 1009,
+    "data_freshness": {
+      "match": {
+        "last_updated": "2026-03-15T01:14:21.446812+00:00",
+        "status": "stale",
+        "source": "boltsks_sync"
+      },
+      "intel": {
+        "last_updated": "2026-03-15T01:14:21.446812+00:00",
+        "status": "stale",
+        "source": "boltsks_sync"
+      },
+      "injuries": {
+        "last_updated": "2026-03-29T06:02:10.000Z",
+        "status": "fresh",
+        "source": "boltsks_sync"
+      }
+    },
+    "sections_available": {
+      "match": true,
+      "teams": true,
+      "intel": true,
+      "injuries": true,
+      "opening_lines": true,
+      "market": true
+    },
+    "warnings": []
+  }
 }
