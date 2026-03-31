@@ -4,7 +4,7 @@ declare const Deno: any;
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-internal-secret",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
@@ -25,6 +25,19 @@ const LEAGUE_MAP: Record<string, string> = {
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 const MOVEMENT_PROVIDER_IDS = new Set([59, 58, 200, 100, 1004]);
+const INTERNAL_JOB_SECRET = (Deno.env.get('INTERNAL_JOB_SECRET') ?? '').trim();
+
+function readRequestSecret(req: Request): string {
+  const headerSecret = req.headers.get('x-internal-secret')?.trim();
+  if (headerSecret) return headerSecret;
+
+  const authHeader = req.headers.get('authorization') ?? '';
+  if (authHeader.toLowerCase().startsWith('bearer ')) {
+    return authHeader.slice(7).trim();
+  }
+
+  return '';
+}
 
 function resolveCoreRoute(leagueId: string): { sport: string; league: string } {
   const league = LEAGUE_MAP[leagueId] ?? leagueId;
@@ -149,6 +162,14 @@ async function fetchJson(url: string): Promise<any> {
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405, headers: CORS });
+
+  if (!INTERNAL_JOB_SECRET) {
+    return new Response(JSON.stringify({ error: 'Missing INTERNAL_JOB_SECRET' }), { status: 500, headers: { ...CORS, 'Content-Type': 'application/json' } });
+  }
+
+  if (readRequestSecret(req) !== INTERNAL_JOB_SECRET) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { ...CORS, 'Content-Type': 'application/json' } });
+  }
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
   const serviceRole = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';

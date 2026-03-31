@@ -1,0 +1,492 @@
+[
+  {
+    "state_code": "FL",
+    "state_name": "Florida",
+    "state_slug": "florida",
+    "hero_image_url": "/images/states/florida.jpg",
+    "sources": [
+      {
+        "source_key": "fl_escript",
+        "source_label": "E-FORCSE",
+        "source_url": "https://www.flhealthsource.gov/pharmacists/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "fl_hb831",
+        "source_label": "Florida HB 831",
+        "source_url": "https://www.flsenate.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out-of-state valid prescriptions accepted conditioned on strict E-FORCSE checks and HB 831 compliance.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically per HB 831.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Florida HB 831 mandates electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth prescribing restricted heavily for initial CS evaluation.",
+      "emergency_supply_text": null,
+      "pdmp_name": "E-FORCSE",
+      "pdmp_url": "https://www.flhealthsource.gov/pharmacists/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Florida Board of Pharmacy",
+      "board_url": "https://flboardofpharmacy.gov/",
+      "board_phone": "(850) 245-4292",
+      "special_restrictions": "E-FORCSE compliance is strictly audited and is among the most rigorous PDMP systems nationally."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "1-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "Florida is a high-volume snowbird destination with aggressive interstate prescription tracking.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "HB 831 mandates the electronic transmission of all controlled substances in Florida.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are not accepted for controlled substances under HB 831.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "snowbird",
+        "segment_data": {
+          "risk_level": "high",
+          "key_friction": "Aggressive E-FORCSE monitoring creates friction for seasonal visitors with out-of-state prescriptions."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Have your out-of-state prescriber send via EPCS directly to a Florida pharmacy before you arrive.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Florida HB 831 created the mandate for e-prescribing across all controlled schedules.",
+        "source_key": "fl_hb831",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "e_rx_scope",
+        "target_key": "FL"
+      }
+    ]
+  },
+  {
+    "state_code": "ME",
+    "state_name": "Maine",
+    "state_slug": "maine",
+    "hero_image_url": "/images/states/maine.jpg",
+    "sources": [
+      {
+        "source_key": "me_pmp",
+        "source_label": "Maine PMP",
+        "source_url": "https://www.maine.gov/pharmacy/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "me_erx",
+        "source_label": "Maine E-Rx Mandate",
+        "source_url": "https://www.maine.gov/pharmacy/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out-of-state valid prescriptions accepted conditionally under EPCS mandates.",
+      "schedule_ii_transfer_text": "Electronic transmission only.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Mandatory electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Aligns with DEA guidelines for initial telehealth evaluations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Maine PMP",
+      "pdmp_url": "https://www.maine.gov/pharmacy/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Maine Board of Pharmacy",
+      "board_url": "https://www.maine.gov/pharmacy/",
+      "board_phone": "(207) 624-8603",
+      "special_restrictions": "PMP queries are mandated prior to dispensing."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "Rural access constraints make EPCS compliance critical.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Electronic prescribing is universally required for controlled substances in Maine.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper prescriptions are universally denied.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "snowbird",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "PMP mandatory checks cause dispensing delays for seasonal visitors."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Ensure your prescriber uses EPCS-certified software.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Maine PMP enforces mandatory dispensing checks.",
+        "source_key": "me_pmp",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "ME"
+      }
+    ]
+  },
+  {
+    "state_code": "AK",
+    "state_name": "Alaska",
+    "state_slug": "alaska",
+    "hero_image_url": "/images/states/alaska.jpg",
+    "sources": [
+      {
+        "source_key": "ak_pdmp",
+        "source_label": "Alaska PDMP",
+        "source_url": "https://www.commerce.alaska.gov/web/cbpl/ProfessionalLicensing/BoardofPharmacy.aspx",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "ak_erx",
+        "source_label": "Alaska E-Rx Mandate",
+        "source_url": "https://www.commerce.alaska.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Permitted with aggressive monitoring and PDMP verification.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Electronic prescribing is required for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth prescribing restricted for initial CS evaluation.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Alaska PDMP",
+      "pdmp_url": "https://www.commerce.alaska.gov/web/cbpl/ProfessionalLicensing/BoardofPharmacy.aspx",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Alaska Board of Pharmacy",
+      "board_url": "https://www.commerce.alaska.gov/web/cbpl/ProfessionalLicensing/BoardofPharmacy.aspx",
+      "board_phone": "(907) 465-2589",
+      "special_restrictions": "Remote geography makes EPCS connectivity a significant compliance factor."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "6-8 weeks",
+      "avg_wait_primary_care": "3-4 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "Extreme rural geography creates unique access challenges for pharmacy services.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "schedule_ii",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Schedule II substances require strict electronic transmission.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are forbidden.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "military",
+        "segment_data": {
+          "risk_level": "high",
+          "key_friction": "Remote geography and strict PDMP enforcement create significant barriers for transient military populations."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Coordinate EPCS connectivity with your prescriber before deploying to Alaska.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Alaska monitors dispensing rigorously via state PDMP.",
+        "source_key": "ak_pdmp",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "AK"
+      }
+    ]
+  },
+  {
+    "state_code": "HI",
+    "state_name": "Hawaii",
+    "state_slug": "hawaii",
+    "hero_image_url": "/images/states/hawaii.jpg",
+    "sources": [
+      {
+        "source_key": "hi_pdmp",
+        "source_label": "Hawaii PDMP",
+        "source_url": "https://cca.hawaii.gov/pvl/boards/pharmacy/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "hi_erx",
+        "source_label": "Hawaii E-Rx Mandate",
+        "source_url": "https://cca.hawaii.gov/pvl/boards/pharmacy/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Accepted conditionally subject to strict PDMP checks.",
+      "schedule_ii_transfer_text": "Must be electronic.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Hawaii requires electronic transmission for controlled substances.",
+      "telehealth_controlled_text": "Follows standard DEA prescribing laws regarding in-person evaluations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Hawaii PDMP",
+      "pdmp_url": "https://cca.hawaii.gov/pvl/boards/pharmacy/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Hawaii Board of Pharmacy",
+      "board_url": "https://cca.hawaii.gov/pvl/boards/pharmacy/",
+      "board_phone": "(808) 586-2694",
+      "special_restrictions": "Island geography makes out-of-state prescription verification particularly critical."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "6-8 weeks",
+      "avg_wait_primary_care": "2-4 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "Island geography creates unique challenges for pharmacy supply chains and cross-state prescriptions.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "schedule_ii",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Schedule II substances require strict electronic transmission in HI.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are explicitly forbidden in HI.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "military",
+        "segment_data": {
+          "risk_level": "high",
+          "key_friction": "Island isolation and strict PDMP rules create barriers for military prescription transfers."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Set up EPCS connectivity with a local pharmacy before arriving in Hawaii.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Hawaii monitors heavily via the state PDMP.",
+        "source_key": "hi_pdmp",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "HI"
+      }
+    ]
+  },
+  {
+    "state_code": "DC",
+    "state_name": "District of Columbia",
+    "state_slug": "district-of-columbia",
+    "hero_image_url": "/images/states/district-of-columbia.jpg",
+    "sources": [
+      {
+        "source_key": "dc_pdmp",
+        "source_label": "DC PDMP",
+        "source_url": "https://dchealth.dc.gov/service/board-pharmacy",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "dc_erx",
+        "source_label": "DC E-Rx Mandate",
+        "source_url": "https://dchealth.dc.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out-of-state valid prescriptions allowed electronically.",
+      "schedule_ii_transfer_text": "Mandatory electronic transmission.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "DC mandates electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth regulations emphasize physical relationship prior to CS prescribing.",
+      "emergency_supply_text": null,
+      "pdmp_name": "DC PDMP",
+      "pdmp_url": "https://dchealth.dc.gov/service/board-pharmacy",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "DC Board of Pharmacy",
+      "board_url": "https://dchealth.dc.gov/service/board-pharmacy",
+      "board_phone": "(202) 724-4900",
+      "special_restrictions": "DC PDMP checks are mandatory before dispensing controlled substances."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "3-4 weeks",
+      "avg_wait_primary_care": "1-2 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "High provider density but strict PDMP compliance requirements.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "DC requires full electronic prescribing for all controlled schedules.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are forbidden in DC.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "travel-nurse",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "DC PDMP imposes comprehensive verification requirements for transient healthcare workers."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Ensure your prescriber links their systems with DC pharmacies.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "DC PDMP checks are strictly integrated into pharmacy workflows.",
+        "source_key": "dc_pdmp",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "DC"
+      }
+    ]
+  }
+]

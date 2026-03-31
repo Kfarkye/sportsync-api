@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SportsSync Demo</title>
-  <meta name="description" content="Pick a sample match and watch one SportsSync brief render into a clear board.">
+  <meta name="description" content="Pick a sample match and view live SportsSync match context with line anchor, market, intel, and injuries.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -545,6 +545,234 @@
         font-size: 44px;
       }
     }
+
+    /* SportsSync warm design carry-over */
+    :root {
+      --bg: #fafaf8;
+      --panel: #ffffff;
+      --panel-strong: #ffffff;
+      --soft: #f6f1eb;
+      --border: #e8e7e3;
+      --border-strong: #d4d3cd;
+      --text: #1a1a18;
+      --muted: #6b6b63;
+      --accent: #c85a3a;
+      --good: #2d8f5c;
+      --warn: #9f6a16;
+      --bad: #b63b2a;
+      --shadow: none;
+      --mono: "JetBrains Mono", Menlo, monospace;
+      --body: "DM Sans", sans-serif;
+      --display: "Source Serif 4", serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body);
+      line-height: 1.65;
+    }
+
+    .topbar {
+      border-bottom: 1px solid var(--border);
+      background: #fafaf8;
+      backdrop-filter: none;
+    }
+
+    .brand {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+
+    .nav a {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .btn {
+      min-height: 42px;
+      border-radius: 6px;
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--text);
+      font-weight: 600;
+      box-shadow: none;
+    }
+
+    .btn-primary {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+      box-shadow: none;
+    }
+
+    .hero {
+      padding: 54px 0 30px;
+      gap: 24px;
+    }
+
+    .cap {
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+    }
+
+    h1 {
+      font-family: var(--display);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      font-size: clamp(34px, 5vw, 52px);
+    }
+
+    .hero-copy p,
+    .hero-panel p,
+    .runtime,
+    .line-note,
+    .muted {
+      color: var(--muted);
+    }
+
+    .hero-panel,
+    .picker,
+    .card,
+    .tile,
+    .form-side,
+    .list li,
+    .loading,
+    .error {
+      border-radius: 8px;
+      border-color: var(--border);
+      box-shadow: none;
+      background: var(--panel);
+    }
+
+    .hero-panel,
+    .card-tonal {
+      background: #fcf8f4;
+      border-color: var(--border-strong);
+    }
+
+    .hero-panel h2,
+    .picker-head h2 {
+      font-family: var(--display);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-stat,
+    .tile {
+      background: var(--panel-strong);
+    }
+
+    .hero-stat strong {
+      font-family: var(--display);
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .picker-head p {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .match-btn {
+      border-radius: 6px;
+      border-color: var(--border-strong);
+      background: transparent;
+      font-weight: 600;
+    }
+
+    .match-btn.active {
+      border-color: var(--text);
+      background: #f3eee8;
+      color: var(--text);
+      box-shadow: none;
+    }
+
+    .card {
+      padding: 20px;
+      animation: none;
+    }
+
+    .card h2 {
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .match-title {
+      font-family: var(--display);
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .chip {
+      border-color: var(--border);
+      background: #f8f7f4;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .chip-strong {
+      background: #f3eee8;
+      border-color: var(--border-strong);
+      color: var(--text);
+    }
+
+    .tile-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .tile-value {
+      font-weight: 600;
+    }
+
+    .tile-value.mono {
+      font-family: var(--mono);
+      font-size: 22px;
+    }
+
+    .status {
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      border-color: var(--border);
+      background: #f8f7f4;
+    }
+
+    .status-ready {
+      color: var(--good);
+      border-color: #cfe7d8;
+      background: #eef8f2;
+    }
+
+    .status-missing {
+      color: var(--bad);
+      border-color: #edd4cf;
+      background: #fbf1ef;
+    }
+
+    .live-label {
+      color: var(--bad);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      font-weight: 500;
+    }
+
+    .live-dot {
+      background: var(--bad);
+    }
   </style>
 </head>
 <body>
@@ -563,13 +791,13 @@
     <section class="hero">
       <div class="hero-copy">
         <div class="cap">Live board</div>
-        <h1>See the brief turn into a readable market view.</h1>
-        <p>Pick a sample match. We pull one brief and render the line anchor, market, form, and injury context into a board that a buyer can read fast.</p>
+        <h1>See one payload turn into a readable market view.</h1>
+        <p>Pick a sample match. We load the public match-context response and render line anchor, market, intel, and injury context into a board a buyer can scan fast.</p>
       </div>
 
       <aside class="hero-panel">
         <div class="cap">What this demo shows</div>
-        <h2>One brief, no extra assembly</h2>
+        <h2>One payload, no extra assembly</h2>
         <p>The point is not decoration. The point is how quickly the buyer can understand where the line sits, what changed, and what is missing.</p>
         <div class="hero-stats">
           <div class="hero-stat">
@@ -578,7 +806,7 @@
           </div>
           <div class="hero-stat">
             <strong>1</strong>
-            <span>brief per view</span>
+            <span>payload per view</span>
           </div>
           <div class="hero-stat">
             <strong>fast</strong>
@@ -594,7 +822,7 @@
           <div class="cap">Board picker</div>
           <h2>Select a sample board</h2>
         </div>
-        <p>These buttons come from the live demo match list.</p>
+        <p>These buttons are the published sample IDs used in docs.</p>
       </div>
       <div id="match-controls" class="controls"></div>
       <p id="runtime" class="runtime"></p>
@@ -605,42 +833,36 @@
     </div>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL = 'https://qffzvrnbzabcokqqrwbv.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmZnp2cm5iemFiY29rcXFyd2J2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUzNTc2NjgsImV4cCI6MjA3MDkzMzY2OH0.PCSnC5E7sG7FvasHy_9DdwiN61xW0GzFROLzZ0bTVnc';
-
     const leagueShort = {
-      'eng.1': 'EPL',
-      'esp.1': 'La Liga',
-      'ita.1': 'Serie A',
-      'ger.1': 'Bundesliga',
-      'fra.1': 'Ligue 1',
-      nba: 'NBA',
-      nhl: 'NHL',
-      'mens-college-basketball': 'NCAAB',
-      'uefa.champions': 'UCL',
-      'uefa.europa': 'UEL',
-      'usa.1': 'MLS'
+      "eng.1": "EPL",
+      "esp.1": "La Liga",
+      "ita.1": "Serie A",
+      "ger.1": "Bundesliga",
+      "fra.1": "Ligue 1",
+      "fifa.world": "WC26",
+      nba: "NBA",
+      nhl: "NHL",
+      nfl: "NFL",
+      mlb: "MLB",
     };
 
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const controlsEl = document.getElementById('match-controls');
-    const previewEl = document.getElementById('preview');
-    const runtimeEl = document.getElementById('runtime');
+    const controlsEl = document.getElementById("match-controls");
+    const previewEl = document.getElementById("preview");
+    const runtimeEl = document.getElementById("runtime");
 
     function escapeHtml(value) {
-      return String(value ?? '')
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
     }
 
     function toNumber(value) {
-      if (typeof value === 'number' && Number.isFinite(value)) return value;
-      if (typeof value === 'string' && value.trim().length > 0) {
+      if (typeof value === "number" && Number.isFinite(value)) return value;
+      if (typeof value === "string" && value.trim().length > 0) {
         const parsed = Number(value);
         return Number.isFinite(parsed) ? parsed : null;
       }
@@ -649,328 +871,267 @@
 
     function formatNumber(value, digits = 1) {
       const numeric = toNumber(value);
-      if (numeric === null) return 'n/a';
-      return numeric.toFixed(digits);
+      return numeric === null ? "n/a" : numeric.toFixed(digits);
     }
 
     function isLive(status) {
-      const normalized = String(status || '').toUpperCase();
-      return normalized.includes('IN_PROGRESS') || normalized === 'LIVE';
+      const normalized = String(status || "").toLowerCase();
+      return normalized === "live" || normalized === "in_progress" || normalized === "halftime";
     }
 
     function formatLeague(leagueId) {
-      return leagueShort[leagueId] || leagueId || 'League';
+      return leagueShort[leagueId] || leagueId || "League";
     }
 
-    function getOddsValue(odds, keys) {
-      if (!odds || typeof odds !== 'object') return null;
-      for (const key of keys) {
-        if (Object.hasOwn(odds, key) && odds[key] !== null && odds[key] !== undefined) {
-          return odds[key];
-        }
+    function formatStatus(status) {
+      return String(status || "scheduled").replaceAll("_", " ");
+    }
+
+    async function fetchJson(url) {
+      const response = await fetch(url);
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const message = payload?.error?.message || payload?.message || `Request failed (${response.status})`;
+        throw new Error(message);
       }
-      return null;
-    }
-
-    function marketReady(currentOdds) {
-      const total = getOddsValue(currentOdds, ['total']);
-      const homeSpread = getOddsValue(currentOdds, ['home_spread', 'homeSpread']);
-      const homeMl = getOddsValue(currentOdds, ['home_ml', 'homeML']);
-      return total !== null || homeSpread !== null || homeMl !== null;
-    }
-
-    function computeRollingAverage(form) {
-      if (!form) return null;
-
-      const homeScored = toNumber(form.home?.avg_scored);
-      const awayScored = toNumber(form.away?.avg_scored);
-      if (homeScored !== null && awayScored !== null) {
-        return Number((homeScored + awayScored).toFixed(1));
-      }
-
-      const homeTotal = toNumber(form.home?.avg_total);
-      if (homeTotal !== null) return Number(homeTotal.toFixed(1));
-
-      return null;
+      return payload;
     }
 
     function setActiveButton(matchId) {
-      controlsEl.querySelectorAll('.match-btn').forEach((btn) => {
-        btn.classList.toggle('active', btn.dataset.matchId === matchId);
+      controlsEl.querySelectorAll(".match-btn").forEach((button) => {
+        button.classList.toggle("active", button.dataset.matchId === matchId);
       });
     }
 
     function renderButtons(matches) {
-      controlsEl.innerHTML = '';
+      controlsEl.innerHTML = "";
 
       for (const match of matches) {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'match-btn';
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "match-btn";
         button.dataset.matchId = match.match_id;
 
-        const label = `${formatLeague(match.league_id)} · ${match.home_team} vs ${match.away_team}`;
+        const label = match.label || `${formatLeague(match.league_id)} · ${match.home_team} vs ${match.away_team}`;
         button.innerHTML = `<span>${escapeHtml(label)}</span>${
           isLive(match.status)
             ? '<span class="live-dot" aria-hidden="true"></span><span class="live-label">LIVE</span>'
-            : ''
+            : ""
         }`;
 
-        button.addEventListener('click', () => {
+        button.addEventListener("click", () => {
           setActiveButton(match.match_id);
-          loadMatchBrief(match.match_id);
+          loadMatchContext(match.match_id);
         });
 
         controlsEl.appendChild(button);
       }
     }
 
-    function renderMetaCard(brief) {
-      const match = brief.match || {};
-      const home = match.home_team || brief.form?.home?.team || 'Home';
-      const away = match.away_team || brief.form?.away?.team || 'Away';
+    function deriveLineAnchor(payload) {
+      const detailText = payload?.intel?.cards?.[0]?.detail || "";
+      const regex = /average\s+(-?\d+(?:\.\d+)?)\s+vs\s+line\s+(-?\d+(?:\.\d+)?)/i;
+      const parsed = regex.exec(detailText);
+      const average = parsed ? Number(parsed[1]) : null;
+      const line = parsed ? Number(parsed[2]) : toNumber(payload?.market?.consensus?.total);
+      const gap = average !== null && line !== null ? Number((average - line).toFixed(1)) : null;
+
+      let narrative = "Line anchor is not available in this sample.";
+      if (gap !== null) {
+        if (gap === 0) {
+          narrative = `Average is ${formatNumber(average)}. Line is ${formatNumber(line)}. They are aligned.`;
+        } else {
+          const direction = gap > 0 ? "above" : "below";
+          narrative = `Average is ${formatNumber(average)}. Line is ${formatNumber(line)}. That's ${formatNumber(Math.abs(gap))} ${direction}.`;
+        }
+      }
+
+      return { average, line, gap, narrative };
+    }
+
+    function renderMetaCard(payload) {
+      const match = payload.match || {};
+      const teams = payload.teams || {};
+      const home = teams.home?.name || "Home";
+      const away = teams.away?.name || "Away";
       const kickoff = new Date(match.start_time);
-      const score = `${match.home_score ?? '-'} : ${match.away_score ?? '-'}`;
+      const score = `${teams.home?.score ?? "-"} : ${teams.away?.score ?? "-"}`;
 
       return `
         <section class="card card-wide card-tonal">
           <div class="match-head">
             <div>
               <div class="match-title">${escapeHtml(home)} vs ${escapeHtml(away)}</div>
-              <div class="match-sub">${escapeHtml(formatLeague(match.league_id))} · ${escapeHtml(String(match.status || 'scheduled').replaceAll('_', ' '))}</div>
+              <div class="match-sub">${escapeHtml(formatLeague(match.league))} · ${escapeHtml(formatStatus(match.status))}</div>
             </div>
             <div class="chip-row">
-              <span class="chip chip-strong">${escapeHtml(formatLeague(match.league_id))}</span>
-              <span class="chip">${isLive(match.status) ? 'live board' : 'pregame board'}</span>
+              <span class="chip chip-strong">${escapeHtml(formatLeague(match.league))}</span>
+              <span class="chip">${isLive(match.status) ? "live board" : "pregame board"}</span>
             </div>
           </div>
           <div class="meta-grid">
             <div class="tile">
               <div class="tile-label">Kickoff</div>
-              <div class="tile-value">${Number.isNaN(kickoff.getTime()) ? 'TBD' : kickoff.toLocaleString()}</div>
+              <div class="tile-value">${Number.isNaN(kickoff.getTime()) ? "TBD" : kickoff.toLocaleString()}</div>
             </div>
             <div class="tile">
               <div class="tile-label">Score</div>
               <div class="tile-value mono">${escapeHtml(score)}</div>
             </div>
             <div class="tile">
-              <div class="tile-label">Status</div>
-              <div class="tile-value">${escapeHtml(String(match.status || 'scheduled').replaceAll('_', ' '))}</div>
+              <div class="tile-label">Source ID</div>
+              <div class="tile-value mono">${escapeHtml(match.source_id || match.id || "n/a")}</div>
             </div>
           </div>
         </section>
       `;
     }
 
-    function renderLineAnchor(brief) {
-      const currentOdds = brief.match?.current_odds || {};
-      const line = toNumber(getOddsValue(currentOdds, ['total']));
-      const average = computeRollingAverage(brief.form || null);
-      const gap = average !== null && line !== null ? Number((average - line).toFixed(1)) : null;
-
-      let lineText = 'Line anchor needs both a form average and a market total.';
-      if (gap !== null) {
-        if (gap === 0) {
-          lineText = `Average is ${formatNumber(average)}. Line is ${formatNumber(line)}. They are aligned.`;
-        } else {
-          const direction = gap > 0 ? 'above' : 'below';
-          lineText = `Average is ${formatNumber(average)}. Line is ${formatNumber(line)}. That's ${formatNumber(Math.abs(gap))} ${direction}.`;
-        }
-      }
-
+    function renderLineAnchor(payload) {
+      const anchor = deriveLineAnchor(payload);
       return `
         <section class="card card-wide">
           <h2>Line Anchor</h2>
           <div class="line-grid">
             <div class="tile">
               <div class="tile-label">Rolling average</div>
-              <div class="tile-value mono">${average === null ? 'n/a' : formatNumber(average)}</div>
+              <div class="tile-value mono">${anchor.average === null ? "n/a" : formatNumber(anchor.average)}</div>
             </div>
             <div class="tile">
-              <div class="tile-label">Tonight's line</div>
-              <div class="tile-value mono">${line === null ? 'n/a' : formatNumber(line)}</div>
+              <div class="tile-label">Posted line</div>
+              <div class="tile-value mono">${anchor.line === null ? "n/a" : formatNumber(anchor.line)}</div>
             </div>
             <div class="tile">
               <div class="tile-label">Gap</div>
-              <div class="tile-value mono">${gap === null ? 'n/a' : `${gap > 0 ? '+' : ''}${formatNumber(gap)}`}</div>
+              <div class="tile-value mono">${anchor.gap === null ? "n/a" : `${anchor.gap > 0 ? "+" : ""}${formatNumber(anchor.gap)}`}</div>
             </div>
           </div>
-          <p class="line-note">${lineText}</p>
+          <p class="line-note">${escapeHtml(anchor.narrative)}</p>
         </section>
       `;
     }
 
-    function renderMarket(brief) {
-      const currentOdds = brief.match?.current_odds || {};
-      const ready = marketReady(currentOdds);
-      const total = getOddsValue(currentOdds, ['total']);
-      const homeSpread = getOddsValue(currentOdds, ['home_spread', 'homeSpread']);
-      const awaySpread = getOddsValue(currentOdds, ['away_spread', 'awaySpread']);
-      const homeMl = getOddsValue(currentOdds, ['home_ml', 'homeML']);
-      const awayMl = getOddsValue(currentOdds, ['away_ml', 'awayML']);
-      const provider = getOddsValue(currentOdds, ['provider']) || 'n/a';
+    function renderMarket(payload) {
+      const market = payload.market || {};
+      const consensus = market.consensus || {};
+      const ready = Boolean(market.available);
+      const fetchedAt = market.fetched_at ? new Date(market.fetched_at) : null;
 
       return `
         <section class="card">
-          <h2>Market <span class="status ${ready ? 'status-ready' : 'status-missing'}">${ready ? 'ready' : 'missing'}</span></h2>
+          <h2>Market <span class="status ${ready ? "status-ready" : "status-missing"}">${ready ? "ready" : "missing"}</span></h2>
           <div class="market-grid">
             <div class="tile">
               <div class="tile-label">Total</div>
-              <div class="tile-value mono">${total === null ? 'n/a' : escapeHtml(total)}</div>
+              <div class="tile-value mono">${consensus.total ?? "n/a"}</div>
             </div>
             <div class="tile">
-              <div class="tile-label">Home spread</div>
-              <div class="tile-value mono">${homeSpread === null ? 'n/a' : escapeHtml(homeSpread)}</div>
-            </div>
-            <div class="tile">
-              <div class="tile-label">Away spread</div>
-              <div class="tile-value mono">${awaySpread === null ? 'n/a' : escapeHtml(awaySpread)}</div>
+              <div class="tile-label">Spread</div>
+              <div class="tile-value mono">${consensus.spread ?? "n/a"}</div>
             </div>
             <div class="tile">
               <div class="tile-label">Home ML</div>
-              <div class="tile-value mono">${homeMl === null ? 'n/a' : escapeHtml(homeMl)}</div>
+              <div class="tile-value mono">${consensus.home_ml ?? "n/a"}</div>
             </div>
             <div class="tile">
               <div class="tile-label">Away ML</div>
-              <div class="tile-value mono">${awayMl === null ? 'n/a' : escapeHtml(awayMl)}</div>
+              <div class="tile-value mono">${consensus.away_ml ?? "n/a"}</div>
             </div>
             <div class="tile">
-              <div class="tile-label">Provider</div>
-              <div class="tile-value">${escapeHtml(provider)}</div>
+              <div class="tile-label">Source</div>
+              <div class="tile-value">${escapeHtml(market.source || "n/a")}</div>
+            </div>
+            <div class="tile">
+              <div class="tile-label">Fetched</div>
+              <div class="tile-value">${fetchedAt && !Number.isNaN(fetchedAt.getTime()) ? fetchedAt.toLocaleString() : "n/a"}</div>
             </div>
           </div>
         </section>
       `;
     }
 
-    function renderFormString(formString) {
-      if (!formString || typeof formString !== 'string') return '<span class="muted">n/a</span>';
-      const chars = formString.trim().toUpperCase().split('');
-      return chars.map((ch) => {
-        let cls = 'other';
-        if (ch === 'W') cls = 'win';
-        if (ch === 'L') cls = 'loss';
-        if (ch === 'D') cls = 'draw';
-        return `<span class="form-char ${cls}">${ch}</span>`;
-      }).join('');
-    }
-
-    function renderRecord(row) {
-      const wins = toNumber(row?.wins);
-      const draws = toNumber(row?.draws);
-      const losses = toNumber(row?.losses);
-
-      if (wins === null && draws === null && losses === null) return 'n/a';
-
-      const winPart = `${wins ?? 0}W`;
-      const drawPart = draws && draws > 0 ? ` ${draws}D` : '';
-      const lossPart = `${losses ?? 0}L`;
-      return `${winPart}${drawPart} ${lossPart}`.trim();
-    }
-
-    function renderFormSide(label, row) {
-      if (!row) {
-        return `
-          <div class="form-side">
-            <div class="form-team">${escapeHtml(label)}</div>
-            <p class="muted">No form data available.</p>
-          </div>
-        `;
-      }
-
-      return `
-        <div class="form-side">
-          <div class="form-team">${escapeHtml(row.team || label)}</div>
-          <div class="form-string">${renderFormString(row.form_string)}</div>
-          <div class="form-metrics">
-            <div><strong>Record:</strong> ${escapeHtml(renderRecord(row))}</div>
-            <div><strong>Avg scored:</strong> ${formatNumber(row.avg_scored)}</div>
-            <div><strong>Avg conceded:</strong> ${formatNumber(row.avg_conceded)}</div>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderForm(brief) {
-      const home = brief.form?.home || null;
-      const away = brief.form?.away || null;
+    function renderIntel(payload) {
+      const intel = payload.intel || {};
+      const ready = Boolean(intel.available);
 
       return `
         <section class="card">
-          <h2>Form</h2>
-          <div class="form-grid">
-            ${renderFormSide('Home', home)}
-            ${renderFormSide('Away', away)}
-          </div>
+          <h2>Intel <span class="status ${ready ? "status-ready" : "status-missing"}">${ready ? "ready" : "missing"}</span></h2>
+          ${!ready
+            ? '<p class="muted">No intel package available for this sample.</p>'
+            : `<ul class="list">
+                <li><strong>${escapeHtml(intel.headline || "Headline unavailable")}</strong></li>
+                <li>Pick: ${escapeHtml(intel.recommended_pick || "n/a")} (${escapeHtml(intel.confidence_tier || "n/a")})</li>
+                <li>${escapeHtml(intel.briefing || intel.pick_summary || "No briefing text.")}</li>
+              </ul>`}
         </section>
       `;
     }
 
-    function renderInjuries(brief) {
-      const homeRows = Array.isArray(brief.injuries?.home) ? brief.injuries.home : [];
-      const awayRows = Array.isArray(brief.injuries?.away) ? brief.injuries.away : [];
-      const rows = [...homeRows, ...awayRows].slice(0, 10);
+    function renderInjuries(payload) {
+      const homeRows = Array.isArray(payload.injuries?.home) ? payload.injuries.home : [];
+      const awayRows = Array.isArray(payload.injuries?.away) ? payload.injuries.away : [];
+      const rows = [
+        ...homeRows.map((row) => ({ side: "Home", row })),
+        ...awayRows.map((row) => ({ side: "Away", row })),
+      ];
 
       return `
         <section class="card">
           <h2>Injuries</h2>
           ${rows.length === 0
-            ? '<p class="muted">No listed injuries in this brief.</p>'
-            : `<ul class="list">${rows.map((row) => `<li>${escapeHtml(row.player || row.name || row.fullName || 'Player')} (${escapeHtml(row.status || 'unknown')})</li>`).join('')}</ul>`}
+            ? '<p class="muted">No listed injuries in this payload.</p>'
+            : `<ul class="list">${rows.slice(0, 12).map((item) => `<li>${item.side}: ${escapeHtml(item.row.player_name || "Player")} (${escapeHtml(item.row.status || "unknown")})</li>`).join("")}</ul>`}
         </section>
       `;
     }
 
-    function renderCoverage(brief) {
-      const currentOdds = brief.match?.current_odds || {};
-      const readyItems = [
-        { label: 'market', ready: marketReady(currentOdds) },
-        { label: 'form', ready: !!(brief.form?.home || brief.form?.away) },
-        { label: 'injuries', ready: Array.isArray(brief.injuries?.home) || Array.isArray(brief.injuries?.away) }
-      ];
+    function renderCoverage(payload) {
+      const sections = payload.metadata?.sections_available || {};
+      const items = Object.keys(sections).length > 0
+        ? Object.entries(sections)
+        : [
+            ["match", Boolean(payload.match)],
+            ["teams", Boolean(payload.teams)],
+            ["market", Boolean(payload.market?.available)],
+            ["intel", Boolean(payload.intel?.available)],
+            ["injuries", Boolean(payload.injuries?.available)],
+          ];
 
       return `
         <section class="card">
           <h2>Coverage</h2>
           <ul class="list">
-            ${readyItems.map((item) => `<li>${escapeHtml(item.label)}: <span class="status ${item.ready ? 'status-ready' : 'status-missing'}">${item.ready ? 'ready' : 'missing'}</span></li>`).join('')}
+            ${items.map(([label, ready]) => `<li>${escapeHtml(label)}: <span class="status ${ready ? "status-ready" : "status-missing"}">${ready ? "ready" : "missing"}</span></li>`).join("")}
           </ul>
         </section>
       `;
     }
 
-    function renderPage(brief) {
+    function renderPage(payload) {
       previewEl.innerHTML = [
-        renderMetaCard(brief),
-        renderLineAnchor(brief),
-        renderMarket(brief),
-        renderForm(brief),
-        renderInjuries(brief),
-        renderCoverage(brief)
-      ].join('');
+        renderMetaCard(payload),
+        renderLineAnchor(payload),
+        renderMarket(payload),
+        renderIntel(payload),
+        renderInjuries(payload),
+        renderCoverage(payload),
+      ].join("");
     }
 
-    async function loadMatchBrief(matchId) {
+    async function loadMatchContext(matchId) {
       previewEl.innerHTML = '<div class="loading">Loading match data...</div>';
-      runtimeEl.textContent = '';
+      runtimeEl.textContent = "";
 
       try {
         const started = performance.now();
-        const { data, error } = await supabaseClient.rpc('get_ai_match_brief', { p_match_id: matchId });
+        const payload = await fetchJson(`/api/match-context?match_id=${encodeURIComponent(matchId)}`);
         const elapsed = Math.round(performance.now() - started);
-
-        if (error) {
-          throw new Error(error.message || 'Could not load this match.');
-        }
-
-        if (!data || typeof data !== 'object') {
-          throw new Error('No match brief returned.');
-        }
-
-        runtimeEl.textContent = `loaded ${elapsed}ms · match_id ${matchId}`;
-        renderPage(data);
+        const responseTime = payload?.metadata?.response_time_ms;
+        runtimeEl.textContent = `loaded ${elapsed}ms · source ${responseTime ?? "n/a"}ms · match_id ${matchId}`;
+        renderPage(payload);
       } catch (error) {
-        previewEl.innerHTML = `<div class="error">${escapeHtml(error.message || 'Could not load this match.')}</div>`;
+        previewEl.innerHTML = `<div class="error">${escapeHtml(error.message || "Could not load this match.")}</div>`;
       }
     }
 
@@ -978,25 +1139,20 @@
       controlsEl.innerHTML = '<div class="loading">Loading match options...</div>';
 
       try {
-        const { data, error } = await supabaseClient.rpc('get_demo_matches', { p_limit: 4 });
-
-        if (error) {
-          throw new Error(error.message || 'Could not load demo matches.');
-        }
-
-        const matches = Array.isArray(data) ? data : [];
+        const payload = await fetchJson("/api/demo-matches");
+        const matches = Array.isArray(payload.rows) ? payload.rows : [];
         if (matches.length === 0) {
           controlsEl.innerHTML = '<div class="error">No demo matches available right now.</div>';
-          previewEl.innerHTML = '';
+          previewEl.innerHTML = "";
           return;
         }
 
         renderButtons(matches);
         const firstMatchId = matches[0].match_id;
         setActiveButton(firstMatchId);
-        await loadMatchBrief(firstMatchId);
+        await loadMatchContext(firstMatchId);
       } catch (error) {
-        controlsEl.innerHTML = `<div class="error">${escapeHtml(error.message || 'Could not load demo matches.')}</div>`;
+        controlsEl.innerHTML = `<div class="error">${escapeHtml(error.message || "Could not load demo matches.")}</div>`;
         previewEl.innerHTML = '<div class="error">Could not load match preview.</div>';
       }
     }

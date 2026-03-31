@@ -54,6 +54,7 @@ const PAGE_DELAY_MS = 200;
 const FETCH_TIMEOUT_MS = 20_000;
 const UPSERT_CHUNK_SIZE = 500;
 const EVENT_CONCURRENCY = 2;
+const INTERNAL_JOB_SECRET = (Deno.env.get("INTERNAL_JOB_SECRET") ?? "").trim();
 
 const MONTH_MAP: Record<string, string> = {
   JAN: "01",
@@ -216,6 +217,18 @@ function getRequiredEnv(name: string): string {
     throw new Error(`Missing required environment variable: ${name}`);
   }
   return value;
+}
+
+function readRequestSecret(req: Request): string {
+  const headerSecret = req.headers.get("x-internal-secret")?.trim();
+  if (headerSecret) return headerSecret;
+
+  const authHeader = req.headers.get("authorization") ?? "";
+  if (authHeader.toLowerCase().startsWith("bearer ")) {
+    return authHeader.slice(7).trim();
+  }
+
+  return "";
 }
 
 function asString(value: unknown): string | null {
@@ -611,7 +624,7 @@ Deno.serve(async (req) => {
       status: 200,
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+        "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-internal-secret",
         "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
       },
     });
@@ -620,7 +633,21 @@ Deno.serve(async (req) => {
   if (req.method !== "GET" && req.method !== "POST") {
     return new Response(JSON.stringify({ code: "METHOD_NOT_ALLOWED", message: "Use GET or POST" }), {
       status: 405,
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+    });
+  }
+
+  if (!INTERNAL_JOB_SECRET) {
+    return new Response(JSON.stringify({ code: "MISCONFIGURED", message: "Missing INTERNAL_JOB_SECRET" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+    });
+  }
+
+  if (readRequestSecret(req) !== INTERNAL_JOB_SECRET) {
+    return new Response(JSON.stringify({ code: "UNAUTHORIZED", message: "Missing or invalid internal secret" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
     });
   }
 
@@ -923,7 +950,7 @@ Deno.serve(async (req) => {
 
     return new Response(JSON.stringify(response), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
     });
   } catch (error) {
     return new Response(
@@ -934,7 +961,7 @@ Deno.serve(async (req) => {
       }),
       {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
       },
     );
   }

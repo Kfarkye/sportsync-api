@@ -1,0 +1,492 @@
+[
+  {
+    "state_code": "MN",
+    "state_name": "Minnesota",
+    "state_slug": "minnesota",
+    "hero_image_url": "/images/states/minnesota.jpg",
+    "sources": [
+      {
+        "source_key": "mn_pmp",
+        "source_label": "Minnesota PMP",
+        "source_url": "https://mn.gov/boards/pharmacy/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "mn_erx",
+        "source_label": "Minnesota E-Prescribing",
+        "source_url": "https://mn.gov/boards/pharmacy/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out of state valid prescriptions allowed subject to strict PMP checks and electronic requirements.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Electronic prescribing is required for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth prescribing faces traditional initial evaluation constraints.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Minnesota PMP",
+      "pdmp_url": "https://mn.gov/boards/pharmacy/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Minnesota Board of Pharmacy",
+      "board_url": "https://mn.gov/boards/pharmacy/",
+      "board_phone": "(651) 201-2825",
+      "special_restrictions": "Use of the Minnesota PMP before dispensing is highly regulated."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "3-5 weeks",
+      "avg_wait_primary_care": "1-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "State tracking robust for out of state prescriptions.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Electronic transmission of controlled substances is universally required.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are denied generally.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "college-student",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Rigorous PMP review causes dispensing delays."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Request EPCS only from your out-of-state provider.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Minnesota relies on EPCS for all controlled meds.",
+        "source_key": "mn_erx",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "e_rx_scope",
+        "target_key": "MN"
+      }
+    ]
+  },
+  {
+    "state_code": "IA",
+    "state_name": "Iowa",
+    "state_slug": "iowa",
+    "hero_image_url": "/images/states/iowa.jpg",
+    "sources": [
+      {
+        "source_key": "ia_pmp",
+        "source_label": "Iowa PMP",
+        "source_url": "https://pharmacy.iowa.gov/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "ia_erx",
+        "source_label": "Iowa EPCS Mandate",
+        "source_url": "https://pharmacy.iowa.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Accepted electronically with verification.",
+      "schedule_ii_transfer_text": "Electronic transmission only.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Required for all controlled substances.",
+      "telehealth_controlled_text": "Aligned to DEA rules for telehealth initial evaluations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Iowa PMP",
+      "pdmp_url": "https://pharmacy.iowa.gov/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Iowa Board of Pharmacy",
+      "board_url": "https://pharmacy.iowa.gov/",
+      "board_phone": "(515) 281-5944",
+      "special_restrictions": "Consistent PDMP inquiries required."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4 weeks",
+      "avg_wait_primary_care": "1-2 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "Interstate tracking is heavily optimized.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "schedule_ii",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Schedule II substances must be sent electronically without exception.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper prescriptions are universally denied.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "travel-nurse",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Strict e-prescribing standards apply."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Ensure electronic prescribing.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Iowa Board enforces mandatory checks via PMP.",
+        "source_key": "ia_pmp",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "IA"
+      }
+    ]
+  },
+  {
+    "state_code": "MO",
+    "state_name": "Missouri",
+    "state_slug": "missouri",
+    "hero_image_url": "/images/states/missouri.jpg",
+    "sources": [
+      {
+        "source_key": "mo_pdmp",
+        "source_label": "Missouri PDMP",
+        "source_url": "https://pr.mo.gov/pharmacists.asp",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "mo_sb63",
+        "source_label": "Missouri SB 63",
+        "source_url": "https://www.senate.mo.gov",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Permitted with aggressive monitoring and verification.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically per SB 63.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Electronic prescribing requires for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth prescribing restricted heavily for initial CS evaluation.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Missouri PDMP",
+      "pdmp_url": "https://pr.mo.gov/pharmacists.asp",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Missouri Board of Pharmacy",
+      "board_url": "https://pr.mo.gov/pharmacists.asp",
+      "board_phone": "(573) 751-0091",
+      "special_restrictions": "Missouri joined PDMP efforts late: verifications are tightly enforced now."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "State PDMP tracking robust for out of state prescriptions.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "SB 63 mandates the electronic transmission of all controlled substances.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are not accepted generally for CS.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "college-student",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Verification delays for cross border out of state telehealth prescriptions."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Verify EPCS clearance.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Missouri SB 63 created the mandate for e-prescribing.",
+        "source_key": "mo_sb63",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "e_rx_scope",
+        "target_key": "MO"
+      }
+    ]
+  },
+  {
+    "state_code": "AR",
+    "state_name": "Arkansas",
+    "state_slug": "arkansas",
+    "hero_image_url": "/images/states/arkansas.jpg",
+    "sources": [
+      {
+        "source_key": "ar_pdmp",
+        "source_label": "Arkansas PDMP",
+        "source_url": "https://www.healthy.arkansas.gov/programs-services/topics/arkansas-state-board-of-pharmacy",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "ar_erx",
+        "source_label": "Arkansas E-Rx Mandate",
+        "source_url": "https://www.healthy.arkansas.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Accepted conditionally subject to strict PDMP checks.",
+      "schedule_ii_transfer_text": "Must be electronic.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Arkansas requires electronic transmission for controlled substances.",
+      "telehealth_controlled_text": "Follows standard DEA prescribing laws regarding evaluations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Arkansas PDMP",
+      "pdmp_url": "https://www.healthy.arkansas.gov/programs-services/topics/arkansas-state-board-of-pharmacy",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Arkansas State Board of Pharmacy",
+      "board_url": "https://www.healthy.arkansas.gov/programs-services/topics/arkansas-state-board-of-pharmacy",
+      "board_phone": "(501) 682-0190",
+      "special_restrictions": "Consistent queries applied for remote patients."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "State PDMP tracking robust.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "schedule_ii",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Schedule II substances require strict electronic transmission.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are forbidden.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "snowbird",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Strict e-prescribing standards apply to visiting patients."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Use electronic prescribing exclusively via EPCS.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Arkansas monitors heavily natively without paper exception.",
+        "source_key": "ar_pdmp",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "AR"
+      }
+    ]
+  },
+  {
+    "state_code": "LA",
+    "state_name": "Louisiana",
+    "state_slug": "louisiana",
+    "hero_image_url": "/images/states/louisiana.jpg",
+    "sources": [
+      {
+        "source_key": "la_pmp",
+        "source_label": "Louisiana PMP",
+        "source_url": "http://www.pharmacy.la.gov/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "la_erx",
+        "source_label": "Louisiana Act 82",
+        "source_url": "http://www.pharmacy.la.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out of state valid prescriptions allowed completely electronic via Act 82.",
+      "schedule_ii_transfer_text": "Mandatory electronic transmission.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Louisiana mandates electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth regulations emphasize physical relationship prior to CS prescribing.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Louisiana PMP",
+      "pdmp_url": "http://www.pharmacy.la.gov/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Louisiana Board of Pharmacy",
+      "board_url": "http://www.pharmacy.la.gov/",
+      "board_phone": "(225) 925-6496",
+      "special_restrictions": "Louisiana strictly verifies out-of-state prescribers via PMP."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4 weeks",
+      "avg_wait_primary_care": "2 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "EPCS compliance strongly required for remote access.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Act 82 requires full electronic prescribing for schedules explicitly.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are forbidden unless under narrow exceptions.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "snowbird",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "EPCS required for out-of-state providers visiting LA."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Ensure your prescriber links their systems with Louisiana pharmacies.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Louisiana enforces EPCS compliance continuously under Act 82.",
+        "source_key": "la_erx",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "e_rx_scope",
+        "target_key": "LA"
+      }
+    ]
+  }
+]

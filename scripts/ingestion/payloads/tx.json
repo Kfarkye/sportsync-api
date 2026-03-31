@@ -1,0 +1,92 @@
+{
+  "state_code": "TX",
+  "state_name": "Texas",
+  "state_slug": "texas",
+  "hero_image_url": "/images/states/texas.jpg",
+  "sources": [
+    {
+      "source_key": "tx_admin_code_315",
+      "source_label": "Texas Administrative Code Rule §315.3",
+      "source_url": "https://texreg.sos.state.tx.us",
+      "source_type": "state_statute"
+    }
+  ],
+  "overrides": {
+    "out_of_state_controlled": "permitted_with_restrictions",
+    "schedule_ii_transfer": "electronic_only",
+    "schedule_iii_v_transfer": "permitted",
+    "e_rx_scope": "all_controlled",
+    "telehealth_controlled": "restricted",
+    "emergency_supply_allowed": false,
+    "out_of_state_controlled_text": "Out-of-state prescribers must have an active DEA and Texas DPS registration for controlled substances.",
+    "schedule_ii_transfer_text": "CII prescriptions must be electronic. Paper CII cannot be transferred.",
+    "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months per federal rules.",
+    "e_rx_scope_text": "Electronic prescribing is required for all controlled substances in Texas.",
+    "telehealth_controlled_text": "Requires an established practitioner-patient relationship before prescribing controlled substances via telehealth.",
+    "emergency_supply_text": null,
+    "pdmp_name": "PMP AWARxE",
+    "pdmp_url": "https://texas.pmpaware.net/",
+    "pdmp_mandatory_check": true,
+    "board_of_pharmacy": "Texas State Board of Pharmacy",
+    "board_url": "https://www.pharmacy.texas.gov/",
+    "board_phone": "(512) 305-8000",
+    "special_restrictions": "Must search PMP before prescribing or dispensing."
+  },
+  "access_facts": {
+    "avg_wait_psychiatry": "4 weeks",
+    "avg_wait_primary_care": "2 weeks",
+    "pcp_can_prescribe_stimulants": true,
+    "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+    "notes": "Strict DPS registration requirements complicate out-of-state access.",
+    "evidence_type": "market_access",
+    "source_url": null
+  },
+  "rules": [
+    {
+      "category": "general",
+      "evidence_type": "state_law",
+      "sort_order": 1,
+      "rule_text": "Electronic prescribing is required for all controlled substances in Texas.",
+      "source_url": null
+    }
+  ],
+  "restrictions": [
+    {
+      "restriction_type": "in_state_prescriber_required",
+      "applies_to": "all_controlled",
+      "description": "Prescriber must be registered with Texas DPS to prescribe controlled substances.",
+      "workaround": null,
+      "evidence_type": "state_law",
+      "source_url": null
+    }
+  ],
+  "segments": [
+    {
+      "segment_slug": "travel-nurse",
+      "segment_data": {
+        "risk_level": "high",
+        "key_friction": "Texas DPS registration required for out-of-state prescribers."
+      },
+      "items": [
+        {
+          "sort_order": 1,
+          "guidance_text": "Ensure your prescriber has active Texas DPS credentials before your assignment starts.",
+          "evidence_type": "editorial",
+          "source_url": null
+        }
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "claim_text": "Texas mandates electronic prescribing for all controlled substances.",
+      "source_key": "tx_admin_code_315",
+      "evidence_type": "state_law",
+      "medication_slug": null,
+      "segment_slug": null,
+      "target_table": "state_rx_overrides",
+      "target_field": "e_rx_scope",
+      "target_key": "TX"
+    }
+  ]
+}

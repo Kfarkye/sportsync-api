@@ -1,0 +1,263 @@
+[
+  {
+    "state_code": "WA",
+    "state_name": "Washington",
+    "state_slug": "washington",
+    "hero_image_url": "/images/states/washington.jpg",
+    "sources": [
+      { "source_key": "wa_esb5380", "source_label": "Washington E-Prescribing Mandate (ESB 5380)", "source_url": "https://app.leg.wa.gov/rcw/default.aspx", "source_type": "state_statute" },
+      { "source_key": "wa_pdmp", "source_label": "Washington Prescription Review (PMP)", "source_url": "https://doh.wa.gov/licenses-permits-and-certificates/professions-new-renew-or-update/pharmacy-professions/prescription-monitoring-program", "source_type": "state_board_guidance" }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Washington state pharmacists can honor out-of-state valid prescriptions, but strict electronic prescribing mandates apply.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically per ESB 5380.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "ESB 5380 requires transmission of virtually all prescriptions electronically, including out-of-state.",
+      "telehealth_controlled_text": "Typically requires an established practitioner-patient relationship and compliance with both federal and WA telehealth standards.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Prescription Review",
+      "pdmp_url": "https://doh.wa.gov/licenses-permits-and-certificates/professions-new-renew-or-update/pharmacy-professions/prescription-monitoring-program",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Washington Pharmacy Quality Assurance Commission",
+      "board_url": "https://doh.wa.gov/licenses-permits-and-certificates/professions-new-renew-or-update/pharmacy-professions",
+      "board_phone": "(360) 236-4946",
+      "special_restrictions": "PMP query mandates are rigorously enforced before dispensing complex scheduling."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Widespread but restricted initially for controlled substances.",
+      "notes": "State geography makes telehealth popular, but strict initial evaluation rules apply for Schedule II.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      { "category": "general", "evidence_type": "state_law", "sort_order": 1, "rule_text": "All prescriptions must be transmitted to the pharmacy electronically, subject to very narrow waivers.", "source_url": null }
+    ],
+    "restrictions": [
+      { "restriction_type": "e_rx_only", "applies_to": "all_controlled", "description": "Paper scripts are not accepted from out-of-state providers without statutory exceptions.", "workaround": "Have the prescriber send the prescription via EPCS system.", "evidence_type": "state_law", "source_url": null }
+    ],
+    "segments": [
+      { "segment_slug": "travel-nurse", "segment_data": { "risk_level": "medium", "key_friction": "Out of state providers failing to transmit via valid Washington EPCS networks." }, "items": [{ "sort_order": 1, "guidance_text": "Confirm that your provider uses an electronic prescribing network that interoperates with Washington pharmacies.", "evidence_type": "editorial", "source_url": null }] }
+    ],
+    "claims": [
+      { "claim_text": "Washington requires electronic transmission for all controlled substances.", "source_key": "wa_esb5380", "evidence_type": "state_law", "medication_slug": null, "segment_slug": null, "target_table": "state_rx_overrides", "target_field": "e_rx_scope", "target_key": "WA" },
+      { "claim_text": "Mandatory check of the Prescription Review program.", "source_key": "wa_pdmp", "evidence_type": "state_board_guidance", "medication_slug": null, "segment_slug": null, "target_table": "state_rx_overrides", "target_field": "pdmp_mandatory_check", "target_key": "WA" }
+    ]
+  },
+  {
+    "state_code": "OR",
+    "state_name": "Oregon",
+    "state_slug": "oregon",
+    "hero_image_url": "/images/states/oregon.jpg",
+    "sources": [
+      { "source_key": "or_escript_mandate", "source_label": "Oregon Prescription Legal Guidelines", "source_url": "https://www.oregon.gov/pharmacy/", "source_type": "state_board_guidance" },
+      { "source_key": "or_pdmp", "source_label": "Oregon PDMP", "source_url": "https://www.oregon.gov/oha/ph/preventionwellness/substanceuse/opioids/pages/pdmp.aspx", "source_type": "state_board_guidance" }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Pharmacists may fill out-of-state valid prescriptions subject to verification criteria.",
+      "schedule_ii_transfer_text": "Required to be sent electronically directly from the practitioner.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Oregon adheres to widespread electronics mandates for controlled schedules.",
+      "telehealth_controlled_text": "Controlled substances typically require an initial evaluation or specific telemedicine exceptions.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Oregon PDMP",
+      "pdmp_url": "https://www.oregon.gov/oha/ph/preventionwellness/substanceuse/opioids/pages/pdmp.aspx",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Oregon Board of Pharmacy",
+      "board_url": "https://www.oregon.gov/pharmacy/",
+      "board_phone": "(971) 673-0001",
+      "special_restrictions": "Documentation of provider credentials across borders may be required."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-5 weeks",
+      "avg_wait_primary_care": "2 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "Telehealth coverage is high but strict regulations surrounding Ryan Haight exceptions persist.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      { "category": "schedule_ii", "evidence_type": "state_law", "sort_order": 1, "rule_text": "Schedule II prescriptions must be e-prescribed and cannot be refilled.", "source_url": null }
+    ],
+    "restrictions": [
+      { "restriction_type": "e_rx_only", "applies_to": "all_controlled", "description": "Paper prescriptions for controlled substances are largely blocked.", "workaround": null, "evidence_type": "state_law", "source_url": null }
+    ],
+    "segments": [
+      { "segment_slug": "college-student", "segment_data": { "risk_level": "medium", "key_friction": "Out-of-state prescribers must verify electronic linkage." }, "items": [{ "sort_order": 1, "guidance_text": "If prescribed out-of-state, ensure the provider has transmitted the e-rx to your specific Oregon pharmacy accurately.", "evidence_type": "educational", "source_url": null }] }
+    ],
+    "claims": [
+      { "claim_text": "Oregon pharmacists must integrate with the central PDMP.", "source_key": "or_pdmp", "evidence_type": "state_board_guidance", "medication_slug": null, "segment_slug": null, "target_table": "state_rx_overrides", "target_field": "pdmp_mandatory_check", "target_key": "OR" }
+    ]
+  },
+  {
+    "state_code": "NV",
+    "state_name": "Nevada",
+    "state_slug": "nevada",
+    "hero_image_url": "/images/states/nevada.jpg",
+    "sources": [
+      { "source_key": "nv_ab310", "source_label": "Nevada Assembly Bill 310", "source_url": "https://www.leg.state.nv.us", "source_type": "state_statute" },
+      { "source_key": "nv_pmp", "source_label": "Nevada PMP", "source_url": "https://bop.nv.gov/services/PMP/", "source_type": "state_board_guidance" }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Pharmacists may fill controlled substances from contiguous and non-contiguous states subject to tight regulatory checks in the PMP.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Electronic prescribing is mandated by Assembly Bill 310.",
+      "telehealth_controlled_text": "Rules align with federal DEA laws regarding initial in-person evaluations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Nevada PMP",
+      "pdmp_url": "https://bop.nv.gov/services/PMP/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Nevada State Board of Pharmacy",
+      "board_url": "https://bop.nv.gov/",
+      "board_phone": "(775) 850-1440",
+      "special_restrictions": "Reviewing standard patient history inside the PMP is explicitly required."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4 weeks",
+      "avg_wait_primary_care": "1-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "E-prescribing strictness for controlled substances complicates crossing dispensing jurisdictions.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      { "category": "general", "evidence_type": "state_law", "sort_order": 1, "rule_text": "Assembly Bill 310 mandates the electronic transmission of all controlled substances.", "source_url": null }
+    ],
+    "restrictions": [
+      { "restriction_type": "e_rx_only", "applies_to": "all_controlled", "description": "Nevada generally mandates electronic prescribing for all controlled substances.", "workaround": null, "evidence_type": "state_law", "source_url": null }
+    ],
+    "segments": [
+      { "segment_slug": "snowbird", "segment_data": { "risk_level": "medium", "key_friction": "Verification lag for out-of-state paper prescriptions." }, "items": [{ "sort_order": 1, "guidance_text": "Request electronic prescriptions directly to a Nevada pharmacy before traveling.", "evidence_type": "educational", "source_url": null }] }
+    ],
+    "claims": [
+      { "claim_text": "Nevada enforces electronic prescribing via AB 310.", "source_key": "nv_ab310", "evidence_type": "state_law", "medication_slug": null, "segment_slug": null, "target_table": "state_rx_overrides", "target_field": "e_rx_scope", "target_key": "NV" }
+    ]
+  },
+  {
+    "state_code": "AZ",
+    "state_name": "Arizona",
+    "state_slug": "arizona",
+    "hero_image_url": "/images/states/arizona.jpg",
+    "sources": [
+      { "source_key": "az_cspmp", "source_label": "AZ CSPMP", "source_url": "https://pharmacypmp.az.gov/", "source_type": "state_board_guidance" },
+      { "source_key": "az_hb2075", "source_label": "Arizona HB 2075 (E-Rx Mandate)", "source_url": "https://www.azleg.gov", "source_type": "state_statute" }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Prescriptions from out-of-state prescribers are valid if they conform to Arizona's e-prescribing rules.",
+      "schedule_ii_transfer_text": "CII prescriptions must be electronic.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "HB 2075 mandates electronic prescribing for all Schedule II controlled substances.",
+      "telehealth_controlled_text": "Prescribing controlled substances typically requires a face-to-face encounter under federal regulations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "AZ CSPMP",
+      "pdmp_url": "https://pharmacypmp.az.gov/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Arizona State Board of Pharmacy",
+      "board_url": "https://pharmacy.az.gov/",
+      "board_phone": "(602) 771-2727",
+      "special_restrictions": "CSPMP review is strictly monitored."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4 weeks",
+      "avg_wait_primary_care": "1-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing.",
+      "notes": "E-rx mandate creates the most friction for out-of-state handwritten prescriptions.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      { "category": "schedule_ii", "evidence_type": "state_law", "sort_order": 1, "rule_text": "HB 2075 mandates the electronic transmission of Schedule II substances.", "source_url": null }
+    ],
+    "restrictions": [
+      { "restriction_type": "e_rx_only", "applies_to": "all_controlled", "description": "Paper prescriptions are not accepted for Schedule II controlled substances.", "workaround": null, "evidence_type": "state_law", "source_url": null }
+    ],
+    "segments": [
+      { "segment_slug": "snowbird", "segment_data": { "risk_level": "high", "key_friction": "Strict e-prescribing and monitoring programs restrict casual out of state prescription deposits." }, "items": [{ "sort_order": 1, "guidance_text": "Be prepared to encounter delays if your prescriber utilizes paper scripts, which are heavily restricted in AZ.", "evidence_type": "educational", "source_url": null }] }
+    ],
+    "claims": [
+      { "claim_text": "AZ CSPMP checks are mandatory prior to dispensing.", "source_key": "az_cspmp", "evidence_type": "state_board_guidance", "medication_slug": null, "segment_slug": null, "target_table": "state_rx_overrides", "target_field": "pdmp_mandatory_check", "target_key": "AZ" }
+    ]
+  },
+  {
+    "state_code": "CO",
+    "state_name": "Colorado",
+    "state_slug": "colorado",
+    "hero_image_url": "/images/states/colorado.jpg",
+    "sources": [
+      { "source_key": "co_pdmp", "source_label": "Colorado PDMP", "source_url": "https://dpo.colorado.gov/PDMP", "source_type": "state_board_guidance" },
+      { "source_key": "co_epcs_mandate", "source_label": "Colorado EPCS Mandate", "source_url": "https://dpo.colorado.gov/Pharmacy", "source_type": "state_statute" }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Pharmacists can dispense out-of-state valid prescriptions, but strict checks in PDMP are customary.",
+      "schedule_ii_transfer_text": "Electronic transmission required.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Colorado law mandates electronic prescribing for all Schedule II-V controlled substances.",
+      "telehealth_controlled_text": "Controlled substances prescribed via telehealth are restricted, tracking DEA guidelines.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Colorado PDMP",
+      "pdmp_url": "https://dpo.colorado.gov/PDMP",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Colorado State Board of Pharmacy",
+      "board_url": "https://dpo.colorado.gov/Pharmacy",
+      "board_phone": "(303) 894-7800",
+      "special_restrictions": "Use of specialized electronic prescribing software is required."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4 weeks",
+      "avg_wait_primary_care": "1-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "Remote tracking restricts fast cross-state dispensation.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      { "category": "general", "evidence_type": "state_board_guidance", "sort_order": 1, "rule_text": "Pharmacists are generally expected to use professional judgment and query the PDMP system prior to dispensing.", "source_url": null }
+    ],
+    "restrictions": [
+      { "restriction_type": "e_rx_only", "applies_to": "all_controlled", "description": "Electronic prescribing is universally required for Schedule II-V.", "workaround": null, "evidence_type": "state_law", "source_url": null }
+    ],
+    "segments": [
+      { "segment_slug": "travel-nurse", "segment_data": { "risk_level": "high", "key_friction": "PDMP tracking cross-state can cause prescription verification delays." }, "items": [{ "sort_order": 1, "guidance_text": "Out of state prescribers should utilize e-prescribing platforms that integrate securely with Colorado pharmacies.", "evidence_type": "editorial", "source_url": null }] }
+    ],
+    "claims": [
+      { "claim_text": "Colorado EPCS mandate requires virtual transmission.", "source_key": "co_epcs_mandate", "evidence_type": "state_law", "medication_slug": null, "segment_slug": null, "target_table": "state_rx_overrides", "target_field": "e_rx_scope", "target_key": "CO" }
+    ]
+  }
+]

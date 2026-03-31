@@ -1,8 +1,27 @@
 # AGENTS.md — AI Match Context API (sportsync-api)
 
+## Object-Ledger Baseline (Locked)
+
+This repo must align to the shared baseline docs:
+- `PRODUCT_BASELINE_OBJECT_LEDGER.md`
+- `docs/ARCHITECTURE_BASELINE.md`
+- `docs/OBJECT_TAXONOMY.md`
+- `docs/URL_RULES.md`
+
+Core system rules:
+- one object, one canonical URL
+- page is the payload
+- front = action
+- back = evidence
+- summaries reveal patterns, not inventory
+- no duplicate identities
+- no UI-only critical truth
+- no page-first implementations for persistent entities
+- no legacy schema assumptions unless explicitly mapped
+
 ## What This Project Is
 
-A standalone API product that delivers pre-joined match intelligence payloads in a single call. Buyers are AI builders, content automators, and betting tool developers who need structured match context (odds, form, injuries, H2H, trends, player props) without building their own data pipeline.
+A standalone API product that delivers pre-joined match intelligence payloads in a single call. Buyers are AI builders, content automators, and betting tool developers who need structured match context (match identity, teams, intel, opening lines, market, injuries, metadata) without building their own data pipeline.
 
 **One-line promise:** "Get a full pre-joined match intelligence payload in one call for AI previews, betting tools, and content generation."
 
@@ -342,31 +361,32 @@ If the task is already a full Task Batch with Objective, Scope, Requirements, Ac
 - `head_to_head` has NO `match_id` — it's a team-pair cache, not per-match.
 - `injury_reports` has NO `match_id` — injuries are linked to teams only.
 
-## V1 Response Contract (FROZEN)
+## V1 Response Contract (LIVE CANONICAL)
 
-The v1 response schema is defined in `schema/v1-response-contract.json`. It has 10 mandatory sections:
+The v1 response schema is defined in `schema/v1-response-contract.json`. It has 7 mandatory sections:
 
 ```
-match, teams, market, form, h2h, injuries, players, trends, live_state, metadata
+match, teams, intel, injuries, opening_lines, market, metadata
 ```
 
 **Rules:**
-- Missing sections return `{ "available": false, "reason": "..." }` — never null, never omitted.
-- Every section includes a `freshness` timestamp.
-- `metadata.schema_version` must always be `"1.0"`.
+- Top-level sections are always present and never omitted.
+- `intel`, `injuries`, `opening_lines`, and `market` use `available` flags for graceful degradation.
+- Canonical metadata key is `metadata.api_version` and must be `"v1"`.
+- `metadata.sections_available` is the section readiness map.
 - A sample valid response is in `schema/sample-response-v1.json`.
 
 ## Edge Function: `match-context`
 
 The core endpoint. Accepts:
-- `GET /match-context?match_id={uuid}&league={optional}`
+- `GET /match-context?match_id={source_or_uuid}&league={optional}`
 - Header: `x-api-key: <key>`
 
 Response flow:
 1. Validate API key (SHA-256 hash lookup in `api_keys`)
 2. Check rate limit (`check_rate_limit` RPC)
 3. Fetch match from `matches` table
-4. Hydrate all 10 sections from respective tables
+4. Hydrate the 7-section contract from canonical tables/views
 5. Return full payload with per-section freshness
 6. Log request to `api_request_logs`
 
@@ -390,7 +410,7 @@ sportsync-api/
 ├── scripts/
 │   └── stability-test.sh              # 20-call stability gate per match
 └── schema/
-    ├── v1-response-contract.json       # Frozen v1 JSON Schema
+    ├── v1-response-contract.json       # Live v1 contract schema
     └── sample-response-v1.json         # Example API response
 ```
 
@@ -398,28 +418,28 @@ sportsync-api/
 
 | Key | Value |
 |---|---|
-| **API Key** | `sk_test_sportsync_beta_001` |
+| **API Key** | Use a currently active key from `api_keys` (do not hardcode test keys in docs). |
 
 ### Seeded Matches (all return HTTP 200)
 | Match | ID | Sport | Sections |
 |---|---|---|---|
-| 🇺🇸 USA vs Mexico | `b42fe447-b2b1-485f-ae6d-1559ee2b57c7` | soccer (FIFA WC) | market ✅ form ✅ injuries ✅ (h2h/players/trends not seeded) |
-| ⚽ Arsenal vs Man City | `b193b51f-cbed-4398-a297-237dd3322607` | soccer (EPL) | ALL sections ✅ |
-| 🏀 Lakers vs Celtics | `d6742e61-2457-43fd-aa3f-e61f6a76c7af` | basketball (NBA) | ALL sections ✅ |
-| 🇬🇧 England vs Brazil | `c94d7e01-333d-41cd-a67d-cc0285fa7f28` | soccer (FIFA WC) | Match only (no supporting data) |
+| 🇺🇸 USA vs Mexico | `b42fe447-b2b1-485f-ae6d-1559ee2b57c7` | soccer (FIFA WC) | match ✅ teams ✅ opening_lines ✅ market ✅ (intel/injuries may be unavailable) |
+| ⚽ Arsenal vs Man City | `b193b51f-cbed-4398-a297-237dd3322607` | soccer (EPL) | all 7 sections present ✅ |
+| 🏀 Lakers vs Celtics | `d6742e61-2457-43fd-aa3f-e61f6a76c7af` | basketball (NBA) | all 7 sections present ✅ |
+| 🇬🇧 England vs Brazil | `c94d7e01-333d-41cd-a67d-cc0285fa7f28` | soccer (FIFA WC) | all 7 sections present ✅ (intel may be unavailable) |
 
 ### Smoke Test
 ```bash
-curl -H "x-api-key: sk_test_sportsync_beta_001" \
+curl -H "x-api-key: $API_KEY" \
   "https://hylnixnuabtnmjcdnujm.supabase.co/functions/v1/match-context?match_id=b193b51f-cbed-4398-a297-237dd3322607"
 ```
 
-Expected: HTTP 200 with all 10 sections populated.
+Expected: HTTP 200 with all 7 top-level sections present.
 
 ## Code Standards
 
 - **No stubs, TODOs, placeholders, or mock logic.** Every function complete, every error path handled.
-- **No modification to the v1 response schema** without explicit approval. The contract is frozen.
+- **No modification to the live v1 response schema** without explicit approval.
 - **No changes to auth logic** (API key validation, SHA-256 hashing) without explicit approval.
 - **No changes to rate limiting logic** without explicit approval.
 - **Graceful degradation only** — missing data returns `available: false`, never crashes the response.
@@ -428,10 +448,10 @@ Expected: HTTP 200 with all 10 sections populated.
 ## What NOT to Touch
 
 Unless the task explicitly says otherwise:
-- Do not modify `schema/v1-response-contract.json` (frozen).
+- Do not modify `schema/v1-response-contract.json` without explicit approval.
 - Do not change the API key validation flow.
 - Do not alter the `check_rate_limit` RPC or rate limiting tables.
-- Do not remove or rename any of the 10 response sections.
+- Do not remove or rename any of the 7 response sections (`match`, `teams`, `intel`, `injuries`, `opening_lines`, `market`, `metadata`).
 - Do not change Supabase project settings or RLS policies without explicit approval.
 
 ## Validation Checklist

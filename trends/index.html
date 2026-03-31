@@ -3,13 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#0b1328" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#fafaf8" />
     <title>SportsSync Trends | API</title>
     <meta
       name="description"
       content="SportsSync internal trend board for edge quality, layers, and directional signals."
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <style>
       *,
       *::before,
@@ -512,6 +515,260 @@
         .hero {
           gap: 4px;
         }
+      }
+
+      /* SportsSync warm design carry-over */
+      :root {
+        --bg: #fafaf8;
+        --panel: #ffffff;
+        --panel-soft: #fcf8f4;
+        --border: #e8e7e3;
+        --text: #1a1a18;
+        --muted: #6b6b63;
+        --muted-2: #9b9b91;
+        --accent: #c85a3a;
+        --ok: #2d8f5c;
+        --warn: #9f6a16;
+        --bad: #b63b2a;
+        --track: #eceae4;
+        --mono: "JetBrains Mono", Menlo, monospace;
+        --body: "DM Sans", sans-serif;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--body);
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1080px;
+        padding: 20px 24px 28px;
+        gap: 20px;
+      }
+
+      .topbar,
+      .panel,
+      .field,
+      .metric-card,
+      .layer-card,
+      .table-wrap {
+        border-radius: 8px;
+        box-shadow: none;
+        border-color: var(--border);
+        background: var(--panel);
+      }
+
+      .topbar {
+        padding: 16px 18px;
+      }
+
+      .brand {
+        font-family: var(--mono);
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+
+      .topbar a,
+      .sub,
+      .state {
+        color: var(--muted);
+      }
+
+      .btn {
+        border-radius: 6px;
+        border-color: var(--border-strong, #d4d3cd);
+        background: transparent;
+        font-weight: 600;
+      }
+
+      h1 {
+        font-family: "Source Serif 4", serif;
+        font-size: clamp(32px, 5vw, 44px);
+        font-weight: 600;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+      }
+
+      .panel {
+        padding: 16px;
+      }
+
+      .panel-head h2 {
+        font-family: "Source Serif 4", serif;
+        font-size: 26px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      .field {
+        background: #fdfcf9;
+        border-radius: 8px;
+      }
+
+      .field label {
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+      }
+
+      select,
+      input[type="text"] {
+        border: 1px solid #d4d3cd;
+        background: #ffffff;
+        color: var(--text);
+        border-radius: 6px;
+        padding: 8px 10px;
+        font: 500 14px "DM Sans", sans-serif;
+      }
+
+      .chip {
+        border-color: #d4d3cd;
+        background: #f8f7f4;
+        color: var(--muted);
+        border-radius: 999px;
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      .chip.is-active {
+        border-color: var(--text);
+        color: var(--text);
+        background: #f3eee8;
+      }
+
+      .table-wrap {
+        background: #ffffff;
+      }
+
+      .table-wrap::-webkit-scrollbar-track {
+        background: #f1f0eb;
+      }
+
+      .table-wrap::-webkit-scrollbar-thumb {
+        background: #d4d3cd;
+      }
+
+      .table-wrap::-webkit-scrollbar-thumb:hover {
+        background: #bdbbb3;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+      }
+
+      th {
+        background: #f8f7f4;
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        border-bottom-color: var(--border);
+      }
+
+      tbody tr:hover {
+        background: #fdf9f5;
+      }
+
+      .logo-wrap {
+        border-color: var(--border);
+        background: #f7f6f1;
+      }
+
+      .team-fallback,
+      .record,
+      .mono {
+        font-family: var(--mono);
+      }
+
+      .team-fallback,
+      .record {
+        color: var(--muted);
+      }
+
+      .quality-track {
+        background: var(--track);
+      }
+
+      .quality-high {
+        background: linear-gradient(90deg, #58b77c, #2d8f5c);
+      }
+
+      .quality-mid {
+        background: linear-gradient(90deg, #d6a24d, #b98025);
+      }
+
+      .quality-low {
+        background: linear-gradient(90deg, #c85a3a, #b63b2a);
+      }
+
+      .pill {
+        border-color: #d4d3cd;
+        border-radius: 999px;
+        background: #f8f7f4;
+      }
+
+      .pill-trend {
+        color: #2d8f5c;
+        border-color: #cfe7d8;
+        background: #eef8f2;
+      }
+
+      .pill-fade {
+        color: #b63b2a;
+        border-color: #edd4cf;
+        background: #fbf1ef;
+      }
+
+      .pill-neutral {
+        color: var(--muted);
+        border-color: #dcdad4;
+        background: #f7f6f1;
+      }
+
+      .hit-high {
+        color: #2d8f5c;
+      }
+
+      .hit-mid {
+        color: #9f6a16;
+      }
+
+      .hit-low {
+        color: #b63b2a;
+      }
+
+      .held-ok {
+        color: #2d8f5c;
+      }
+
+      .held-bad {
+        color: #b63b2a;
+      }
+
+      .skeleton {
+        background: #eceae4;
+      }
+
+      .skeleton::after {
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+      }
+
+      .error {
+        color: #b63b2a;
+        font-size: 13px;
+      }
+
+      .empty {
+        color: var(--muted);
       }
     </style>
   </head>

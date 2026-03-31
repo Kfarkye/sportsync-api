@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+<title>RxTransfer — Controlled Substance Prescription Rules by State (2026)</title>
+<meta name="description" content="Navigate pharmacy regulations for controlled substances across all 50 states and DC. PDMP requirements, e-prescribing mandates, transfer rules, and telehealth restrictions in one reference.">
+<link rel="canonical" href="https://www.rxtransfer.com">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#ffffff">
+<meta property="og:title" content="RxTransfer — Controlled Substance Prescription Rules by State (2026)">
+<meta property="og:description" content="Navigate pharmacy regulations for controlled substances across all 50 states and DC.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.rxtransfer.com">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RxTransfer — Controlled Substance Prescription Rules by State">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Karla:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --paper: #faf9f7;
+  --text: #222222;
+  --muted: #666666;
+  --line: #e8e5e0;
+  --link: #1a5f7a;
+  --focus: rgba(26, 95, 122, 0.2);
+  --accent: #b08a52;
+  --accent-soft: rgba(176, 138, 82, 0.14);
+  --shell: 1120px;
+  --reading: 760px;
+  --shadow-soft: 0 18px 42px rgba(37, 29, 20, 0.06);
+  --shadow-card: 0 16px 34px rgba(37, 29, 20, 0.08);
+  --radius-lg: 24px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Karla', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 140ms ease, border-color 140ms ease, background-color 140ms ease, box-shadow 180ms ease;
+}
+button { font: inherit; border: 0; background: none; cursor: pointer; }
+ul { list-style: none; margin: 0; padding: 0; }
+h1, h2, h3 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0;
+  color: #191919;
+}
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 3px var(--focus);
+}
+
+/* ── Nav ── */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.site-nav-inner {
+  width: 100%;
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.site-nav-brand {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+.site-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.site-nav-links a {
+  font-size: 13px;
+  color: #888;
+  padding: 6px 0;
+  border-bottom: 1px solid transparent;
+}
+.site-nav-links a:hover {
+  color: #333;
+  border-color: rgba(176, 138, 82, 0.48);
+}
+
+/* ── Hero ── */
+.hero-wrapper {
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: 92px 24px 56px;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.72fr);
+  gap: 44px;
+  align-items: stretch;
+  min-height: 380px;
+}
+.hero-copy {
+  max-width: 46rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.hero-kicker {
+  margin: 0 0 12px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7c7267;
+}
+.hero-wrapper h1 {
+  font-size: clamp(34px, 5vw, 52px);
+  margin-bottom: 14px;
+}
+.hero-sub {
+  max-width: 42ch;
+  font-size: 19px;
+  color: #444;
+  margin: 0;
+}
+.hero-proofline {
+  margin: 18px 0 0;
+  font-size: 14px;
+  color: #6b6258;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 18px;
+  margin-top: 22px;
+}
+.hero-actions a {
+  font-size: 14px;
+  color: #2b2b2b;
+  text-decoration: underline;
+  text-decoration-color: rgba(176, 138, 82, 0.34);
+  text-underline-offset: 4px;
+}
+.hero-actions a:hover {
+  text-decoration-color: rgba(176, 138, 82, 0.74);
+}
+
+/* ── Aside card ── */
+.aside-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 24px 24px 22px;
+  box-shadow: var(--shadow-card);
+}
+.hero-aside {
+  display: flex;
+  align-items: stretch;
+}
+.trend-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.aside-label {
+  margin: 0 0 14px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7c7267;
+}
+.aside-meta {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 13px;
+  color: #7b7166;
+}
+.popular-links {
+  display: grid;
+  gap: 10px;
+}
+.popular-links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 15px;
+  color: #282828;
+}
+.popular-links a:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.popular-links a:hover { color: var(--link); }
+.popular-links svg { flex: 0 0 auto; color: #a79b8f; }
+.popular-links .pop-badge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(176, 138, 82, 0.12);
+  color: #8a6f3f;
+  white-space: nowrap;
+}
+
+/* ── Search ── */
+.search-wrap {
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.search-inner {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #fff;
+  padding: 16px;
+  box-shadow: var(--shadow-soft);
+}
+.search-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.92fr);
+  gap: 18px;
+}
+.search-panel {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  background: #fff;
+}
+.search-copy {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.search-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2b2b2b;
+}
+.search-note {
+  font-size: 13px;
+  color: #7c7267;
+}
+.search-field {
+  min-width: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.search-actions-stacked {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(220px, 0.95fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+.search-icon {
+  position: absolute;
+  left: 12px;
+  color: #999;
+  pointer-events: none;
+}
+.search-input {
+  width: 100%;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0 38px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--text);
+  background: #fff;
+}
+.search-input::placeholder { color: #999; }
+.search-select {
+  width: 100%;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0 40px 0 12px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--text);
+  background: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23888' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+.search-submit {
+  height: 44px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  background: #191919;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.search-submit:disabled { cursor: not-allowed; opacity: 0.4; }
+.search-examples {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: #7f766b;
+}
+.search-examples a {
+  color: #4a4641;
+  text-decoration: underline;
+  text-decoration-color: rgba(176, 138, 82, 0.28);
+  text-underline-offset: 3px;
+}
+.search-examples a:hover {
+  text-decoration-color: rgba(176, 138, 82, 0.7);
+}
+
+/* ── Content + Features ── */
+.content {
+  max-width: var(--shell);
+  margin: 34px auto 0;
+  padding: 0 24px 72px;
+}
+.features {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 34px;
+}
+.feature-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 24px 24px 22px;
+  box-shadow: var(--shadow-soft);
+}
+.feature-card h3 {
+  font-size: 20px;
+  margin: 0 0 6px;
+}
+.feature-card p {
+  margin: 0;
+  font-size: 15px;
+  color: #555;
+}
+
+/* ── Directory shell ── */
+.directory-shell {
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--paper);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+.directory-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 24px 18px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+.directory-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2b2b2b;
+  padding: 10px 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+.directory-toggle:hover {
+  border-color: rgba(176, 138, 82, 0.5);
+  background: rgba(176, 138, 82, 0.06);
+}
+.directory-toggle svg {
+  transition: transform 200ms ease;
+}
+.directory-toggle.open svg {
+  transform: rotate(180deg);
+}
+.section-kicker {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7c7267;
+  margin: 0 0 4px;
+}
+.grid-title {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #777;
+  margin: 0;
+}
+.directory-note {
+  font-size: 13px;
+  color: #7c7267;
+}
+
+/* ── State grid ── */
+.state-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  background: rgba(255, 255, 255, 0.72);
+}
+.state-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20px;
+  gap: 12px;
+  align-items: center;
+  min-height: 96px;
+  padding: 20px 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  background: transparent;
+  transition: background 140ms ease;
+}
+.state-card:hover {
+  background: rgba(255, 255, 255, 0.72);
+}
+.state-card:nth-child(-n+3) { border-top: 0; }
+.state-card:not(:nth-child(3n)) {
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+}
+.card-body { min-width: 0; }
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  font-family: 'Karla', sans-serif;
+}
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #5f5a53;
+}
+.card-meta-divider {
+  color: #b0a79d;
+}
+.card-chevron {
+  display: flex;
+  justify-content: flex-end;
+  color: #9a9a9a;
+  align-self: center;
+}
+
+/* ── Segment pills ── */
+.segment-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+.segment-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 13px;
+  color: #3d3a36;
+  background: #fff;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+.segment-pill:hover, .segment-pill.active {
+  border-color: rgba(176, 138, 82, 0.5);
+  background: rgba(176, 138, 82, 0.08);
+  color: #5a4a2a;
+}
+
+/* ── Footer ── */
+.foot-wrapper {
+  border-top: 1px solid var(--line);
+  padding: 44px 24px 60px;
+}
+.foot {
+  max-width: var(--shell);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 48px;
+}
+.foot h2 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 20px;
+  margin: 0 0 8px;
+}
+.foot p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+.foot-links { display: grid; gap: 8px; }
+.foot-links a {
+  font-size: 14px;
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-color: rgba(26, 95, 122, 0.3);
+}
+.foot-meta {
+  display: block;
+  margin-top: 12px;
+  font-size: 12px;
+  color: #999;
+}
+
+/* ── How-it-works ── */
+.how-section {
+  margin: 44px 0 34px;
+}
+.how-section h2 {
+  font-size: clamp(24px, 3vw, 32px);
+  margin: 0 0 8px;
+}
+.how-section > p {
+  font-size: 16px;
+  color: #666;
+  margin: 0 0 24px;
+}
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.how-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-soft);
+}
+.how-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: #191919;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+.how-card h3 {
+  font-size: 18px;
+  margin: 0 0 6px;
+}
+.how-card p {
+  font-size: 15px;
+  color: #555;
+  margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 760px) {
+  .site-nav-links { display: none; }
+  .hero-wrapper { padding: 46px 16px 28px; }
+  .site-nav-inner, .search-wrap, .content, .foot-wrapper {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    min-height: 0;
+  }
+  .hero-copy { justify-content: flex-start; }
+  .hero-actions { gap: 10px 14px; }
+  .directory-head {
+    display: block;
+    padding: 18px 16px 14px;
+  }
+  .directory-note {
+    display: block;
+    margin-top: 4px;
+  }
+  .state-grid { grid-template-columns: 1fr; }
+  .state-card {
+    min-height: 0;
+    padding: 16px;
+  }
+  .state-card:not(:nth-child(3n)) { border-right: 0; }
+  .state-card:nth-child(2), .state-card:nth-child(3) {
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+  .search-copy { display: block; }
+  .search-note { display: block; margin-top: 4px; }
+  .search-grid { grid-template-columns: 1fr; }
+  .search-actions-stacked {
+    grid-template-columns: 1fr;
+  }
+  .features { grid-template-columns: 1fr; }
+  .how-grid { grid-template-columns: 1fr; }
+  .foot { grid-template-columns: 1fr; }
+  .segment-pills { gap: 6px; }
+}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="Site navigation">
+  <div class="site-nav-inner">
+    <a href="/" class="site-nav-brand">RxTransfer</a>
+    <div class="site-nav-links">
+      <a href="#search">Search by state</a>
+      <a href="#how">How it works</a>
+      <a href="#directory">Browse all states</a>
+      <a href="#about">What you'll find</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero-wrapper">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <p class="hero-kicker">For patients, families, travelers, and providers</p>
+      <h1>Will your prescription still work in the new state?</h1>
+      <p class="hero-sub">Check whether moving could delay or block your prescription because of state rules, e-prescribing requirements, or pharmacy restrictions.</p>
+      <p class="hero-proofline">Every state page links to the official board, statute, or rule behind the answer.</p>
+      <div class="hero-actions">
+        <a href="#search">Check your state</a>
+        <a href="#about">What you'll learn</a>
+        <a href="#directory">Browse all states</a>
+      </div>
+    </div>
+
+    <aside class="hero-aside" id="trending" aria-label="High-friction states">
+      <section class="aside-card trend-card">
+        <p class="aside-label">High-friction states</p>
+        <div class="popular-links">
+          <a href="state.html?s=florida">
+            <span>Florida</span>
+            <span class="pop-badge">E-FORCSE</span>
+          </a>
+          <a href="state.html?s=new-york">
+            <span>New York</span>
+            <span class="pop-badge">I-STOP</span>
+          </a>
+          <a href="state.html?s=california">
+            <span>California</span>
+            <span class="pop-badge">AB 2789</span>
+          </a>
+          <a href="state.html?s=north-carolina">
+            <span>North Carolina</span>
+            <span class="pop-badge">STOP Act</span>
+          </a>
+        </div>
+        <p class="aside-meta">These states have the strictest rules for filling prescriptions from out of state. Start here if you're relocating.</p>
+      </section>
+    </aside>
+  </div>
+</header>
+
+<div class="search-wrap" id="search">
+  <div class="search-inner">
+    <div class="search-grid">
+      <section class="search-panel" aria-label="Search by state">
+        <div class="search-copy">
+          <span class="search-title">Start with the state you're moving to.</span>
+          <span class="search-note">See whether your prescription can transfer, what extra steps may apply, and where to go if something gets blocked.</span>
+        </div>
+        <div class="search-actions-stacked">
+          <div class="search-field">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="5"/><path d="M11 11L15 15"/></svg>
+            <input id="stateSearch" class="search-input" type="text" placeholder="Try Florida, Texas, or California" aria-label="Search states" list="stateOptions" autocomplete="off" spellcheck="false">
+          </div>
+          <select id="segmentSelect" class="search-select" aria-label="Choose your situation">
+            <option value="">All situations</option>
+            <option value="moving">Moving permanently</option>
+            <option value="snowbird">Seasonal stay</option>
+            <option value="college-student">School / college</option>
+            <option value="travel-nurse">Travel assignment</option>
+            <option value="military">Military / PCS</option>
+          </select>
+          <button id="searchButton" class="search-submit" type="button" disabled>Check state rules</button>
+        </div>
+        <datalist id="stateOptions"></datalist>
+        <p class="search-examples">Popular: <a href="state.html?s=florida">Florida</a> · <a href="state.html?s=texas">Texas</a> · <a href="state.html?s=california">California</a> · <a href="state.html?s=new-york">New York</a></p>
+      </section>
+      <section class="search-panel" aria-label="What can block a transfer">
+        <div class="search-copy">
+          <span class="search-title">What can block a transfer?</span>
+          <span class="search-note">These are the most common reasons prescriptions fail to cross state lines.</span>
+        </div>
+        <div style="display: grid; gap: 10px; margin-top: 4px;">
+          <div style="display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #3d3a36;">
+            <span style="width: 8px; height: 8px; border-radius: 999px; background: #c45d4a; flex: 0 0 auto; margin-top: 6px;"></span>
+            <span><strong>PDMP check required</strong> before the pharmacy can dispense</span>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #3d3a36;">
+            <span style="width: 8px; height: 8px; border-radius: 999px; background: #c45d4a; flex: 0 0 auto; margin-top: 6px;"></span>
+            <span><strong>E-prescribing may be required</strong> — paper scripts rejected in many states</span>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #3d3a36;">
+            <span style="width: 8px; height: 8px; border-radius: 999px; background: #b08a52; flex: 0 0 auto; margin-top: 6px;"></span>
+            <span><strong>Out-of-state controlled prescriptions</strong> may be restricted or need extra verification</span>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #3d3a36;">
+            <span style="width: 8px; height: 8px; border-radius: 999px; background: #b08a52; flex: 0 0 auto; margin-top: 6px;"></span>
+            <span><strong>Telehealth prescribing rules</strong> may differ by state</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<main class="content">
+  <section class="features" id="about">
+    <p class="section-kicker" style="grid-column: 1 / -1; margin-bottom: -2px;">What do you need to check?</p>
+    <article class="feature-card" style="cursor: pointer;" onclick="document.getElementById('stateSearch').focus()">
+      <h3>Check transfer eligibility</h3>
+      <p>Find out whether the destination state will accept your prescription — and what extra verification the pharmacy may need.</p>
+    </article>
+    <article class="feature-card" style="cursor: pointer;" onclick="document.getElementById('stateSearch').focus()">
+      <h3>Check prescription format</h3>
+      <p>See if your state requires electronic prescribing. If your script is paper, it may be rejected at the counter.</p>
+    </article>
+    <article class="feature-card" style="cursor: pointer;" onclick="document.getElementById('stateSearch').focus()">
+      <h3>Check prescriber eligibility</h3>
+      <p>Learn whether your current doctor or telehealth provider is authorized to prescribe in the new state.</p>
+    </article>
+    <article class="feature-card" style="cursor: pointer;" onclick="document.getElementById('stateSearch').focus()">
+      <h3>Get official next steps</h3>
+      <p>If your transfer gets blocked, every state page has the board contact, PDMP lookup, and escalation path.</p>
+    </article>
+  </section>
+
+  <section class="how-section" id="how">
+    <h2>How RxTransfer works</h2>
+    <p>Three quick steps to see whether your prescription can move with you.</p>
+    <div class="how-grid">
+      <div class="how-card">
+        <span class="how-step">1</span>
+        <h3>Pick your destination state</h3>
+        <p>Search the state you're moving to or browse all 50 states and DC.</p>
+      </div>
+      <div class="how-card">
+        <span class="how-step">2</span>
+        <h3>See what could block a transfer</h3>
+        <p>Check e-prescribing rules, pharmacy restrictions, PDMP requirements, and controlled-substance transfer rules at a glance.</p>
+      </div>
+      <div class="how-card">
+        <span class="how-step">3</span>
+        <h3>Take the right next step</h3>
+        <p>Use the official links to verify the rule, contact the board, or figure out whether you need a new prescription.</p>
+      </div>
+    </div>
+  </section>
+
+  <div id="segments" style="margin-bottom: 18px;">
+    <p class="section-kicker">Who this helps</p>
+    <div class="segment-pills">
+      <button class="segment-pill active" data-segment="all">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="8" r="6"/></svg>
+        All states
+      </button>
+      <button class="segment-pill" data-segment="snowbird">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 2v12M2 8l6 6 6-6"/></svg>
+        Snowbirds
+      </button>
+      <button class="segment-pill" data-segment="travel-nurse">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 1v14M1 8h14"/></svg>
+        Travel Nurses
+      </button>
+      <button class="segment-pill" data-segment="college-student">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 6l6-4 6 4-6 4z"/><path d="M4 7.5V12l4 2.5 4-2.5V7.5"/></svg>
+        College Students
+      </button>
+      <button class="segment-pill" data-segment="military">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 14l5-12 5 12"/><path d="M5 9h6"/></svg>
+        Military / PCS
+      </button>
+    </div>
+  </div>
+
+  <div style="display: flex; justify-content: center; margin: 8px 0 18px;">
+    <button class="directory-toggle" id="directoryToggle" aria-expanded="false" aria-controls="directory">
+      <span>Browse all 51 states</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
+    </button>
+  </div>
+  <section class="directory-shell" id="directory" aria-label="State directory" style="display: none;">
+    <div class="directory-head">
+      <div>
+        <p class="section-kicker">Full directory</p>
+        <p class="grid-title">Browse by state</p>
+      </div>
+      <span class="directory-note" id="stateCount">51 jurisdictions covered</span>
+    </div>
+    <div class="state-grid" id="stateGrid">
+      <!-- JS populated -->
+    </div>
+  </section>
+</main>
+
+<footer class="foot-wrapper">
+  <div class="foot">
+    <div>
+      <h2>RxTransfer</h2>
+      <p>A free reference for controlled substance prescription transfer rules across the United States. Every claim is sourced from official state pharmacy boards and statutes.</p>
+      <span class="foot-meta">Data verified March 2026. Not legal or medical advice. Always confirm with your state board of pharmacy.</span>
+    </div>
+    <div>
+      <h2>Quick links</h2>
+      <div class="foot-links">
+        <a href="#search">Search by state</a>
+        <a href="#directory">Full state directory</a>
+        <a href="#how">How it works</a>
+        <a href="#about">What you'll find</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const STATES = [
+  { code: 'AL', name: 'Alabama', slug: 'alabama', pdmp: 'Alabama PDMP', erx: 'all_controlled' },
+  { code: 'AK', name: 'Alaska', slug: 'alaska', pdmp: 'Alaska PDMP', erx: 'all_controlled' },
+  { code: 'AZ', name: 'Arizona', slug: 'arizona', pdmp: 'Arizona PDMP', erx: 'all_controlled' },
+  { code: 'AR', name: 'Arkansas', slug: 'arkansas', pdmp: 'Arkansas PDMP', erx: 'all_controlled' },
+  { code: 'CA', name: 'California', slug: 'california', pdmp: 'CURES', erx: 'all_controlled' },
+  { code: 'CO', name: 'Colorado', slug: 'colorado', pdmp: 'Colorado PDMP', erx: 'all_controlled' },
+  { code: 'CT', name: 'Connecticut', slug: 'connecticut', pdmp: 'CPMRS', erx: 'all_controlled' },
+  { code: 'DE', name: 'Delaware', slug: 'delaware', pdmp: 'Delaware PMP', erx: 'all_controlled' },
+  { code: 'DC', name: 'District of Columbia', slug: 'district-of-columbia', pdmp: 'DC PDMP', erx: 'all_controlled' },
+  { code: 'FL', name: 'Florida', slug: 'florida', pdmp: 'E-FORCSE', erx: 'all_controlled' },
+  { code: 'GA', name: 'Georgia', slug: 'georgia', pdmp: 'Georgia PDMP', erx: 'all_controlled' },
+  { code: 'HI', name: 'Hawaii', slug: 'hawaii', pdmp: 'Hawaii PDMP', erx: 'all_controlled' },
+  { code: 'ID', name: 'Idaho', slug: 'idaho', pdmp: 'Idaho PDMP', erx: 'all_controlled' },
+  { code: 'IL', name: 'Illinois', slug: 'illinois', pdmp: 'Illinois PMP', erx: 'all_controlled' },
+  { code: 'IN', name: 'Indiana', slug: 'indiana', pdmp: 'INSPECT', erx: 'all_controlled' },
+  { code: 'IA', name: 'Iowa', slug: 'iowa', pdmp: 'Iowa PMP', erx: 'all_controlled' },
+  { code: 'KS', name: 'Kansas', slug: 'kansas', pdmp: 'K-TRACS', erx: 'all_controlled' },
+  { code: 'KY', name: 'Kentucky', slug: 'kentucky', pdmp: 'KASPER', erx: 'all_controlled' },
+  { code: 'LA', name: 'Louisiana', slug: 'louisiana', pdmp: 'Louisiana PMP', erx: 'all_controlled' },
+  { code: 'ME', name: 'Maine', slug: 'maine', pdmp: 'Maine PMP', erx: 'all_controlled' },
+  { code: 'MD', name: 'Maryland', slug: 'maryland', pdmp: 'CRISP PDMP', erx: 'all_controlled' },
+  { code: 'MA', name: 'Massachusetts', slug: 'massachusetts', pdmp: 'MassPAT', erx: 'all_controlled' },
+  { code: 'MI', name: 'Michigan', slug: 'michigan', pdmp: 'Michigan MAPS', erx: 'all_controlled' },
+  { code: 'MN', name: 'Minnesota', slug: 'minnesota', pdmp: 'Minnesota PMP', erx: 'all_controlled' },
+  { code: 'MS', name: 'Mississippi', slug: 'mississippi', pdmp: 'Mississippi PMP', erx: 'all_controlled' },
+  { code: 'MO', name: 'Missouri', slug: 'missouri', pdmp: 'Missouri PDMP', erx: 'all_controlled' },
+  { code: 'MT', name: 'Montana', slug: 'montana', pdmp: 'Montana PDMP', erx: 'all_controlled' },
+  { code: 'NE', name: 'Nebraska', slug: 'nebraska', pdmp: 'Nebraska PDMP', erx: 'all_controlled' },
+  { code: 'NV', name: 'Nevada', slug: 'nevada', pdmp: 'Nevada PDMP', erx: 'all_controlled' },
+  { code: 'NH', name: 'New Hampshire', slug: 'new-hampshire', pdmp: 'NH PDMP', erx: 'all_controlled' },
+  { code: 'NJ', name: 'New Jersey', slug: 'new-jersey', pdmp: 'NJPMP', erx: 'all_controlled' },
+  { code: 'NM', name: 'New Mexico', slug: 'new-mexico', pdmp: 'New Mexico PDMP', erx: 'all_controlled' },
+  { code: 'NY', name: 'New York', slug: 'new-york', pdmp: 'I-STOP / PMP', erx: 'all_controlled' },
+  { code: 'NC', name: 'North Carolina', slug: 'north-carolina', pdmp: 'NC CSRS', erx: 'all_controlled' },
+  { code: 'ND', name: 'North Dakota', slug: 'north-dakota', pdmp: 'ND PDMP', erx: 'all_controlled' },
+  { code: 'OH', name: 'Ohio', slug: 'ohio', pdmp: 'OARRS', erx: 'all_controlled' },
+  { code: 'OK', name: 'Oklahoma', slug: 'oklahoma', pdmp: 'Oklahoma PMP', erx: 'all_controlled' },
+  { code: 'OR', name: 'Oregon', slug: 'oregon', pdmp: 'Oregon PDMP', erx: 'all_controlled' },
+  { code: 'PA', name: 'Pennsylvania', slug: 'pennsylvania', pdmp: 'PA PDMP', erx: 'all_controlled' },
+  { code: 'RI', name: 'Rhode Island', slug: 'rhode-island', pdmp: 'Rhode Island PDMP', erx: 'all_controlled' },
+  { code: 'SC', name: 'South Carolina', slug: 'south-carolina', pdmp: 'SC SCRIPTS', erx: 'all_controlled' },
+  { code: 'SD', name: 'South Dakota', slug: 'south-dakota', pdmp: 'SD PDMP', erx: 'all_controlled' },
+  { code: 'TN', name: 'Tennessee', slug: 'tennessee', pdmp: 'Tennessee CSMD', erx: 'all_controlled' },
+  { code: 'TX', name: 'Texas', slug: 'texas', pdmp: 'Texas PMP', erx: 'all_controlled' },
+  { code: 'UT', name: 'Utah', slug: 'utah', pdmp: 'Utah PDMP', erx: 'all_controlled' },
+  { code: 'VT', name: 'Vermont', slug: 'vermont', pdmp: 'VPMS', erx: 'all_controlled' },
+  { code: 'VA', name: 'Virginia', slug: 'virginia', pdmp: 'Virginia PMP', erx: 'all_controlled' },
+  { code: 'WA', name: 'Washington', slug: 'washington', pdmp: 'Washington PMP', erx: 'all_controlled' },
+  { code: 'WV', name: 'West Virginia', slug: 'west-virginia', pdmp: 'WV CSAPP', erx: 'all_controlled' },
+  { code: 'WI', name: 'Wisconsin', slug: 'wisconsin', pdmp: 'Wisconsin ePDMP', erx: 'all_controlled' },
+  { code: 'WY', name: 'Wyoming', slug: 'wyoming', pdmp: 'Wyoming PDMP', erx: 'all_controlled' },
+];
+
+const chevron = '<svg width="8" height="13" viewBox="0 0 8 13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 1.5L6.5 6.5L1.5 11.5"/></svg>';
+
+function renderGrid(states) {
+  const grid = document.getElementById('stateGrid');
+  grid.innerHTML = states.map(s => `
+    <a class="state-card" href="state.html?s=${s.slug}" aria-label="Open ${s.name} guide">
+      <span class="card-body">
+        <span class="card-title">${s.name}</span>
+        <span class="card-meta">
+          <span>${s.pdmp}</span>
+          <span class="card-meta-divider" aria-hidden="true">&bull;</span>
+          <span>E-Rx: All controlled</span>
+        </span>
+      </span>
+      <span class="card-chevron" aria-hidden="true">${chevron}</span>
+    </a>
+  `).join('');
+  document.getElementById('stateCount').textContent = `${states.length} jurisdictions covered`;
+}
+
+// Init grid
+renderGrid(STATES);
+
+// Populate datalist
+const dl = document.getElementById('stateOptions');
+STATES.forEach(s => {
+  const opt = document.createElement('option');
+  opt.value = s.name;
+  dl.appendChild(opt);
+});
+
+// Search functionality
+const searchInput = document.getElementById('stateSearch');
+const searchBtn = document.getElementById('searchButton');
+searchInput.addEventListener('input', () => {
+  const val = searchInput.value.trim();
+  const match = STATES.find(s => s.name.toLowerCase() === val.toLowerCase());
+  searchBtn.disabled = !match;
+});
+searchBtn.addEventListener('click', () => {
+  const val = searchInput.value.trim();
+  const match = STATES.find(s => s.name.toLowerCase() === val.toLowerCase());
+  if (match) window.location.href = `state.html?s=${match.slug}`;
+});
+
+// Segment pills
+document.querySelectorAll('.segment-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('.segment-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    renderGrid(STATES);
+  });
+});
+
+// Directory toggle
+const dirToggle = document.getElementById('directoryToggle');
+const dirSection = document.getElementById('directory');
+dirToggle.addEventListener('click', () => {
+  const isOpen = dirSection.style.display !== 'none';
+  dirSection.style.display = isOpen ? 'none' : 'block';
+  dirToggle.classList.toggle('open', !isOpen);
+  dirToggle.setAttribute('aria-expanded', !isOpen);
+  if (!isOpen) {
+    dirSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,492 @@
+[
+  {
+    "state_code": "WI",
+    "state_name": "Wisconsin",
+    "state_slug": "wisconsin",
+    "hero_image_url": "/images/states/wisconsin.jpg",
+    "sources": [
+      {
+        "source_key": "wi_epdmp",
+        "source_label": "Wisconsin ePDMP",
+        "source_url": "https://dsps.wi.gov/Pages/BoardsCouncils/Pharmacy/Default.aspx",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "wi_erx",
+        "source_label": "Wisconsin E-Rx Mandate",
+        "source_url": "https://dsps.wi.gov/Pages/BoardsCouncils/Pharmacy/Default.aspx",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out-of-state valid prescriptions are allowed subject to rigorous PDMP checks.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Electronic prescribing is required for all controlled substances.",
+      "telehealth_controlled_text": "Limited initial telehealth prescribing unless there’s an established physical relationship.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Wisconsin ePDMP",
+      "pdmp_url": "https://pdmp.wi.gov/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Wisconsin Pharmacy Examining Board",
+      "board_url": "https://dsps.wi.gov/Pages/BoardsCouncils/Pharmacy/Default.aspx",
+      "board_phone": "(608) 266-2112",
+      "special_restrictions": "Pharmacists must query the ePDMP prior to dispensing any controlled substances."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "1-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "State tracking robust for cross-border transit.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Electronic transmission of controlled substances is universally required.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are denied generally.",
+        "workaround": "Have the prescriber send via EPCS.",
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "college-student",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Verification delays due to strict ePDMP rules."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Ensure your prescriber utilizes electronic prescribing directly to the pharmacy.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Wisconsin ePDMP mandates query checks before dispensing.",
+        "source_key": "wi_epdmp",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "WI"
+      }
+    ]
+  },
+  {
+    "state_code": "MI",
+    "state_name": "Michigan",
+    "state_slug": "michigan",
+    "hero_image_url": "/images/states/michigan.jpg",
+    "sources": [
+      {
+        "source_key": "mi_maps",
+        "source_label": "MAPS",
+        "source_url": "https://www.michigan.gov/lara/bureau-list/bpl/health/pharm",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "mi_erx",
+        "source_label": "Michigan EPCS Mandate",
+        "source_url": "https://www.michigan.gov/lara/bureau-list/bpl/health/pharm",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out of state valid prescriptions accepted conditionally under EPCS mandates.",
+      "schedule_ii_transfer_text": "Electronic transmission only.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Mandatory for all controlled substances.",
+      "telehealth_controlled_text": "Aligns with DEA guidelines for initial telehealth evaluations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Michigan MAPS",
+      "pdmp_url": "https://michigan.pmpaware.net/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Michigan Board of Pharmacy",
+      "board_url": "https://www.michigan.gov/lara/bureau-list/bpl/health/pharm",
+      "board_phone": "(517) 335-0918",
+      "special_restrictions": "MAPS checks are rigorous for cross-state validation."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4 weeks",
+      "avg_wait_primary_care": "2 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "Interstate tracking is strictly monitored via MAPS.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "schedule_ii",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Schedule II substances must be sent electronically without exception.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper prescriptions are universally denied in MI.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "snowbird",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Strict EPCS protocols impose structural delays."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Ensure electronic prescribing.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Michigan Board enforces mandatory checks via MAPS.",
+        "source_key": "mi_maps",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "MI"
+      }
+    ]
+  },
+  {
+    "state_code": "IN",
+    "state_name": "Indiana",
+    "state_slug": "indiana",
+    "hero_image_url": "/images/states/indiana.jpg",
+    "sources": [
+      {
+        "source_key": "in_inspect",
+        "source_label": "INSPECT",
+        "source_url": "https://www.in.gov/pla/professions/pharmacy-home/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "in_hea1207",
+        "source_label": "Indiana HEA 1207",
+        "source_url": "https://www.in.gov/pla/professions/pharmacy-home/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Permitted with aggressive monitoring and verification.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Electronic prescribing requires for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth prescribing restricted heavily for initial CS evaluation.",
+      "emergency_supply_text": null,
+      "pdmp_name": "INSPECT",
+      "pdmp_url": "https://www.in.gov/pla/professions/pharmacy-home/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Indiana Board of Pharmacy",
+      "board_url": "https://www.in.gov/pla/professions/pharmacy-home/",
+      "board_phone": "(317) 234-2067",
+      "special_restrictions": "INSPECT checks are tightly enforced under Indiana law."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "State tracking robust for out of state prescriptions.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "HEA 1207 mandates the electronic transmission of all controlled substances.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are not accepted generally for CS.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "college-student",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Verification delays for cross border out of state telehealth prescriptions."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Verify EPCS clearance.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Indiana HEA 1207 created the mandate for e-prescribing.",
+        "source_key": "in_hea1207",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "e_rx_scope",
+        "target_key": "IN"
+      }
+    ]
+  },
+  {
+    "state_code": "KY",
+    "state_name": "Kentucky",
+    "state_slug": "kentucky",
+    "hero_image_url": "/images/states/kentucky.jpg",
+    "sources": [
+      {
+        "source_key": "ky_kasper",
+        "source_label": "KASPER",
+        "source_url": "https://pharmacy.ky.gov/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "ky_erx",
+        "source_label": "Kentucky E-Rx Mandate",
+        "source_url": "https://pharmacy.ky.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Accepted conditionally subject to strict KASPER checks and evaluations.",
+      "schedule_ii_transfer_text": "Must be electronic.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Kentucky requires electronic transmission for controlled substances.",
+      "telehealth_controlled_text": "Follows standard DEA prescribing laws regarding in-person evaluations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "KASPER",
+      "pdmp_url": "https://chfs.ky.gov/agencies/os/oig/dai/deppb/Pages/kasper.aspx",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Kentucky State Board of Pharmacy",
+      "board_url": "https://pharmacy.ky.gov/",
+      "board_phone": "(502) 564-7910",
+      "special_restrictions": "KASPER checks are famously rigorous for all remote patients."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "State PDMP tracking via KASPER is intensely regulated.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "schedule_ii",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Schedule II substances require strict electronic transmission.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are explicitly forbidden in KY.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "travel-nurse",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Strict e-prescribing standards and KASPER rules apply."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Use electronic prescribing exclusively via EPCS.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Kentucky explicitly monitors controlled medications natively via KASPER.",
+        "source_key": "ky_kasper",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "KY"
+      }
+    ]
+  },
+  {
+    "state_code": "TN",
+    "state_name": "Tennessee",
+    "state_slug": "tennessee",
+    "hero_image_url": "/images/states/tennessee.jpg",
+    "sources": [
+      {
+        "source_key": "tn_csmd",
+        "source_label": "Tennessee CSMD",
+        "source_url": "https://www.tn.gov/health/health-program-areas/health-professional-boards/pharmacy-board.html",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "tn_erx",
+        "source_label": "Tennessee E-Rx Mandate",
+        "source_url": "https://www.tn.gov/health/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out of state valid prescriptions allowed completely electronic.",
+      "schedule_ii_transfer_text": "Mandatory electronic transmission.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Tennessee mandates electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth regulations emphasize physical relationship prior to CS prescribing.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Tennessee CSMD",
+      "pdmp_url": "https://www.tn.gov/health/health-program-areas/health-professional-boards/pharmacy-board.html",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Tennessee Board of Pharmacy",
+      "board_url": "https://www.tn.gov/health/health-program-areas/health-professional-boards/pharmacy-board.html",
+      "board_phone": "(615) 741-2718",
+      "special_restrictions": "Tennessee strictly verifies out-of-state prescribers via CSMD."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4 weeks",
+      "avg_wait_primary_care": "2 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "EPCS compliance strongly required for remote access in Tennessee.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Tennessee requires full electronic prescribing explicitly.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are forbidden unless under narrow exceptions.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "snowbird",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "EPCS required for out-of-state providers visiting TN."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Ensure your prescriber links their systems with Tennessee pharmacies.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Tennessee enforces CSMD checks continuously.",
+        "source_key": "tn_csmd",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "TN"
+      }
+    ]
+  }
+]

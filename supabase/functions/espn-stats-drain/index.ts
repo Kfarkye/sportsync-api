@@ -11,8 +11,21 @@ declare const Deno: any;
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-internal-secret',
 };
+const INTERNAL_JOB_SECRET = (Deno.env.get('INTERNAL_JOB_SECRET') ?? '').trim();
+
+function readRequestSecret(req: Request): string {
+  const headerSecret = req.headers.get('x-internal-secret')?.trim();
+  if (headerSecret) return headerSecret;
+
+  const authHeader = req.headers.get('authorization') ?? '';
+  if (authHeader.toLowerCase().startsWith('bearer ')) {
+    return authHeader.slice(7).trim();
+  }
+
+  return '';
+}
 
 const L = {
   info: (e: string, d: Record<string, any> = {}) => console.log(JSON.stringify({ level: 'INFO', ts: new Date().toISOString(), fn: 'espn-stats-drain', event: e, ...d })),
@@ -448,6 +461,18 @@ async function drainGameLogs(supabase: any, leagueKey: string, league: LeagueDef
 // ━━━ Main Handler ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
+
+  if (!INTERNAL_JOB_SECRET) {
+    return new Response(JSON.stringify({ error: 'Missing INTERNAL_JOB_SECRET' }), {
+      status: 500, headers: { ...CORS, 'Content-Type': 'application/json' },
+    });
+  }
+
+  if (readRequestSecret(req) !== INTERNAL_JOB_SECRET) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401, headers: { ...CORS, 'Content-Type': 'application/json' },
+    });
+  }
 
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL')!,

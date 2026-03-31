@@ -2,7 +2,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 var CORS = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type"
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-internal-secret"
 };
 var L = {
   info: (e, d = {}) => console.log(JSON.stringify({ level: "INFO", ts: (/* @__PURE__ */ new Date()).toISOString(), fn: "espn-enrichment-drain", event: e, ...d })),
@@ -37,6 +37,16 @@ var FETCH_TIMEOUT = 12e3;
 var MAX_CONCURRENT = 3;
 var INTER_BATCH_DELAY_MS = 300;
 var DRAIN_VERSION = "v2.1";
+var INTERNAL_JOB_SECRET = (Deno.env.get("INTERNAL_JOB_SECRET") ?? "").trim();
+function readRequestSecret(req) {
+  const headerSecret = req.headers.get("x-internal-secret")?.trim();
+  if (headerSecret) return headerSecret;
+  const authHeader = req.headers.get("authorization") ?? "";
+  if (authHeader.toLowerCase().startsWith("bearer ")) {
+    return authHeader.slice(7).trim();
+  }
+  return "";
+}
 async function safeFetch(url, label) {
   try {
     const controller = new AbortController();
@@ -324,6 +334,18 @@ async function drainEvent(eventId, league, leagueKey, homeTeamId, awayTeamId, ho
 }
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+  if (!INTERNAL_JOB_SECRET) {
+    return new Response(JSON.stringify({ error: "Missing INTERNAL_JOB_SECRET" }), {
+      status: 500,
+      headers: { ...CORS, "Content-Type": "application/json" }
+    });
+  }
+  if (readRequestSecret(req) !== INTERNAL_JOB_SECRET) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { ...CORS, "Content-Type": "application/json" }
+    });
+  }
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL"),
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")

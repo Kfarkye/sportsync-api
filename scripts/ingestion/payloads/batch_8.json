@@ -1,0 +1,492 @@
+[
+  {
+    "state_code": "VA",
+    "state_name": "Virginia",
+    "state_slug": "virginia",
+    "hero_image_url": "/images/states/virginia.jpg",
+    "sources": [
+      {
+        "source_key": "va_pmp",
+        "source_label": "Virginia PMP",
+        "source_url": "https://www.dhp.virginia.gov/Boards/Pharmacy/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "va_erx",
+        "source_label": "Virginia E-Rx Mandate",
+        "source_url": "https://www.dhp.virginia.gov/Boards/Pharmacy/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out-of-state valid prescriptions accepted conditionally under EPCS mandates.",
+      "schedule_ii_transfer_text": "Electronic transmission only.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Mandatory electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Aligns with DEA guidelines for initial telehealth evaluations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Virginia PMP",
+      "pdmp_url": "https://www.dhp.virginia.gov/Boards/Pharmacy/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Virginia Board of Pharmacy",
+      "board_url": "https://www.dhp.virginia.gov/Boards/Pharmacy/",
+      "board_phone": "(804) 367-4456",
+      "special_restrictions": "PMP queries are mandated prior to dispensing."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "1-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "State tracking robust for out-of-state prescriptions.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Electronic prescribing is universally required for controlled substances in Virginia.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper prescriptions are universally denied.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "military",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "PMP mandatory checks cause dispensing delays for transient personnel."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Ensure your military prescriber uses EPCS-certified software.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Virginia PMP enforces mandatory dispensing checks.",
+        "source_key": "va_pmp",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "VA"
+      }
+    ]
+  },
+  {
+    "state_code": "WV",
+    "state_name": "West Virginia",
+    "state_slug": "west-virginia",
+    "hero_image_url": "/images/states/west-virginia.jpg",
+    "sources": [
+      {
+        "source_key": "wv_csapp",
+        "source_label": "WV CSAPP",
+        "source_url": "https://www.wvbop.com/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "wv_erx",
+        "source_label": "West Virginia EPCS Mandate",
+        "source_url": "https://www.wvbop.com/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Permitted with aggressive monitoring and PDMP verification.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Electronic prescribing is required for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth prescribing restricted for initial CS evaluation.",
+      "emergency_supply_text": null,
+      "pdmp_name": "WV CSAPP",
+      "pdmp_url": "https://www.wvbop.com/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "West Virginia Board of Pharmacy",
+      "board_url": "https://www.wvbop.com/",
+      "board_phone": "(304) 558-0558",
+      "special_restrictions": "CSAPP checks are tightly enforced across all dispensing events to curb diversion."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "6-8 weeks",
+      "avg_wait_primary_care": "2-4 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "State CSAPP tracking robust for out-of-state prescriptions.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "schedule_ii",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Schedule II substances require strict electronic transmission.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are forbidden.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "military",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Strict CSAPP enforcement causes dispensing delays."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Coordinate with your prescriber to use EPCS before arriving in WV.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "West Virginia monitors dispensing rigorously via CSAPP.",
+        "source_key": "wv_csapp",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "WV"
+      }
+    ]
+  },
+  {
+    "state_code": "MD",
+    "state_name": "Maryland",
+    "state_slug": "maryland",
+    "hero_image_url": "/images/states/maryland.jpg",
+    "sources": [
+      {
+        "source_key": "md_crisp",
+        "source_label": "CRISP PDMP",
+        "source_url": "https://health.maryland.gov/pharmacy/Pages/Index.aspx",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "md_erx",
+        "source_label": "Maryland EPCS Mandate",
+        "source_url": "https://health.maryland.gov/pharmacy/Pages/Index.aspx",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Permitted with mandatory CRISP PDMP verification.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically per 2022 mandate.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Maryland mandates electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth prescribing restricted heavily for initial CS evaluation.",
+      "emergency_supply_text": null,
+      "pdmp_name": "CRISP PDMP",
+      "pdmp_url": "https://health.maryland.gov/pharmacy/Pages/Index.aspx",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Maryland Board of Pharmacy",
+      "board_url": "https://health.maryland.gov/pharmacy/Pages/Index.aspx",
+      "board_phone": "(410) 764-4755",
+      "special_restrictions": "CRISP inquiries are required for all pharmacists dispensing CS."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "State PDMP tracking is heavily optimized via CRISP.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Maryland mandates the electronic transmission of all controlled substances.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are not accepted for controlled substances.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "college-student",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Verification delays for cross-border telehealth prescriptions."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Verify EPCS clearance with your out-of-state prescriber.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Maryland created an absolute mandate for e-prescribing.",
+        "source_key": "md_erx",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "e_rx_scope",
+        "target_key": "MD"
+      }
+    ]
+  },
+  {
+    "state_code": "DE",
+    "state_name": "Delaware",
+    "state_slug": "delaware",
+    "hero_image_url": "/images/states/delaware.jpg",
+    "sources": [
+      {
+        "source_key": "de_pmp",
+        "source_label": "Delaware PMP",
+        "source_url": "https://dpr.delaware.gov/boards/pharmacy/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "de_erx",
+        "source_label": "Delaware E-Rx Mandate",
+        "source_url": "https://dpr.delaware.gov/boards/pharmacy/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Accepted conditionally subject to strict PMP checks.",
+      "schedule_ii_transfer_text": "Must be electronic.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Delaware requires electronic transmission for controlled substances.",
+      "telehealth_controlled_text": "Follows standard DEA prescribing laws regarding in-person evaluations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Delaware PMP",
+      "pdmp_url": "https://dpr.delaware.gov/boards/pharmacy/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Delaware Board of Pharmacy",
+      "board_url": "https://dpr.delaware.gov/boards/pharmacy/",
+      "board_phone": "(302) 744-4500",
+      "special_restrictions": "PMP checks are rigorous for all remote or out-of-state patients."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "PMP monitoring is intensely regulated.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "schedule_ii",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Schedule II substances require strict electronic transmission in DE.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are explicitly forbidden in DE.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "snowbird",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Strict e-prescribing standards and PMP rules apply."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Use electronic prescribing exclusively via EPCS.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Delaware monitors heavily via the state PMP.",
+        "source_key": "de_pmp",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "DE"
+      }
+    ]
+  },
+  {
+    "state_code": "NJ",
+    "state_name": "New Jersey",
+    "state_slug": "new-jersey",
+    "hero_image_url": "/images/states/new-jersey.jpg",
+    "sources": [
+      {
+        "source_key": "nj_pmp",
+        "source_label": "NJPMP",
+        "source_url": "https://www.njconsumeraffairs.gov/phar/Pages/default.aspx",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "nj_erx",
+        "source_label": "New Jersey E-Rx Mandate",
+        "source_url": "https://www.njconsumeraffairs.gov/phar/Pages/default.aspx",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out-of-state valid prescriptions allowed electronically.",
+      "schedule_ii_transfer_text": "Mandatory electronic transmission.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "New Jersey mandates electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth regulations emphasize physical relationship prior to CS prescribing.",
+      "emergency_supply_text": null,
+      "pdmp_name": "NJPMP",
+      "pdmp_url": "https://www.njconsumeraffairs.gov/phar/Pages/default.aspx",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "New Jersey Board of Pharmacy",
+      "board_url": "https://www.njconsumeraffairs.gov/phar/Pages/default.aspx",
+      "board_phone": "(973) 504-6450",
+      "special_restrictions": "NJPMP checks are mandatory for all Schedule II prescriptions before dispensing."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4 weeks",
+      "avg_wait_primary_care": "2 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "NJPMP compliance is strongly enforced for all prescribers.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "New Jersey requires full electronic prescribing for all controlled schedules.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are forbidden in New Jersey.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "travel-nurse",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "NJPMP imposes comprehensive verification requirements."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Ensure your prescriber links their systems with NJ pharmacies.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "NJPMP checks are strictly integrated into pharmacy workflows.",
+        "source_key": "nj_pmp",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "NJ"
+      }
+    ]
+  }
+]

@@ -7,7 +7,7 @@
   <meta name="description" content="Quickstart and API reference for SportsSync Match Context API.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -359,6 +359,168 @@
         grid-template-columns: 1fr 1fr;
       }
     }
+
+    /* SportsSync warm design carry-over */
+    :root {
+      --bg: #fafaf8;
+      --panel: #ffffff;
+      --panel-strong: #ffffff;
+      --soft: #f6f1eb;
+      --border: #e8e7e3;
+      --border-strong: #d4d3cd;
+      --text: #1a1a18;
+      --muted: #6b6b63;
+      --accent: #c85a3a;
+      --accent-deep: #a24831;
+      --shadow: none;
+      --mono: "JetBrains Mono", Menlo, monospace;
+      --body: "DM Sans", sans-serif;
+      --display: "Source Serif 4", serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body);
+      line-height: 1.65;
+    }
+
+    .layout {
+      width: min(1080px, calc(100% - 32px));
+      gap: 20px;
+      padding: 24px 0 36px;
+    }
+
+    .sidebar,
+    .section,
+    .quick-card,
+    .side-stat,
+    table,
+    pre,
+    .callout {
+      border-radius: 8px;
+      box-shadow: none;
+      background: var(--panel);
+      border-color: var(--border);
+    }
+
+    .sidebar {
+      top: 20px;
+      padding: 20px;
+      background: var(--panel);
+    }
+
+    .brand {
+      font-family: var(--mono);
+      font-size: 15px;
+      letter-spacing: -0.02em;
+      font-weight: 500;
+    }
+
+    .sidebar p,
+    p,
+    .quick-card span,
+    .side-stat span,
+    th,
+    li {
+      color: var(--muted);
+    }
+
+    .side-stat strong {
+      font-family: var(--display);
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+    }
+
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      background: #f3eee8;
+      color: var(--text);
+    }
+
+    .section {
+      padding: 26px;
+    }
+
+    .cap {
+      color: var(--accent);
+      font-size: 11px;
+      font-family: var(--mono);
+      letter-spacing: 0.06em;
+    }
+
+    h2 {
+      font-family: var(--display);
+      font-size: 34px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    h3 {
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .lead {
+      font-size: 16px;
+      max-width: 58ch;
+    }
+
+    .quick-grid {
+      gap: 12px;
+    }
+
+    .quick-card {
+      padding: 16px;
+    }
+
+    .quick-card strong {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .callout {
+      border: 1px solid var(--border-strong);
+      background: #fcf8f4;
+      color: var(--text);
+    }
+
+    .copy-btn {
+      border-radius: 6px;
+      border-color: var(--border-strong);
+      background: transparent;
+      font-weight: 600;
+    }
+
+    .copy-btn:hover {
+      border-color: var(--text);
+    }
+
+    table {
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    th {
+      background: #f8f7f4;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      font-weight: 500;
+    }
+
+    code {
+      background: #f5f4f0;
+      border-radius: 6px;
+    }
+
+    pre {
+      background: #1e1e1c;
+      color: #c8c8bc;
+      border: 1px solid #33332f;
+    }
   </style>
 </head>
 <body>
@@ -373,7 +535,7 @@
           <span>contract</span>
         </div>
         <div class="side-stat">
-          <strong>10</strong>
+          <strong>7</strong>
           <span>sections</span>
         </div>
         <div class="side-stat">
@@ -406,13 +568,13 @@
       <section class="section" id="overview">
         <div class="cap">Overview</div>
         <h2>One stable payload for the whole match picture</h2>
-        <p class="lead">SportsSync returns match identity, market, form, injuries, player context, trends, and live state in one response, so the buyer does not need to stitch feeds or normalize partial data by hand.</p>
+        <p class="lead">SportsSync returns match identity, teams, intel, opening lines, market, injuries, and metadata in one response, so the buyer does not need to stitch feeds or normalize partial data by hand.</p>
         <div class="callout">Canonical v1 metadata key is <code>api_version</code>. Public examples in these docs use placeholders, not exposed live credentials.</div>
 
         <div class="quick-grid">
           <div class="quick-card">
             <strong>Fixed top-level shape</strong>
-            <span>Every response includes the same 10 sections.</span>
+            <span>Every response includes the same 7 sections.</span>
           </div>
           <div class="quick-card">
             <strong>Graceful degradation</strong>
@@ -431,7 +593,7 @@
       <section class="section" id="quickstart">
         <div class="cap">Quickstart</div>
         <h2>First successful call</h2>
-        <p>Use a sandbox key, pick one of the published sample IDs, then hit <code>/match-context</code>. The browser demo at <a href="/demo/index.html">/demo/index.html</a> is the fastest way to see the payload rendered as a product surface.</p>
+        <p>Use a sandbox key, pick one of the published sample IDs, then hit <code>/match-context</code>. The browser demo at <a href="/demo/index.html">/demo/index.html</a> calls a server proxy that only serves the published sample IDs, so no production integration key is exposed client-side.</p>
 
         <table>
           <thead>
@@ -484,7 +646,7 @@
       <section class="section" id="endpoint">
         <div class="cap">Endpoint</div>
         <h2>Request shape</h2>
-        <p><code>GET /match-context?match_id=&lt;uuid&gt;&amp;league=&lt;optional&gt;</code></p>
+        <p><code>GET /match-context?match_id=&lt;source_or_uuid&gt;&amp;league=&lt;optional&gt;</code></p>
 
         <table>
           <thead>
@@ -496,7 +658,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td><code>match_id</code></td><td>uuid</td><td>Yes</td><td>The target match.</td></tr>
+            <tr><td><code>match_id</code></td><td>string</td><td>Yes</td><td>Published source ID or canonical UUID.</td></tr>
             <tr><td><code>league</code></td><td>string</td><td>No</td><td>Optional filter when the client already knows the league.</td></tr>
           </tbody>
         </table>
@@ -512,7 +674,7 @@
       <section class="section" id="response">
         <div class="cap">Response</div>
         <h2>Top-level contract</h2>
-        <p>All top-level sections are always present. When a feed is unavailable, the section remains in place with <code>available: false</code>, which keeps typed clients predictable.</p>
+        <p>All top-level sections are always present. When intel or injuries are unavailable, the section remains in place with <code>available: false</code>, which keeps typed clients predictable.</p>
 
         <div class="copy-wrap">
           <strong>JSON outline</strong>
@@ -521,18 +683,16 @@
         <pre id="json_outline"><code>{
   "match": { ... },
   "teams": { ... },
-  "market": { ... },
-  "form": { ... },
-  "h2h": { ... },
+  "intel": { ... },
   "injuries": { ... },
-  "players": { ... },
-  "trends": { ... },
-  "live_state": { ... },
+  "opening_lines": { ... },
+  "market": { ... },
   "metadata": {
     "api_version": "v1",
     "generated_at": "ISO-8601",
     "response_time_ms": 182,
-    "data_freshness": { ... }
+    "data_freshness": { ... },
+    "sections_available": { ... }
   }
 }</code></pre>
       </section>

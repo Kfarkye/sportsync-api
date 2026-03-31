@@ -1,0 +1,492 @@
+[
+  {
+    "state_code": "NM",
+    "state_name": "New Mexico",
+    "state_slug": "new-mexico",
+    "hero_image_url": "/images/states/new-mexico.jpg",
+    "sources": [
+      {
+        "source_key": "nm_pmp",
+        "source_label": "New Mexico PMP",
+        "source_url": "https://www.rld.nm.gov/boards-and-commissions/individual-boards-and-commissions/pharmacy/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "nm_sb131",
+        "source_label": "NM SB 131 E-Prescribing",
+        "source_url": "https://www.nmlegis.gov",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out-of-state valid prescriptions may be filled if they comply with New Mexico's e-prescribing mandates.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically per SB 131.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "SB 131 mandates electronic transmission of all controlled substance prescriptions.",
+      "telehealth_controlled_text": "Typically requires an established relationship; out-of-state telehealth providers face scrutiny.",
+      "emergency_supply_text": null,
+      "pdmp_name": "New Mexico PMP",
+      "pdmp_url": "https://www.rld.nm.gov/boards-and-commissions/individual-boards-and-commissions/pharmacy/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "New Mexico Board of Pharmacy",
+      "board_url": "https://www.rld.nm.gov/boards-and-commissions/individual-boards-and-commissions/pharmacy/",
+      "board_phone": "(505) 222-9830",
+      "special_restrictions": "PMP queries are strictly monitored for out-of-state patients."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-4 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing.",
+      "notes": "State geography requires robust PMP verification for cross-border transit patients.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "All controlled substance prescriptions must be sent electronically.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are generally refused for controlled substances.",
+        "workaround": "Have prescriber send via EPCS.",
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "travel-nurse",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Verification delays due to strict PMP and e-rx enforcement."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Ensure your prescriber utilizes electronic prescribing systems connected to New Mexico pharmacies.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "New Mexico requires electronic transmission for all controlled substances.",
+        "source_key": "nm_sb131",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "e_rx_scope",
+        "target_key": "NM"
+      }
+    ]
+  },
+  {
+    "state_code": "UT",
+    "state_name": "Utah",
+    "state_slug": "utah",
+    "hero_image_url": "/images/states/utah.jpg",
+    "sources": [
+      {
+        "source_key": "ut_csd",
+        "source_label": "Utah Controlled Substance Database",
+        "source_url": "https://dopl.utah.gov/pharmacy/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "ut_hb177",
+        "source_label": "Utah HB 177 E-Prescribing",
+        "source_url": "https://le.utah.gov",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Utah allows out-of-state valid prescriptions subject to verification and electronic transmission rules.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Electronic prescribing is required for all controlled substances per state law.",
+      "telehealth_controlled_text": "Initial evaluation restrictions apply for remote controlled substance prescribing.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Utah CSD",
+      "pdmp_url": "https://dopl.utah.gov/pharmacy/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Utah Division of Professional Licensing (DOPL)",
+      "board_url": "https://dopl.utah.gov/pharmacy/",
+      "board_phone": "(801) 530-6628",
+      "special_restrictions": "CSD review is mandatory prior to dispensing controlled substances."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "3-5 weeks",
+      "avg_wait_primary_care": "1-2 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial prescribing via telehealth.",
+      "notes": "Strong state-level tracking and verification requirements.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "schedule_ii",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Electronic prescribing is required for Schedule II.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are heavily verified and often rejected for controlled substances.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "snowbird",
+        "segment_data": {
+          "risk_level": "high",
+          "key_friction": "Strict e-prescribing and monitoring database check required."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Use electronic prescribing integrated with DOPL rules to avoid delays.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Utah enforces mandatory CSD checks.",
+        "source_key": "ut_csd",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "UT"
+      }
+    ]
+  },
+  {
+    "state_code": "ID",
+    "state_name": "Idaho",
+    "state_slug": "idaho",
+    "hero_image_url": "/images/states/idaho.jpg",
+    "sources": [
+      {
+        "source_key": "id_pdmp",
+        "source_label": "Idaho PDMP",
+        "source_url": "https://bop.idaho.gov/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "id_pharmacy_act",
+        "source_label": "Idaho Pharmacy Act",
+        "source_url": "https://legislature.idaho.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Idaho permits out-of-state valid prescriptions, provided they meet state law standards.",
+      "schedule_ii_transfer_text": "CII prescriptions must be electronic.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Idaho requires electronic transmission for controlled substances.",
+      "telehealth_controlled_text": "Adheres to DEA telehealth standards for initial controlled substance prescriptions.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Idaho PDMP",
+      "pdmp_url": "https://bop.idaho.gov/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Idaho State Board of Pharmacy",
+      "board_url": "https://bop.idaho.gov/",
+      "board_phone": "(208) 334-2356",
+      "special_restrictions": "Regular mandatory queries of the PDMP are implemented."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4 weeks",
+      "avg_wait_primary_care": "2 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "Lower population density rely on integrated electronic systems for cross border prescriptions.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Electronic prescribing is universally mandated for controlled substances.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are not accepted generally for CS.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "travel-nurse",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Telehealth initial evaluation rules cause issues for arriving patients."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Verify EPCS clearance.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Idaho mandates electronic transmission for controlled substances.",
+        "source_key": "id_pharmacy_act",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "e_rx_scope",
+        "target_key": "ID"
+      }
+    ]
+  },
+  {
+    "state_code": "MT",
+    "state_name": "Montana",
+    "state_slug": "montana",
+    "hero_image_url": "/images/states/montana.jpg",
+    "sources": [
+      {
+        "source_key": "mt_mpr",
+        "source_label": "Montana PDMP",
+        "source_url": "https://boards.bsd.dli.mt.gov/pharmacy/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "mt_law",
+        "source_label": "Montana E-Rx Mandate",
+        "source_url": "https://leg.mt.gov",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Pharmacists can dispense out-of-state valid prescriptions subject to PDMP verification.",
+      "schedule_ii_transfer_text": "Must be electronic.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Montana law requires electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Prescribing controlled substances typically requires a formal face-to-face encounter initially.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Montana PDMP",
+      "pdmp_url": "https://boards.bsd.dli.mt.gov/pharmacy/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Montana Board of Pharmacy",
+      "board_url": "https://boards.bsd.dli.mt.gov/pharmacy/",
+      "board_phone": "(406) 841-2300",
+      "special_restrictions": "Reviewing standard patient history inside the PDMP is consistently enforced."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing.",
+      "notes": "Low population density increases reliance on cross-border telehealth, but strict federal alignment remains.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "schedule_ii",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Electronic transmission of Schedule II substances is required.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper prescriptions are not generally accepted.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "snowbird",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Verification lag for out-of-state paper prescriptions."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Opt for electronic transmission exclusively.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Montana relies heavily on PDMP review prior to controlled substance dispensing.",
+        "source_key": "mt_mpr",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "MT"
+      }
+    ]
+  },
+  {
+    "state_code": "WY",
+    "state_name": "Wyoming",
+    "state_slug": "wyoming",
+    "hero_image_url": "/images/states/wyoming.jpg",
+    "sources": [
+      {
+        "source_key": "wy_worx",
+        "source_label": "WORx",
+        "source_url": "https://pharmacyboard.wyo.gov/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "wy_erx",
+        "source_label": "Wyoming E-Prescribing",
+        "source_url": "https://pharmacyboard.wyo.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Prescriptions from contiguous and non-contiguous states are valid if electronically generated.",
+      "schedule_ii_transfer_text": "Mandatory electronic transmission.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Mandatory electronic prescribing implemented Jan 2021.",
+      "telehealth_controlled_text": "Initial evaluation restrictions apply per standard DEA alignment.",
+      "emergency_supply_text": null,
+      "pdmp_name": "WORx",
+      "pdmp_url": "https://pharmacyboard.wyo.gov/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Wyoming State Board of Pharmacy",
+      "board_url": "https://pharmacyboard.wyo.gov/",
+      "board_phone": "(307) 634-9636",
+      "special_restrictions": "Queries to WORx are customary for cross-border transit patients."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4 weeks",
+      "avg_wait_primary_care": "1-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "Remote tracking robust across state lines utilizing WORx.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Wyoming enforces e-prescribing mandates uniformly.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are not accepted without explicit statutory exceptions.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "snowbird",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Strict e-prescribing rules cause transit delays."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Always have the prescriber send scripts directly to the intended pharmacy electronically.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "WORx system tracks controlled substance dispensing strictly.",
+        "source_key": "wy_worx",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "WY"
+      }
+    ]
+  }
+]

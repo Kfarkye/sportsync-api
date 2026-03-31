@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+<title>Loading… — RxTransfer</title>
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#ffffff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Karla:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --paper: #faf9f7;
+  --text: #222222;
+  --muted: #666666;
+  --line: #e8e5e0;
+  --link: #1a5f7a;
+  --focus: rgba(26, 95, 122, 0.2);
+  --accent: #b08a52;
+  --accent-soft: rgba(176, 138, 82, 0.14);
+  --shell: 920px;
+  --shadow-soft: 0 18px 42px rgba(37, 29, 20, 0.06);
+  --shadow-card: 0 16px 34px rgba(37, 29, 20, 0.08);
+  --radius-lg: 24px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Karla', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+h1, h2, h3 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0;
+  color: #191919;
+}
+
+/* ── Nav ── */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.site-nav-inner {
+  width: 100%;
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.site-nav-brand {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+.site-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.site-nav-links a {
+  font-size: 13px;
+  color: #888;
+  padding: 6px 0;
+  border-bottom: 1px solid transparent;
+}
+.site-nav-links a:hover {
+  color: #333;
+  border-color: rgba(176, 138, 82, 0.48);
+}
+
+/* ── Breadcrumb ── */
+.breadcrumb {
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: 16px 24px 0;
+  font-size: 13px;
+  color: #7c7267;
+}
+.breadcrumb a { color: #7c7267; text-decoration: underline; text-decoration-color: rgba(176, 138, 82, 0.28); text-underline-offset: 3px; }
+.breadcrumb a:hover { color: #333; }
+.breadcrumb span { margin: 0 6px; color: #b0a79d; }
+
+/* ── State hero ── */
+.state-hero {
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: 28px 24px 0;
+}
+.state-hero h1 {
+  font-size: clamp(30px, 4.5vw, 44px);
+  margin-bottom: 8px;
+}
+.state-hero-sub {
+  font-size: 17px;
+  color: #444;
+  margin: 0 0 4px;
+  max-width: 56ch;
+}
+.state-hero-proof {
+  font-size: 13px;
+  color: #7c7267;
+  margin: 0;
+}
+
+/* ── Rail cards ── */
+.state-content {
+  max-width: var(--shell);
+  margin: 28px auto 0;
+  padding: 0 24px 72px;
+}
+.rail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.rail-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 18px 20px 16px;
+  box-shadow: var(--shadow-soft);
+}
+.rail-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7c7267;
+  margin: 0 0 6px;
+}
+.rail-value {
+  font-size: 22px;
+  font-weight: 600;
+  color: #191919;
+  margin: 0;
+  font-family: 'Karla', sans-serif;
+}
+.rail-note {
+  font-size: 13px;
+  color: #5f5a53;
+  margin: 4px 0 0;
+}
+
+/* ── Detail sections ── */
+.detail-shell {
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--paper);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 22px;
+}
+.detail-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+.detail-head h2 {
+  font-size: 20px;
+}
+.detail-note {
+  font-size: 13px;
+  color: #7c7267;
+}
+.detail-body {
+  padding: 20px 24px 22px;
+  background: rgba(255, 255, 255, 0.72);
+}
+.rule-row {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: 16px;
+  padding: 14px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+.rule-row:first-child { border-top: 0; padding-top: 0; }
+.rule-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #3d3a36;
+  padding-top: 1px;
+}
+.rule-value {
+  font-size: 15px;
+  color: #333;
+}
+.rule-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.badge-yes {
+  background: rgba(46, 125, 50, 0.1);
+  color: #2e7d32;
+}
+.badge-no {
+  background: rgba(196, 93, 74, 0.1);
+  color: #c45d4a;
+}
+.badge-restricted {
+  background: rgba(176, 138, 82, 0.14);
+  color: #8a6f3f;
+}
+
+/* ── Board card ── */
+.board-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 22px;
+}
+.board-card h3 {
+  font-size: 18px;
+  margin: 0 0 14px;
+}
+.board-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 15px;
+}
+.board-row:first-of-type { border-top: 0; }
+.board-key {
+  font-weight: 600;
+  color: #3d3a36;
+  min-width: 80px;
+}
+.board-val {
+  color: #333;
+}
+.board-val a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-color: rgba(26, 95, 122, 0.3);
+}
+
+/* ── Loading ── */
+.loading-shell {
+  max-width: var(--shell);
+  margin: 80px auto;
+  text-align: center;
+  padding: 0 24px;
+}
+.loading-shell p {
+  font-size: 16px;
+  color: #888;
+}
+.error-shell {
+  max-width: var(--shell);
+  margin: 80px auto;
+  text-align: center;
+  padding: 0 24px;
+}
+.error-shell h1 {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+.error-shell p {
+  font-size: 16px;
+  color: #666;
+}
+.error-shell a {
+  color: var(--link);
+  text-decoration: underline;
+}
+
+/* ── Footer ── */
+.foot-wrapper {
+  border-top: 1px solid var(--line);
+  padding: 44px 24px 60px;
+}
+.foot {
+  max-width: var(--shell);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 48px;
+}
+.foot h2 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 20px;
+  margin: 0 0 8px;
+}
+.foot p { font-size: 14px; color: #666; margin: 0; }
+.foot-links { display: grid; gap: 8px; }
+.foot-links a { font-size: 14px; color: var(--link); text-decoration: underline; text-decoration-color: rgba(26, 95, 122, 0.3); }
+.foot-meta { display: block; margin-top: 12px; font-size: 12px; color: #999; }
+
+/* ── Responsive ── */
+@media (max-width: 760px) {
+  .site-nav-links { display: none; }
+  .rail-grid { grid-template-columns: 1fr; }
+  .rule-row { grid-template-columns: 1fr; gap: 4px; }
+  .state-hero { padding: 20px 16px 0; }
+  .state-content { padding: 0 16px 48px; }
+  .breadcrumb { padding: 12px 16px 0; }
+  .detail-body { padding: 16px; }
+  .foot { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Site navigation">
+  <div class="site-nav-inner">
+    <a href="index.html" class="site-nav-brand">RxTransfer</a>
+    <div class="site-nav-links">
+      <a href="index.html#search">Search by state</a>
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#directory">Browse all states</a>
+    </div>
+  </div>
+</nav>
+
+<div id="pageContent"></div>
+
+<footer class="foot-wrapper">
+  <div class="foot">
+    <div>
+      <h2>RxTransfer</h2>
+      <p>A free reference for controlled substance prescription transfer rules across the United States. Every claim is sourced from official state pharmacy boards and statutes.</p>
+      <span class="foot-meta">Data verified March 2026. Not legal or medical advice. Always confirm with your state board of pharmacy.</span>
+    </div>
+    <div>
+      <h2>Quick links</h2>
+      <div class="foot-links">
+        <a href="index.html#search">Search by state</a>
+        <a href="index.html#directory">Full state directory</a>
+        <a href="index.html#how">How it works</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const SUPABASE_URL = 'https://qtajfcitgcrsscdvvqxk.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF0YWpmY2l0Z2Nyc3NjZHZ2cXhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzOTc3OTYsImV4cCI6MjA4OTk3Mzc5Nn0.80zKDfoOm4MyPM4uQQnCXmQuq3_0S_-hLxE12sI2tLQ';
+
+const params = new URLSearchParams(window.location.search);
+const stateSlug = params.get('s');
+const container = document.getElementById('pageContent');
+
+function formatEnum(val) {
+  if (!val) return '—';
+  return val.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function badge(val) {
+  if (!val) return '<span class="rule-badge badge-no">Unknown</span>';
+  const map = {
+    'permitted': ['badge-yes', 'Permitted'],
+    'permitted_with_restrictions': ['badge-restricted', 'Restricted'],
+    'electronic_only': ['badge-restricted', 'Electronic Only'],
+    'all_controlled': ['badge-restricted', 'All Controlled'],
+    'restricted': ['badge-restricted', 'Restricted'],
+    'not_permitted': ['badge-no', 'Not Permitted'],
+  };
+  const [cls, label] = map[val] || ['badge-restricted', formatEnum(val)];
+  return `<span class="rule-badge ${cls}">${label}</span>`;
+}
+
+async function loadState() {
+  if (!stateSlug) {
+    container.innerHTML = `
+      <div class="error-shell">
+        <h1>No state selected</h1>
+        <p>Go back and <a href="index.html">pick a state</a> to check its prescription transfer rules.</p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = `<div class="loading-shell"><p>Loading state rules…</p></div>`;
+
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/v_state_page?state_slug=eq.${encodeURIComponent(stateSlug)}&limit=1`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+    );
+    const data = await res.json();
+
+    if (!data || data.length === 0) {
+      container.innerHTML = `
+        <div class="error-shell">
+          <h1>State not found</h1>
+          <p>"${stateSlug}" didn't match any state in our database. <a href="index.html">Go back</a> and try again.</p>
+        </div>`;
+      return;
+    }
+
+    const s = data[0];
+    document.title = `${s.state_name} — Controlled Substance Rules | RxTransfer`;
+
+    const meta = document.createElement('meta');
+    meta.name = 'description';
+    meta.content = `${s.state_name} prescription transfer rules: PDMP (${s.pdmp_name}), e-prescribing, controlled substance transfer policies, and Board of Pharmacy contact.`;
+    document.head.appendChild(meta);
+
+    container.innerHTML = `
+      <div class="breadcrumb">
+        <a href="index.html">RxTransfer</a>
+        <span>›</span>
+        <span>${s.state_name}</span>
+      </div>
+
+      <header class="state-hero">
+        <h1>${s.state_name}</h1>
+        <p class="state-hero-sub">What you need to know before filling a controlled substance prescription in ${s.state_name}.</p>
+        <p class="state-hero-proof">Last verified ${s.last_verified} · Source: ${s.board_of_pharmacy}</p>
+      </header>
+
+      <main class="state-content">
+        <div class="rail-grid">
+          <div class="rail-card">
+            <p class="rail-label">PDMP System</p>
+            <p class="rail-value">${s.pdmp_name || '—'}</p>
+            <p class="rail-note">${s.pdmp_mandatory_check ? 'Mandatory check before dispensing' : 'Check not mandatory'}</p>
+          </div>
+          <div class="rail-card">
+            <p class="rail-label">E-Prescribing</p>
+            <p class="rail-value">${formatEnum(s.e_rx_scope)}</p>
+            <p class="rail-note">${s.e_rx_scope === 'all_controlled' ? 'Required for all controlled substances' : 'Scope varies by schedule'}</p>
+          </div>
+          <div class="rail-card">
+            <p class="rail-label">Schedule II Transfer</p>
+            <p class="rail-value">${formatEnum(s.schedule_ii_transfer)}</p>
+            <p class="rail-note">${s.schedule_ii_transfer_text || ''}</p>
+          </div>
+        </div>
+
+        <section class="detail-shell">
+          <div class="detail-head">
+            <h2>Transfer rules</h2>
+            <span class="detail-note">Will your prescription be accepted here?</span>
+          </div>
+          <div class="detail-body">
+            <div class="rule-row">
+              <span class="rule-label">Out-of-state prescriptions</span>
+              <span class="rule-value">${badge(s.out_of_state_controlled)}<br><span style="font-size: 14px; color: #555; margin-top: 4px; display: inline-block;">${s.out_of_state_controlled_text || ''}</span></span>
+            </div>
+            <div class="rule-row">
+              <span class="rule-label">Schedule II</span>
+              <span class="rule-value">${badge(s.schedule_ii_transfer)}<br><span style="font-size: 14px; color: #555; margin-top: 4px; display: inline-block;">${s.schedule_ii_transfer_text || ''}</span></span>
+            </div>
+            <div class="rule-row">
+              <span class="rule-label">Schedule III–V</span>
+              <span class="rule-value">${badge(s.schedule_iii_v_transfer)}<br><span style="font-size: 14px; color: #555; margin-top: 4px; display: inline-block;">${s.schedule_iii_v_transfer_text || ''}</span></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="detail-shell">
+          <div class="detail-head">
+            <h2>Prescribing requirements</h2>
+            <span class="detail-note">Will your prescription format work here?</span>
+          </div>
+          <div class="detail-body">
+            <div class="rule-row">
+              <span class="rule-label">E-prescribing</span>
+              <span class="rule-value">${badge(s.e_rx_scope)}<br><span style="font-size: 14px; color: #555; margin-top: 4px; display: inline-block;">${s.e_rx_scope_text || ''}</span></span>
+            </div>
+            <div class="rule-row">
+              <span class="rule-label">Telehealth prescribing</span>
+              <span class="rule-value">${badge(s.telehealth_controlled)}<br><span style="font-size: 14px; color: #555; margin-top: 4px; display: inline-block;">${s.telehealth_controlled_text || ''}</span></span>
+            </div>
+            <div class="rule-row">
+              <span class="rule-label">Emergency supply</span>
+              <span class="rule-value">${s.emergency_supply_allowed ? '<span class="rule-badge badge-yes">Allowed</span>' : '<span class="rule-badge badge-restricted">Not standard</span>'}<br><span style="font-size: 14px; color: #555; margin-top: 4px; display: inline-block;">${s.emergency_supply_text || (s.emergency_supply_allowed ? '' : 'Contact the board to confirm whether emergency dispensing applies to your situation.')}</span></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="detail-shell">
+          <div class="detail-head">
+            <h2>Access &amp; prescribing reality</h2>
+            <span class="detail-note">What getting care actually looks like in ${s.state_name}</span>
+          </div>
+          <div class="detail-body">
+            <div class="rule-row">
+              <span class="rule-label">Psychiatry wait</span>
+              <span class="rule-value">${s.avg_wait_psychiatry || '—'}<br><span style="font-size: 13px; color: #7c7267; margin-top: 2px; display: inline-block;">Estimated new-patient wait</span></span>
+            </div>
+            <div class="rule-row">
+              <span class="rule-label">Primary care wait</span>
+              <span class="rule-value">${s.avg_wait_primary_care || '—'}<br><span style="font-size: 13px; color: #7c7267; margin-top: 2px; display: inline-block;">Estimated new-patient wait</span></span>
+            </div>
+            <div class="rule-row">
+              <span class="rule-label">PCP prescribing</span>
+              <span class="rule-value">${s.pcp_can_prescribe_stimulants ? '<span class="rule-badge badge-yes">Can prescribe stimulants</span>' : '<span class="rule-badge badge-no">Cannot prescribe stimulants</span>'}</span>
+            </div>
+            <div class="rule-row">
+              <span class="rule-label">Telehealth access</span>
+              <span class="rule-value">${s.telehealth_services_available || '—'}</span>
+            </div>
+          </div>
+        </section>
+
+        <div class="board-card">
+          <h3>If you need to verify or escalate</h3>
+          <div class="board-row">
+            <span class="board-key">Board</span>
+            <span class="board-val">${s.board_of_pharmacy || '—'}</span>
+          </div>
+          <div class="board-row">
+            <span class="board-key">Website</span>
+            <span class="board-val"><a href="${s.board_url || '#'}" target="_blank" rel="noopener">Official board website ↗</a></span>
+          </div>
+          <div class="board-row">
+            <span class="board-key">PDMP</span>
+            <span class="board-val">${s.pdmp_name || '—'} ${s.pdmp_mandatory_check ? '· Mandatory check required' : '· Check recommended'}</span>
+          </div>
+          <div class="board-row">
+            <span class="board-key">Next step</span>
+            <span class="board-val">Call the board if your pharmacy says they cannot fill. Have your prescription details and prescriber information ready.</span>
+          </div>
+        </div>
+      </main>
+    `;
+  } catch (err) {
+    container.innerHTML = `
+      <div class="error-shell">
+        <h1>Something went wrong</h1>
+        <p>We couldn't load the data for this state. <a href="index.html">Go back</a> and try again.</p>
+      </div>`;
+  }
+}
+
+loadState();
+</script>
+</body>
+</html>

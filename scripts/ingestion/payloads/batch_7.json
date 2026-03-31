@@ -1,0 +1,492 @@
+[
+  {
+    "state_code": "MS",
+    "state_name": "Mississippi",
+    "state_slug": "mississippi",
+    "hero_image_url": "/images/states/mississippi.jpg",
+    "sources": [
+      {
+        "source_key": "ms_pmp",
+        "source_label": "Mississippi PMP",
+        "source_url": "https://www.mbp.ms.gov/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "ms_erx",
+        "source_label": "Mississippi E-Rx Mandate",
+        "source_url": "https://www.mbp.ms.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out-of-state valid prescriptions accepted conditionally under EPCS mandates.",
+      "schedule_ii_transfer_text": "Electronic transmission only.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Mandatory electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Aligns with DEA guidelines for initial telehealth evaluations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Mississippi PMP",
+      "pdmp_url": "https://www.mbp.ms.gov/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Mississippi Board of Pharmacy",
+      "board_url": "https://www.mbp.ms.gov/",
+      "board_phone": "(601) 605-5388",
+      "special_restrictions": "PMP checks are rigorously enforced for all dispensing events."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "6-8 weeks",
+      "avg_wait_primary_care": "2-4 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "Rural access constraints make EPCS compliance critical.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Electronic prescribing is universally required for controlled substances in Mississippi.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper prescriptions are universally denied.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "military",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "PMP mandatory checks cause dispensing delays for transient military personnel."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Ensure your military prescriber uses EPCS-certified software.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Mississippi PMP enforces mandatory dispensing checks.",
+        "source_key": "ms_pmp",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "MS"
+      }
+    ]
+  },
+  {
+    "state_code": "AL",
+    "state_name": "Alabama",
+    "state_slug": "alabama",
+    "hero_image_url": "/images/states/alabama.jpg",
+    "sources": [
+      {
+        "source_key": "al_pdmp",
+        "source_label": "Alabama PDMP",
+        "source_url": "https://www.albop.com/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "al_erx",
+        "source_label": "Alabama EPCS Mandate",
+        "source_url": "https://www.albop.com/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Permitted with aggressive monitoring and PDMP verification.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Electronic prescribing is required for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth prescribing restricted for initial CS evaluation.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Alabama PDMP",
+      "pdmp_url": "https://www.albop.com/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Alabama State Board of Pharmacy",
+      "board_url": "https://www.albop.com/",
+      "board_phone": "(334) 261-2308",
+      "special_restrictions": "PDMP checks tightly enforced across all dispensing events."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "6-8 weeks",
+      "avg_wait_primary_care": "2-4 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "State PDMP tracking robust for out-of-state prescriptions.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "schedule_ii",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Schedule II substances require strict electronic transmission.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are forbidden.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "military",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Strict PDMP enforcement causes dispensing delays for transient populations."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Coordinate with your prescriber to use EPCS before arriving in Alabama.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Alabama PDMP monitors dispensing rigorously.",
+        "source_key": "al_pdmp",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "AL"
+      }
+    ]
+  },
+  {
+    "state_code": "GA",
+    "state_name": "Georgia",
+    "state_slug": "georgia",
+    "hero_image_url": "/images/states/georgia.jpg",
+    "sources": [
+      {
+        "source_key": "ga_pdmp",
+        "source_label": "Georgia PDMP",
+        "source_url": "https://gbp.georgia.gov/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "ga_hb249",
+        "source_label": "Georgia HB 249",
+        "source_url": "https://www.legis.ga.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Permitted with mandatory PDMP verification under HB 249.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically per HB 249.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Georgia HB 249 mandates electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth prescribing restricted heavily for initial CS evaluation.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Georgia PDMP",
+      "pdmp_url": "https://gdna.georgia.gov/georgia-prescription-drug-monitoring-program",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Georgia Board of Pharmacy",
+      "board_url": "https://gbp.georgia.gov/",
+      "board_phone": "(478) 207-2440",
+      "special_restrictions": "HB 249 imposes comprehensive PDMP check requirements before dispensing."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "State PDMP tracking is robust under HB 249.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "HB 249 mandates the electronic transmission of all controlled substances in Georgia.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are not accepted for controlled substances.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "college-student",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Verification delays for cross-border telehealth prescriptions."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Verify EPCS clearance with your out-of-state prescriber.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Georgia HB 249 created the mandate for e-prescribing.",
+        "source_key": "ga_hb249",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "e_rx_scope",
+        "target_key": "GA"
+      }
+    ]
+  },
+  {
+    "state_code": "SC",
+    "state_name": "South Carolina",
+    "state_slug": "south-carolina",
+    "hero_image_url": "/images/states/south-carolina.jpg",
+    "sources": [
+      {
+        "source_key": "sc_scripts",
+        "source_label": "SC SCRIPTS",
+        "source_url": "https://llr.sc.gov/bop/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "sc_erx",
+        "source_label": "South Carolina E-Rx Mandate",
+        "source_url": "https://llr.sc.gov/bop/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Accepted conditionally subject to strict SC SCRIPTS checks.",
+      "schedule_ii_transfer_text": "Must be electronic.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "South Carolina requires electronic transmission for controlled substances.",
+      "telehealth_controlled_text": "Follows standard DEA prescribing laws regarding in-person evaluations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "SC SCRIPTS",
+      "pdmp_url": "https://llr.sc.gov/bop/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "South Carolina Board of Pharmacy",
+      "board_url": "https://llr.sc.gov/bop/",
+      "board_phone": "(803) 896-4700",
+      "special_restrictions": "SC SCRIPTS checks are famously rigorous for all remote patients."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "SC SCRIPTS monitoring is intensely regulated for cross-border access.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "schedule_ii",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Schedule II substances require strict electronic transmission in SC.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are explicitly forbidden in SC.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "snowbird",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Strict e-prescribing standards and SC SCRIPTS rules apply."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Use electronic prescribing exclusively via EPCS.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "South Carolina monitors heavily via SC SCRIPTS.",
+        "source_key": "sc_scripts",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "SC"
+      }
+    ]
+  },
+  {
+    "state_code": "NC",
+    "state_name": "North Carolina",
+    "state_slug": "north-carolina",
+    "hero_image_url": "/images/states/north-carolina.jpg",
+    "sources": [
+      {
+        "source_key": "nc_csrs",
+        "source_label": "NC CSRS",
+        "source_url": "https://www.ncbop.org/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "nc_stopact",
+        "source_label": "NC STOP Act",
+        "source_url": "https://www.ncleg.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out-of-state valid prescriptions allowed electronically under the STOP Act.",
+      "schedule_ii_transfer_text": "Mandatory electronic transmission under STOP Act.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "NC STOP Act mandates electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth regulations emphasize physical relationship prior to CS prescribing.",
+      "emergency_supply_text": null,
+      "pdmp_name": "NC CSRS",
+      "pdmp_url": "https://www.ncbop.org/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "North Carolina Board of Pharmacy",
+      "board_url": "https://www.ncbop.org/",
+      "board_phone": "(919) 246-1050",
+      "special_restrictions": "The STOP Act is one of the most comprehensive state controlled substance oversight laws in the US."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4 weeks",
+      "avg_wait_primary_care": "2 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "CSRS compliance is strongly enforced under the STOP Act framework.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "The STOP Act requires full electronic prescribing for all controlled schedules.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are forbidden under the STOP Act.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "travel-nurse",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "STOP Act imposes comprehensive EPCS requirements for all providers."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Ensure your prescriber links their systems with NC pharmacies under STOP Act rules.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "NC STOP Act enforces CSRS checks continuously for all dispensing.",
+        "source_key": "nc_stopact",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "e_rx_scope",
+        "target_key": "NC"
+      }
+    ]
+  }
+]

@@ -2,13 +2,14 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 var CORS = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type"
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-internal-secret"
 };
 var DRAIN_VERSION = "v2";
 var MAX_CONCURRENT = 3;
 var INTER_BATCH_MS = 400;
 var FETCH_TIMEOUT_MS = 15e3;
 var ESPN_BASE = "https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/summary";
+var INTERNAL_JOB_SECRET = (Deno.env.get("INTERNAL_JOB_SECRET") ?? "").trim();
 var WEATHER_CONDITIONS = {
   1: "Sunny",
   2: "Partly Cloudy",
@@ -52,6 +53,15 @@ function asBoolean(value) {
     if (["false", "0", "no", "n"].includes(normalized)) return false;
   }
   return null;
+}
+function readRequestSecret(req) {
+  const headerSecret = req.headers.get("x-internal-secret")?.trim();
+  if (headerSecret) return headerSecret;
+  const authHeader = req.headers.get("authorization") ?? "";
+  if (authHeader.toLowerCase().startsWith("bearer ")) {
+    return authHeader.slice(7).trim();
+  }
+  return "";
 }
 async function fetchWithTimeout(url, ms) {
   const ctrl = new AbortController();
@@ -617,6 +627,18 @@ async function insertMissingHalftimeRows(supabase, rows, errors) {
 }
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+  if (!INTERNAL_JOB_SECRET) {
+    return new Response(JSON.stringify({ error: "Missing INTERNAL_JOB_SECRET" }), {
+      status: 500,
+      headers: { ...CORS, "Content-Type": "application/json" }
+    });
+  }
+  if (readRequestSecret(req) !== INTERNAL_JOB_SECRET) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { ...CORS, "Content-Type": "application/json" }
+    });
+  }
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL"),
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")

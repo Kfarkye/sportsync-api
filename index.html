@@ -1,899 +1,783 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SportsSync Match Context API</title>
-  <meta name="description" content="One call for the full match picture: market, form, injuries, player context, trends, and live state.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg: #f6f8fc;
-      --bg-soft: #edf2fb;
-      --panel: rgba(255, 255, 255, 0.92);
-      --panel-strong: #ffffff;
-      --border: rgba(24, 39, 75, 0.12);
-      --border-strong: rgba(33, 84, 255, 0.2);
-      --text: #101828;
-      --muted: #667085;
-      --accent: #2554ff;
-      --accent-deep: #1637b8;
-      --accent-soft: rgba(37, 84, 255, 0.08);
-      --success: #0b8f55;
-      --shadow: 0 18px 44px rgba(16, 24, 40, 0.08);
-      --mono: "IBM Plex Mono", "SF Mono", Menlo, monospace;
-      --body: "Manrope", "Avenir Next", sans-serif;
-      --display: "Space Grotesk", "Avenir Next", sans-serif;
-    }
-
-    body {
-      background:
-        radial-gradient(circle at top left, rgba(37, 84, 255, 0.08), transparent 28%),
-        linear-gradient(180deg, #f6f8fc 0%, #fbfcff 26%, #f7f9fc 100%);
-      color: var(--text);
-      font-family: var(--body);
-      line-height: 1.55;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    .shell {
-      width: min(1120px, calc(100% - 32px));
-      margin: 0 auto;
-    }
-
-    .topbar {
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(16px);
-      background: rgba(246, 248, 252, 0.86);
-    }
-
-    .topbar-inner {
-      min-height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .brand {
-      color: var(--text);
-      text-decoration: none;
-      font-family: var(--display);
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
-    .nav a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-height: 46px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: var(--panel-strong);
-      color: var(--text);
-      padding: 0 16px;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 800;
-      letter-spacing: -0.01em;
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
-    }
-
-    .btn-primary {
-      border-color: transparent;
-      background: var(--accent);
-      color: #fff;
-      box-shadow: 0 16px 30px rgba(37, 84, 255, 0.2);
-    }
-
-    .hero {
-      padding: 44px 0 28px;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
-      gap: 22px;
-      align-items: start;
-    }
-
-    .hero-copy {
-      padding-top: 12px;
-    }
-
-    .hero-note {
-      margin-bottom: 14px;
-      color: var(--accent);
-      font-size: 13px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    h1 {
-      max-width: 10ch;
-      margin-bottom: 16px;
-      font-family: var(--display);
-      font-size: clamp(46px, 7vw, 78px);
-      line-height: 0.94;
-      letter-spacing: -0.055em;
-    }
-
-    .hero-copy p {
-      max-width: 58ch;
-      margin-bottom: 18px;
-      color: var(--muted);
-      font-size: 19px;
-    }
-
-    .hero-copy strong {
-      color: var(--text);
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-
-    .hero-footnote {
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .board {
-      border: 1px solid var(--border-strong);
-      border-radius: 24px;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 250, 255, 0.96));
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .board-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 18px 20px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.94);
-    }
-
-    .board-label {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .board-id {
-      color: var(--accent);
-      font-family: var(--mono);
-      font-size: 11px;
-    }
-
-    .board-main {
-      padding: 20px;
-      display: grid;
-      gap: 16px;
-    }
-
-    .match-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .matchup {
-      font-family: var(--display);
-      font-size: 24px;
-      font-weight: 700;
-      letter-spacing: -0.04em;
-    }
-
-    .match-sub {
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .live-pill {
-      padding: 7px 10px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-    }
-
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .metric {
-      padding: 14px;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.84);
-    }
-
-    .metric-label {
-      margin-bottom: 6px;
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .metric-value {
-      font-family: var(--display);
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: -0.05em;
-    }
-
-    .metric-value.mono {
-      font-family: var(--mono);
-      font-size: 24px;
-      letter-spacing: -0.02em;
-    }
-
-    .board-footer {
-      display: grid;
-      gap: 8px;
-      padding-top: 4px;
-    }
-
-    .board-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .board-row span:last-child {
-      color: var(--text);
-      font-family: var(--mono);
-      font-weight: 600;
-    }
-
-    .rail {
-      margin: 26px 0 0;
-      padding: 14px 18px;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.74);
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .rail-item strong {
-      display: block;
-      margin-bottom: 4px;
-      color: var(--text);
-      font-family: var(--display);
-      font-size: 24px;
-      font-weight: 700;
-      letter-spacing: -0.04em;
-    }
-
-    .rail-item span {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .section {
-      margin-bottom: 18px;
-      padding: 22px 22px 24px;
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      background: var(--panel);
-      box-shadow: 0 10px 24px rgba(16, 24, 40, 0.04);
-    }
-
-    .section-head {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-    }
-
-    h2 {
-      font-family: var(--display);
-      font-size: 34px;
-      line-height: 1;
-      letter-spacing: -0.05em;
-    }
-
-    .section-head p {
-      max-width: 60ch;
-      color: var(--muted);
-      font-size: 15px;
-      font-weight: 600;
-    }
-
-    .cap {
-      color: var(--accent);
-      font-family: var(--mono);
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .payload-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .payload-card {
-      padding: 16px;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: #fff;
-    }
-
-    .payload-card h3 {
-      margin-bottom: 8px;
-      font-size: 17px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-
-    .payload-card p {
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .board-table {
-      display: grid;
-      gap: 10px;
-    }
-
-    .board-row-head,
-    .board-entry {
-      display: grid;
-      grid-template-columns: minmax(0, 1.45fr) minmax(160px, 0.95fr) 110px;
-      gap: 14px;
-      align-items: center;
-    }
-
-    .board-row-head {
-      padding: 0 14px;
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .board-entry {
-      padding: 14px;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: #fff;
-    }
-
-    .entry-main {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-    }
-
-    .entry-main img {
-      width: 30px;
-      height: 30px;
-      object-fit: cover;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: #fff;
-      flex-shrink: 0;
-    }
-
-    .entry-text strong {
-      display: block;
-      font-size: 14px;
-      font-weight: 800;
-      line-height: 1.25;
-    }
-
-    .entry-text span {
-      display: block;
-      margin-top: 3px;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .entry-id {
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 11px;
-      line-height: 1.35;
-      word-break: break-all;
-    }
-
-    .entry-link {
-      justify-self: end;
-      color: var(--accent);
-      font-size: 13px;
-      font-weight: 800;
-      text-decoration: none;
-    }
-
-    .use-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .use-card {
-      padding: 18px;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: #fff;
-    }
-
-    .use-card h3 {
-      margin-bottom: 8px;
-      font-size: 16px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-
-    .use-card p {
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .pricing {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .plan {
-      display: grid;
-      align-content: start;
-      gap: 14px;
-      padding: 18px;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      background: #fff;
-    }
-
-    .plan-highlight {
-      border-color: var(--border-strong);
-      background: linear-gradient(180deg, rgba(37, 84, 255, 0.08), rgba(255, 255, 255, 0.96) 42%);
-      box-shadow: 0 14px 32px rgba(37, 84, 255, 0.08);
-    }
-
-    .plan-tag {
-      color: var(--accent);
-      font-family: var(--mono);
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .plan h3 {
-      font-size: 19px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-
-    .price {
-      font-family: var(--display);
-      font-size: 42px;
-      font-weight: 700;
-      line-height: 0.95;
-      letter-spacing: -0.06em;
-    }
-
-    .plan p {
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .plan ul {
-      list-style: none;
-      display: grid;
-      gap: 8px;
-    }
-
-    .plan li {
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    footer {
-      padding: 8px 0 28px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-      text-align: center;
-    }
-
-    footer a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    @media (max-width: 960px) {
-      .hero-grid,
-      .payload-grid,
-      .use-grid,
-      .pricing {
-        grid-template-columns: 1fr;
-      }
-
-      .rail {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .board-row-head,
-      .board-entry {
-        grid-template-columns: 1fr;
-      }
-
-      .entry-link {
-        justify-self: start;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .shell {
-        width: min(100% - 20px, 1120px);
-      }
-
-      .topbar-inner {
-        padding: 12px 0;
-      }
-
-      .hero {
-        padding-top: 28px;
-      }
-
-      h1 {
-        font-size: 48px;
-      }
-
-      .hero-copy p {
-        font-size: 17px;
-      }
-
-      .rail,
-      .metric-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SportsSync API — Live Sports Data API</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAFAF8;
+    --surface: #FFFFFF;
+    --text-primary: #1A1A18;
+    --text-secondary: #6B6B63;
+    --text-tertiary: #9B9B91;
+    --accent: #C85A3A;
+    --border: #E8E7E3;
+    --border-strong: #D4D3CD;
+    --green: #2D8F5C;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  nav {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .nav-links a:hover { color: var(--text-primary); }
+
+  /* HERO */
+  .hero {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 80px 24px 72px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: 'Source Serif 4', serif;
+    font-size: clamp(36px, 5vw, 52px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
+    max-width: 620px;
+    margin-bottom: 24px;
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    max-width: 520px;
+    margin-bottom: 40px;
+  }
+
+  .hero-cta-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 14px 28px;
+    background: var(--text-primary);
+    color: var(--bg);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 0.2s;
+  }
+
+  .btn-primary:hover { background: #333; }
+
+  .btn-secondary {
+    display: inline-block;
+    padding: 14px 28px;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    transition: border-color 0.2s;
+  }
+
+  .btn-secondary:hover { border-color: var(--text-primary); }
+
+  .hero-proof {
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--text-tertiary);
+  }
+
+  .hero-proof span {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-secondary);
+    font-size: 12px;
+  }
+
+  /* SECTION COMMON */
+  section {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .section-header {
+    margin-bottom: 48px;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Source Serif 4', serif;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    max-width: 540px;
+  }
+
+  .section-desc {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 520px;
+    margin-top: 14px;
+  }
+
+  /* WHAT YOU GET */
+  .payload-section {
+    padding-bottom: 80px;
+  }
+
+  .payload-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .payload-item {
+    background: var(--surface);
+    padding: 28px 24px;
+  }
+
+  .payload-item-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .payload-item h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .payload-item p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  /* SAMPLE */
+  .sample-section {
+    padding-bottom: 80px;
+  }
+
+  .sample-block {
+    background: #1E1E1C;
+    border-radius: 8px;
+    padding: 32px;
+    overflow-x: auto;
+  }
+
+  .sample-block pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: #C8C8BC;
+  }
+
+  .sample-block .key { color: #9AABCF; }
+  .sample-block .str { color: #C3A87A; }
+  .sample-block .num { color: #B5CEA8; }
+  .sample-block .comment { color: #6A6A5E; font-style: italic; }
+  .sample-block .section-marker { color: #7A8A6E; }
+
+  /* COVERAGE */
+  .coverage-section {
+    padding-bottom: 80px;
+  }
+
+  .coverage-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .coverage-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .coverage-table td {
+    font-size: 14px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-primary);
+  }
+
+  .coverage-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .coverage-table td:first-child {
+    font-weight: 600;
+  }
+
+  .coverage-table .leagues {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .coverage-table .status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  .status-live { color: var(--green); }
+  .status-partial { color: var(--text-tertiary); }
+
+  /* PRICING */
+  .pricing-section {
+    padding-bottom: 80px;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .pricing-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pricing-card.featured {
+    border-color: var(--text-primary);
+  }
+
+  .pricing-tier {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .pricing-amount {
+    font-family: 'Source Serif 4', serif;
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .pricing-period {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+  }
+
+  .pricing-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 32px;
+    flex-grow: 1;
+  }
+
+  .pricing-features li {
+    font-size: 14px;
+    color: var(--text-secondary);
+    padding-left: 18px;
+    position: relative;
+  }
+
+  .pricing-features li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: var(--text-tertiary);
+  }
+
+  .pricing-card .btn-primary,
+  .pricing-card .btn-secondary {
+    text-align: center;
+    width: 100%;
+  }
+
+  .checkout-status {
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    min-height: 20px;
+  }
+
+  .checkout-status.success {
+    color: var(--green);
+  }
+
+  .checkout-status.error {
+    color: #b63b2a;
+  }
+
+  /* BOTTOM CTA */
+  .bottom-cta {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  .bottom-cta-inner {
+    border-top: 1px solid var(--border);
+    padding-top: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .bottom-cta h2 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.25;
+    max-width: 380px;
+  }
+
+  .bottom-cta p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+  }
+
+  footer {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border);
+  }
+
+  footer span {
+    font-size: 13px;
+    color: var(--text-tertiary);
+  }
+
+  footer a {
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-decoration: none;
+  }
+
+  footer a:hover { color: var(--text-primary); }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  @media (max-width: 768px) {
+    .payload-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero { padding: 48px 24px 48px; }
+    .bottom-cta-inner { flex-direction: column; align-items: flex-start; }
+    .coverage-table { font-size: 13px; }
+  }
+</style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="shell topbar-inner">
-      <a class="brand" href="/">SportsSync</a>
-      <nav class="nav">
-        <a href="docs/index.html">Docs</a>
-        <a href="demo/index.html">Demo</a>
-        <a href="mailto:api@sportsync.io?subject=SportsSync%20Builder%20Questions">Contact</a>
-        <a class="btn btn-primary" href="mailto:api@sportsync.io?subject=SportsSync%20Sandbox%20Access">Start Free</a>
-      </nav>
+
+<nav>
+  <span class="nav-brand">SportsSync</span>
+  <ul class="nav-links">
+    <li><a href="#coverage">Coverage</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="https://sportsync-api.vercel.app/docs/index.html">Docs</a></li>
+    <li><a href="mailto:api@sportsync.io?subject=SportsSync%20API%20Access">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Live sports data API</div>
+  <h1>One API call for match, market, injuries, and opening lines.</h1>
+  <p class="hero-sub">Structured live sports data with a fixed public contract. Every response returns the same seven sections: match, teams, intel, injuries, opening lines, market, and metadata.</p>
+  <div class="hero-cta-row">
+    <a class="btn-primary" href="mailto:api@sportsync.io?subject=SportsSync%20Sandbox%20Access">Get sandbox access</a>
+    <a class="btn-secondary" href="https://sportsync-api.vercel.app/docs/index.html">Read the docs</a>
+  </div>
+  <div class="hero-proof">
+    Sandbox is free · <span>4 published sample IDs</span> · Live docs · MCP server available
+  </div>
+</section>
+
+<!-- WHAT ONE CALL RETURNS -->
+<section class="payload-section">
+  <div class="section-header">
+    <div class="section-label">One call</div>
+    <h2 class="section-title">Seven sections land in every response.</h2>
+    <p class="section-desc">Each section is always present and returned in the same order. The public v1 contract is schema-checked and release-gated.</p>
+  </div>
+  <div class="payload-grid">
+    <div class="payload-item">
+      <div class="payload-item-label">match</div>
+      <h4>Identity and status</h4>
+      <p>Match ID, kickoff time, venue, status, period, and clock. The anchor for everything else in the response.</p>
     </div>
-  </header>
+    <div class="payload-item">
+      <div class="payload-item-label">teams</div>
+      <h4>Home and away</h4>
+      <p>Team names, abbreviations, records, and logo URLs. Both sides, every call.</p>
+    </div>
+    <div class="payload-item">
+      <div class="payload-item-label">intel</div>
+      <h4>Pre-match context</h4>
+      <p>Rolling scoring averages, recent form, and trending directions. The context layer behind the line.</p>
+    </div>
+    <div class="payload-item">
+      <div class="payload-item-label">injuries</div>
+      <h4>Absences and impact</h4>
+      <p>Who's out, who's questionable, and a summary of the expected impact on the game.</p>
+    </div>
+    <div class="payload-item">
+      <div class="payload-item-label">opening_lines</div>
+      <h4>Where the line opened</h4>
+      <p>Opening spread, total, and moneyline. The reference point for measuring where the market has moved.</p>
+    </div>
+    <div class="payload-item">
+      <div class="payload-item-label">market</div>
+      <h4>Current consensus</h4>
+      <p>Current spread, total, and moneyline from the consensus feed. Updated each refresh cycle.</p>
+    </div>
+    <div class="payload-item">
+      <div class="payload-item-label">metadata</div>
+      <h4>API version and coverage</h4>
+      <p>API version, response time, and a coverage map showing which sections resolved for this match.</p>
+    </div>
+  </div>
+</section>
 
-  <main class="shell">
-    <section class="hero">
-      <div class="hero-grid">
-        <div class="hero-copy">
-          <div class="hero-note">Market-grade match context</div>
-          <h1>Ship the full match board in one call.</h1>
-          <p><strong>SportsSync Match Context API</strong> returns market, form, injuries, player context, trends, and live state in one response, so your product can move from request to answer without hand-built feed glue.</p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="demo/index.html">Open Live Demo</a>
-            <a class="btn" href="docs/index.html">Read Quickstart</a>
-          </div>
-          <div class="hero-footnote">Sandbox is free. Production starts at $149/month.</div>
-        </div>
+<!-- SAMPLE RESPONSE -->
+<section class="sample-section">
+  <div class="section-header">
+    <div class="section-label">Sample response</div>
+    <h2 class="section-title">This is the actual shape.</h2>
+    <p class="section-desc">Abbreviated for readability. Full payload in the docs.</p>
+  </div>
+  <div class="sample-block">
+<pre><span class="comment">// GET /api/match-context?match_id={match_id}</span>
 
-        <aside class="board" aria-label="Sample payload board">
-          <div class="board-head">
-            <div>
-              <div class="board-label">Sample payload</div>
-              <div class="board-id">match_id: b193b51f-cbed-4398-a297-237dd3322607</div>
-            </div>
-            <div class="live-pill">10/10 sections</div>
-          </div>
-          <div class="board-main">
-            <div class="match-row">
-              <div>
-                <div class="matchup">Arsenal vs Man City</div>
-                <div class="match-sub">EPL · scheduled · 2026-03-15 16:30 UTC</div>
-              </div>
-              <div class="live-pill">response 182ms</div>
-            </div>
+{
+  <span class="section-marker">// 1. match</span>
+  <span class="key">"match"</span>: {
+    <span class="key">"id"</span>: <span class="str">"b193b51f-cbed-4398-a297-237dd3322607"</span>,
+    <span class="key">"home_team"</span>: <span class="str">"Arsenal"</span>,
+    <span class="key">"away_team"</span>: <span class="str">"Man City"</span>,
+    <span class="key">"league"</span>: <span class="str">"eng.1"</span>,
+    <span class="key">"status"</span>: <span class="str">"scheduled"</span>,
+    <span class="key">"kickoff"</span>: <span class="str">"2026-03-15T16:30:00Z"</span>
+  },
 
-            <div class="metric-grid">
-              <div class="metric">
-                <div class="metric-label">Total</div>
-                <div class="metric-value mono">2.5</div>
-              </div>
-              <div class="metric">
-                <div class="metric-label">Spread</div>
-                <div class="metric-value mono">-0.25</div>
-              </div>
-              <div class="metric">
-                <div class="metric-label">Rolling Avg</div>
-                <div class="metric-value mono">4.1</div>
-              </div>
-              <div class="metric">
-                <div class="metric-label">Gap</div>
-                <div class="metric-value mono">+1.6</div>
-              </div>
-            </div>
+  <span class="section-marker">// 2. teams</span>
+  <span class="key">"teams"</span>: {
+    <span class="key">"home"</span>: { <span class="key">"name"</span>: <span class="str">"Arsenal"</span>, <span class="key">"record"</span>: <span class="str">"22-4-3"</span>, <span class="key">"logo"</span>: <span class="str">"https://..."</span> },
+    <span class="key">"away"</span>: { <span class="key">"name"</span>: <span class="str">"Man City"</span>, <span class="key">"record"</span>: <span class="str">"18-6-5"</span>, <span class="key">"logo"</span>: <span class="str">"https://..."</span> }
+  },
 
-            <div class="board-footer">
-              <div class="board-row"><span>market</span><span>ready</span></div>
-              <div class="board-row"><span>form</span><span>ready</span></div>
-              <div class="board-row"><span>injuries</span><span>1 questionable</span></div>
-              <div class="board-row"><span>metadata.api_version</span><span>v1</span></div>
-            </div>
-          </div>
-        </aside>
-      </div>
+  <span class="section-marker">// 3. intel</span>
+  <span class="key">"intel"</span>: {
+    <span class="key">"home_avg_total"</span>: <span class="num">2.8</span>,
+    <span class="key">"away_avg_total"</span>: <span class="num">3.1</span>,
+    <span class="key">"sample"</span>: <span class="num">10</span>
+  },
 
-      <div class="rail">
-        <div class="rail-item">
-          <strong>10</strong>
-          <span>fixed sections</span>
-        </div>
-        <div class="rail-item">
-          <strong>4</strong>
-          <span>public sample IDs</span>
-        </div>
-        <div class="rail-item">
-          <strong>&lt;1 min</strong>
-          <span>to first call</span>
-        </div>
-        <div class="rail-item">
-          <strong>v1</strong>
-          <span>frozen contract</span>
-        </div>
-      </div>
-    </section>
+  <span class="section-marker">// 4. injuries</span>
+  <span class="key">"injuries"</span>: [
+    { <span class="key">"player"</span>: <span class="str">"Saka"</span>, <span class="key">"status"</span>: <span class="str">"questionable"</span>, <span class="key">"detail"</span>: <span class="str">"hamstring"</span> }
+  ],
 
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <div class="cap">Payload surface</div>
-          <h2>What lands in every response</h2>
-        </div>
-        <p>The point is not more data. The point is getting the pieces that matter in one stable shape, without making the buyer stitch the board together.</p>
-      </div>
+  <span class="section-marker">// 5. opening_lines</span>
+  <span class="key">"opening_lines"</span>: {
+    <span class="key">"spread"</span>: <span class="num">-0.5</span>,
+    <span class="key">"total"</span>: <span class="num">2.5</span>,
+    <span class="key">"moneyline_home"</span>: <span class="num">-120</span>
+  },
 
-      <div class="payload-grid">
-        <article class="payload-card">
-          <h3>Match + teams</h3>
-          <p>Identity, kickoff, venue, status, home side, and away side are all packaged up front.</p>
-        </article>
-        <article class="payload-card">
-          <h3>Market + form</h3>
-          <p>Consensus line sits next to recent scoring context, so the gap is readable immediately.</p>
-        </article>
-        <article class="payload-card">
-          <h3>Injuries + players</h3>
-          <p>Absences, impact summaries, and player context show up in the same call as the market.</p>
-        </article>
-        <article class="payload-card">
-          <h3>Trends + live state</h3>
-          <p>Pre-match signals and in-progress state are already shaped for preview cards and game views.</p>
-        </article>
-      </div>
-    </section>
+  <span class="section-marker">// 6. market</span>
+  <span class="key">"market"</span>: {
+    <span class="key">"spread"</span>: <span class="num">-0.25</span>,
+    <span class="key">"total"</span>: <span class="num">2.5</span>,
+    <span class="key">"moneyline_home"</span>: <span class="num">-110</span>
+  },
 
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <div class="cap">Quickstart board</div>
-          <h2>Public sample IDs</h2>
-        </div>
-        <p>These are the onboarding IDs. They belong in docs, demo, and release validation, and they should always resolve.</p>
-      </div>
+  <span class="section-marker">// 7. metadata</span>
+  <span class="key">"metadata"</span>: {
+    <span class="key">"api_version"</span>: <span class="str">"v1"</span>,
+    <span class="key">"response_ms"</span>: <span class="num">182</span>,
+    <span class="key">"coverage"</span>: { <span class="key">"intel"</span>: <span class="num">true</span>, <span class="key">"injuries"</span>: <span class="num">true</span>, <span class="key">"market"</span>: <span class="num">true</span> }
+  }
+}</pre>
+  </div>
+</section>
 
-      <div class="board-table">
-        <div class="board-row-head">
-          <div>Match</div>
-          <div>match_id</div>
-          <div>Path</div>
-        </div>
+<!-- COVERAGE -->
+<section class="coverage-section" id="coverage">
+  <div class="section-header">
+    <div class="section-label">Coverage</div>
+    <h2 class="section-title">What's live and what's coming.</h2>
+  </div>
+  <table class="coverage-table">
+    <thead>
+      <tr>
+        <th>Sport</th>
+        <th>Leagues</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Basketball</td>
+        <td class="leagues">NBA, NCAAB</td>
+        <td><span class="status status-live">Live</span></td>
+      </tr>
+      <tr>
+        <td>Football</td>
+        <td class="leagues">NFL</td>
+        <td><span class="status status-live">Live</span></td>
+      </tr>
+      <tr>
+        <td>Baseball</td>
+        <td class="leagues">MLB</td>
+        <td><span class="status status-live">Live</span></td>
+      </tr>
+      <tr>
+        <td>Hockey</td>
+        <td class="leagues">NHL</td>
+        <td><span class="status status-live">Live</span></td>
+      </tr>
+      <tr>
+        <td>Soccer</td>
+        <td class="leagues">EPL, La Liga, Serie A, Bundesliga, Ligue 1, MLS + 8 more</td>
+        <td><span class="status status-live">Live</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
 
-        <div class="board-entry">
-          <div class="entry-main">
-            <img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg" alt="Arsenal logo">
-            <div class="entry-text">
-              <strong>EPL · Arsenal vs Man City</strong>
-              <span>Stable quickstart fixture</span>
-            </div>
-          </div>
-          <div class="entry-id">b193b51f-cbed-4398-a297-237dd3322607</div>
-          <a class="entry-link" href="demo/index.html">Open demo</a>
-        </div>
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="section-header">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">One plan covers every sport.</h2>
+    <p class="section-desc">No per-league pricing. No upsells to unlock endpoints. Every plan gets the full payload shape across every league.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-tier">Sandbox</div>
+      <div class="pricing-amount">Free</div>
+      <div class="pricing-period">Evaluate the data before you commit.</div>
+      <ul class="pricing-features">
+        <li>Published sample match IDs</li>
+        <li>1,000 requests per month</li>
+        <li>Full v1 payload</li>
+        <li>Email support</li>
+      </ul>
+      <a class="btn-secondary" href="mailto:api@sportsync.io?subject=SportsSync%20Sandbox%20Access">Start free</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-tier">Trader</div>
+      <div class="pricing-amount">$499</div>
+      <div class="pricing-period">per month · all sports</div>
+      <ul class="pricing-features">
+        <li>All live and historical data</li>
+        <li>25,000 requests per month</li>
+        <li>20 requests per minute</li>
+        <li>All leagues, one plan</li>
+        <li>Priority support</li>
+      </ul>
+      <a class="btn-primary" data-checkout-plan="trader" href="mailto:api@sportsync.io?subject=SportsSync%20Trader%20Plan">Start Trader</a>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-tier">Desk</div>
+      <div class="pricing-amount">Custom</div>
+      <div class="pricing-period">For teams with throughput needs.</div>
+      <ul class="pricing-features">
+        <li>Everything in Trader</li>
+        <li>Custom request limits</li>
+        <li>Dedicated refresh</li>
+        <li>Direct Slack channel</li>
+      </ul>
+      <a class="btn-secondary" data-checkout-plan="desk" href="mailto:api@sportsync.io?subject=SportsSync%20Desk%20Plan">Talk to us</a>
+    </div>
+  </div>
+  <p class="checkout-status" id="checkout-status"></p>
+</section>
 
-        <div class="board-entry">
-          <div class="entry-main">
-            <img src="https://flagcdn.com/us.svg" alt="United States flag">
-            <div class="entry-text">
-              <strong>WC26 · USA vs Mexico</strong>
-              <span>World Cup sample</span>
-            </div>
-          </div>
-          <div class="entry-id">b42fe447-b2b1-485f-ae6d-1559ee2b57c7</div>
-          <a class="entry-link" href="docs/index.html#endpoint">See docs</a>
-        </div>
+<!-- BOTTOM CTA -->
+<div class="bottom-cta">
+  <div class="bottom-cta-inner">
+    <div>
+      <h2>Sandbox access, live docs, and published sample IDs.</h2>
+      <p>First call takes under a minute.</p>
+    </div>
+    <a class="btn-primary" href="mailto:api@sportsync.io?subject=SportsSync%20Sandbox%20Access">Get sandbox access</a>
+  </div>
+</div>
 
-        <div class="board-entry">
-          <div class="entry-main">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Los_Angeles_Lakers_logo.svg" alt="Lakers logo">
-            <div class="entry-text">
-              <strong>NBA · Lakers vs Celtics</strong>
-              <span>Basketball line anchor sample</span>
-            </div>
-          </div>
-          <div class="entry-id">d6742e61-2457-43fd-aa3f-e61f6a76c7af</div>
-          <a class="entry-link" href="demo/index.html">Open demo</a>
-        </div>
+<footer>
+  <span>&copy; 2026 SportsSync</span>
+  <div class="footer-links">
+    <a href="https://sportsync-api.vercel.app/docs/index.html">Docs</a>
+    <a href="https://sportsync-api.vercel.app/demo/index.html">Demo</a>
+    <a href="mailto:api@sportsync.io">api@sportsync.io</a>
+  </div>
+</footer>
 
-        <div class="board-entry">
-          <div class="entry-main">
-            <img src="https://flagcdn.com/gb-eng.svg" alt="England flag">
-            <div class="entry-text">
-              <strong>WC26 · England vs Brazil</strong>
-              <span>High-interest international sample</span>
-            </div>
-          </div>
-          <div class="entry-id">c94d7e01-333d-41cd-a67d-cc0285fa7f28</div>
-          <a class="entry-link" href="docs/index.html#examples">Use in code</a>
-        </div>
-      </div>
-    </section>
+<script>
+  (function () {
+    const statusEl = document.getElementById("checkout-status");
+    const checkoutButtons = Array.from(document.querySelectorAll("[data-checkout-plan]"));
 
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <div class="cap">Buyer fit</div>
-          <h2>Where it earns its keep</h2>
-        </div>
-        <p>Best for products that need fast, legible match context and cannot afford brittle joins or half-finished first-call experiences.</p>
-      </div>
+    function setStatus(message, tone) {
+      if (!statusEl) return;
+      statusEl.textContent = message || "";
+      statusEl.className = "checkout-status" + (tone ? ` ${tone}` : "");
+    }
 
-      <div class="use-grid">
-        <article class="use-card">
-          <h3>Preview products</h3>
-          <p>Ship match pages with market, form, and injury context already aligned.</p>
-        </article>
-        <article class="use-card">
-          <h3>Betting tools</h3>
-          <p>Anchor the line against recent scoring and make the gap obvious in one glance.</p>
-        </article>
-        <article class="use-card">
-          <h3>Content systems</h3>
-          <p>Generate cards, briefs, and recap prompts from a consistent payload instead of raw feed fragments.</p>
-        </article>
-      </div>
-    </section>
+    async function openCheckout(button) {
+      const plan = String(button.dataset.checkoutPlan || "").trim().toLowerCase();
+      const fallbackHref = button.getAttribute("href");
+      const originalText = button.textContent;
 
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <div class="cap">Pricing</div>
-          <h2>Start free, move to production when ready</h2>
-        </div>
-        <p>One pricing story across the whole surface: sandbox is free, production starts at $149/month.</p>
-      </div>
+      button.style.pointerEvents = "none";
+      button.setAttribute("aria-busy", "true");
+      button.textContent = "Loading...";
+      setStatus("Opening secure checkout...", "");
 
-      <div class="pricing">
-        <article class="plan plan-highlight">
-          <div class="plan-tag">Sandbox</div>
-          <div>
-            <h3>Free</h3>
-            <div class="price">$0</div>
-          </div>
-          <p>For first calls, proof of concept work, and internal review.</p>
-          <ul>
-            <li>Published sample IDs</li>
-            <li>1,000 requests / month</li>
-            <li>Email support</li>
-          </ul>
-          <a class="btn btn-primary" href="mailto:api@sportsync.io?subject=SportsSync%20Sandbox%20Access">Start Free</a>
-        </article>
+      try {
+        const response = await fetch("/api/checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            plan,
+            origin: window.location.origin,
+          }),
+        });
 
-        <article class="plan">
-          <div class="plan-tag">Builder</div>
-          <div>
-            <h3>Production</h3>
-            <div class="price">$149</div>
-          </div>
-          <p>For one live product in active build.</p>
-          <ul>
-            <li>10,000 requests / month</li>
-            <li>15 requests / minute</li>
-            <li>Full v1 payload</li>
-          </ul>
-          <a class="btn" href="mailto:api@sportsync.io?subject=SportsSync%20Builder%20Plan">Start Builder</a>
-        </article>
+        const payload = await response.json().catch(() => ({}));
 
-        <article class="plan">
-          <div class="plan-tag">Pro</div>
-          <div>
-            <h3>Scale</h3>
-            <div class="price">$599</div>
-          </div>
-          <p>For products with steady traffic and higher throughput needs.</p>
-          <ul>
-            <li>50,000 requests / month</li>
-            <li>30 requests / minute</li>
-            <li>Priority support</li>
-          </ul>
-          <a class="btn" href="mailto:api@sportsync.io?subject=SportsSync%20Pro%20Plan">Talk Through Scale</a>
-        </article>
-      </div>
-    </section>
-  </main>
+        if (response.ok && typeof payload.checkout_url === "string" && payload.checkout_url.length > 0) {
+          window.location.assign(payload.checkout_url);
+          return;
+        }
 
-  <footer class="shell">
-    <p>&copy; 2026 SportsSync · <a href="docs/index.html">Docs</a> · <a href="demo/index.html">Demo</a> · <a href="mailto:api@sportsync.io?subject=SportsSync%20API%20Question">Contact</a></p>
-  </footer>
+        const message = payload?.error?.message || "Checkout is not configured yet. Opening email fallback.";
+        setStatus(message, "error");
+        if (fallbackHref) window.location.assign(fallbackHref);
+      } catch {
+        setStatus("Network issue opening checkout. Opening email fallback.", "error");
+        if (fallbackHref) window.location.assign(fallbackHref);
+      } finally {
+        button.style.pointerEvents = "";
+        button.removeAttribute("aria-busy");
+        button.textContent = originalText;
+      }
+    }
+
+    checkoutButtons.forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        openCheckout(button);
+      });
+    });
+
+    const search = new URLSearchParams(window.location.search);
+    const checkoutState = search.get("checkout");
+    if (checkoutState === "success") {
+      setStatus("Checkout started successfully. We will confirm access by email.", "success");
+    } else if (checkoutState === "cancelled") {
+      setStatus("Checkout was cancelled. You can try again anytime.", "error");
+    }
+  })();
+</script>
+
 </body>
 </html>

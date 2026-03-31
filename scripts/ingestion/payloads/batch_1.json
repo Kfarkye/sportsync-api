@@ -1,0 +1,261 @@
+[
+  {
+    "state_code": "CA",
+    "state_name": "California",
+    "state_slug": "california",
+    "hero_image_url": "/images/states/california.jpg",
+    "sources": [
+      { "source_key": "ca_ab2789", "source_label": "California Assembly Bill 2789", "source_url": "https://leginfo.legislature.ca.gov/", "source_type": "state_statute" },
+      { "source_key": "ca_cures", "source_label": "California CURES Mandate", "source_url": "https://oag.ca.gov/cures", "source_type": "state_board_guidance" }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out-of-state prescribers may prescribe controlled substances, provided they meet strict CA paper form requirements or utilize e-prescribing.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically per AB 2789.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "AB 2789 requires nearly all prescriptions in CA to be e-prescribed.",
+      "telehealth_controlled_text": "Telehealth prescribing of controlled substances generally requires a prior in-person visit per federal standards, with limited emergency state exceptions.",
+      "emergency_supply_text": null,
+      "pdmp_name": "CURES",
+      "pdmp_url": "https://oag.ca.gov/cures",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "California State Board of Pharmacy",
+      "board_url": "https://www.pharmacy.ca.gov/",
+      "board_phone": "(916) 518-3100",
+      "special_restrictions": "CA specific controlled substance prescription security forms are mandatory if an exception to e-prescribing applies."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Widespread but restricted for initial controlled substance prescriptions.",
+      "notes": "Extremely high volume state for traveling nurses requires proactive e-prescribing setup before arrival.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      { "category": "general", "evidence_type": "state_law", "sort_order": 1, "rule_text": "All prescriptions must be electronically transmitted directly to the dispensing pharmacy.", "source_url": null },
+      { "category": "general", "evidence_type": "state_board_guidance", "sort_order": 2, "rule_text": "Pharmacists must consult the CURES database prior to dispensing a Schedule II-IV controlled substance.", "source_url": null }
+    ],
+    "restrictions": [
+      { "restriction_type": "e_rx_only", "applies_to": "all_controlled", "description": "Paper prescriptions are rejected unless written on specialized CA security forms.", "workaround": "Have the prescriber send the prescription electronically.", "evidence_type": "state_law", "source_url": null }
+    ],
+    "segments": [
+      { "segment_slug": "travel-nurse", "segment_data": { "risk_level": "high", "key_friction": "Strict e-prescribing mandate and unique paper security forms make relying on out-of-state paper scripts impossible." }, "items": [{ "sort_order": 1, "guidance_text": "Ensure your out-of-state prescriber is equipped to send E-scripts across state lines before you travel.", "evidence_type": "editorial", "source_url": null }] },
+      { "segment_slug": "snowbird", "segment_data": { "risk_level": "medium", "key_friction": "Pharmacists cannot accept standard out-of-state paper prescriptions." }, "items": [{ "sort_order": 1, "guidance_text": "Do not bring physical prescriptions to California. Tell your provider to use electronic prescribing.", "evidence_type": "editorial", "source_url": null }] }
+    ],
+    "claims": [
+      { "claim_text": "California mandates electronic prescribing for all prescriptions.", "source_key": "ca_ab2789", "evidence_type": "state_law", "medication_slug": null, "segment_slug": null, "target_table": "state_rx_overrides", "target_field": "e_rx_scope", "target_key": "CA" },
+      { "claim_text": "CURES check is mandatory prior to dispensing.", "source_key": "ca_cures", "evidence_type": "state_board_guidance", "medication_slug": null, "segment_slug": null, "target_table": "state_rx_overrides", "target_field": "pdmp_mandatory_check", "target_key": "CA" }
+    ]
+  },
+  {
+    "state_code": "NY",
+    "state_name": "New York",
+    "state_slug": "new-york",
+    "hero_image_url": "/images/states/new-york.jpg",
+    "sources": [
+      { "source_key": "ny_istop", "source_label": "NYS I-STOP Mandate", "source_url": "https://www.health.ny.gov/professionals/narcotic/prescription_monitoring/", "source_type": "state_board_guidance" }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": true,
+      "out_of_state_controlled_text": "New York pharmacists can legally fill out-of-state prescriptions, but I-STOP strict e-prescribing mandates apply universally.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically per state law.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Every prescription issued in New York must be transmitted electronically.",
+      "telehealth_controlled_text": "Prescribers utilizing telehealth must abide by state and federal laws, generally limiting controlled substance issuance without physical evaluations.",
+      "emergency_supply_text": "A 5-day emergency supply is permitted for certain controlled substances under strict guidelines.",
+      "pdmp_name": "I-STOP",
+      "pdmp_url": "https://www.health.ny.gov/professionals/narcotic/prescription_monitoring/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "New York State Board of Pharmacy",
+      "board_url": "https://www.op.nysed.gov/professions/pharmacist/nursing/pharmacist",
+      "board_phone": "(518) 474-3817",
+      "special_restrictions": "I-STOP registry check is required prior to prescribing and dispensing most controlled substances."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "3-5 weeks",
+      "avg_wait_primary_care": "1-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial prescribing of controlled substances.",
+      "notes": "Extremely strict registry requirements frequently block casual travelers.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      { "category": "general", "evidence_type": "state_law", "sort_order": 1, "rule_text": "I-STOP requires practitioners to electronically prescribe all medications.", "source_url": null }
+    ],
+    "restrictions": [
+      { "restriction_type": "e_rx_only", "applies_to": "all_controlled", "description": "Paper prescriptions are generally invalid under I-STOP laws.", "workaround": "Practitioners must use compliant E-prescribing platforms.", "evidence_type": "state_law", "source_url": null }
+    ],
+    "segments": [
+      { "segment_slug": "college-student", "segment_data": { "risk_level": "medium", "key_friction": "Out of state providers must successfully connect to NY dispensing systems." }, "items": [{ "sort_order": 1, "guidance_text": "Ensure your home state prescriber supports out-of-state e-prescribing networks.", "evidence_type": "educational", "source_url": null }] }
+    ],
+    "claims": [
+      { "claim_text": "I-STOP enforces a universal electronic prescribing mandate.", "source_key": "ny_istop", "evidence_type": "state_board_guidance", "medication_slug": null, "segment_slug": null, "target_table": "state_rx_overrides", "target_field": "e_rx_scope", "target_key": "NY" }
+    ]
+  },
+  {
+    "state_code": "IL",
+    "state_name": "Illinois",
+    "state_slug": "illinois",
+    "hero_image_url": "/images/states/illinois.jpg",
+    "sources": [
+      { "source_key": "il_pmp_mandate", "source_label": "Illinois PMP Framework", "source_url": "https://www.ilpmp.org/", "source_type": "state_board_guidance" }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Pharmacists may fill controlled substances from contiguous and non-contiguous states subject to verification.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically per state law.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Electronic prescribing is required for all controlled substances in Illinois.",
+      "telehealth_controlled_text": "Telehealth rules generally align with federal DEA laws regarding initial in-person evaluations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "ILPMP",
+      "pdmp_url": "https://www.ilpmp.org/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Illinois Department of Financial and Professional Regulation",
+      "board_url": "https://idfpr.illinois.gov/profs/pharm.html",
+      "board_phone": "(800) 560-6420",
+      "special_restrictions": "Documentation of out-of-state prescriber credentials may be heavily scrutinized."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-5 weeks",
+      "avg_wait_primary_care": "2 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "E-prescribing strictness for controlled substances complicates cross-border dispensing.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      { "category": "schedule_ii", "evidence_type": "state_law", "sort_order": 1, "rule_text": "Schedule II prescriptions must be e-prescribed and cannot be refilled.", "source_url": null }
+    ],
+    "restrictions": [
+      { "restriction_type": "e_rx_only", "applies_to": "all_controlled", "description": "Illinois generally mandates electronic prescribing for all controlled substances.", "workaround": null, "evidence_type": "state_law", "source_url": null }
+    ],
+    "segments": [
+      { "segment_slug": "college-student", "segment_data": { "risk_level": "medium", "key_friction": "Verification lag for out-of-state prescriptions." }, "items": [{ "sort_order": 1, "guidance_text": "If prescribed out-of-state, ensure the provider has transmitted the e-rx to your specific Illinois pharmacy accurately.", "evidence_type": "educational", "source_url": null }] }
+    ],
+    "claims": [
+      { "claim_text": "Illinois PMP checks are required prior to dispensing certain controlled substances.", "source_key": "il_pmp_mandate", "evidence_type": "state_board_guidance", "medication_slug": null, "segment_slug": null, "target_table": "state_rx_overrides", "target_field": "pdmp_mandatory_check", "target_key": "IL" }
+    ]
+  },
+  {
+    "state_code": "PA",
+    "state_name": "Pennsylvania",
+    "state_slug": "pennsylvania",
+    "hero_image_url": "/images/states/pennsylvania.jpg",
+    "sources": [
+      { "source_key": "pa_act96", "source_label": "Pennsylvania Act 96 (E-Rx Mandate)", "source_url": "https://www.dos.pa.gov", "source_type": "state_statute" }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Prescriptions from out-of-state prescribers are valid if they conform to Pennsylvania's stringent e-prescribing rules.",
+      "schedule_ii_transfer_text": "CII prescriptions must be electronic.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Act 96 mandates electronic prescribing for all Schedule II-V controlled substances.",
+      "telehealth_controlled_text": "Prescribing controlled substances typically requires a face-to-face encounter under federal/state regulations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "PA PDMP (AWARxE)",
+      "pdmp_url": "https://www.health.pa.gov/topics/programs/PDMP/Pages/PDMP.aspx",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Pennsylvania State Board of Pharmacy",
+      "board_url": "https://www.dos.pa.gov/ProfessionalLicensing/BoardsCommissions/Pharmacy/Pages/default.aspx",
+      "board_phone": "(717) 783-7156",
+      "special_restrictions": "Act 96 establishes firm e-prescribing requirements for controlled substances."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4 weeks",
+      "avg_wait_primary_care": "1-2 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing.",
+      "notes": "E-rx mandate creates the most friction for out-of-state prescriptions.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      { "category": "general", "evidence_type": "state_law", "sort_order": 1, "rule_text": "Act 96 mandates the electronic transmission of Schedule II through V controlled substances.", "source_url": null }
+    ],
+    "restrictions": [
+      { "restriction_type": "e_rx_only", "applies_to": "all_controlled", "description": "Paper prescriptions are not accepted for controlled substances without a specific statutory override.", "workaround": null, "evidence_type": "state_law", "source_url": null }
+    ],
+    "segments": [
+      { "segment_slug": "digital-nomad", "segment_data": { "risk_level": "high", "key_friction": "Strict e-prescribing and monitoring programs restrict casual out of state prescription deposits." }, "items": [{ "sort_order": 1, "guidance_text": "Be prepared to encounter delays if your prescriber utilizes paper scripts, which are heavily restricted in PA.", "evidence_type": "educational", "source_url": null }] }
+    ],
+    "claims": [
+      { "claim_text": "Pennsylvania enforces electronic prescribing via Act 96.", "source_key": "pa_act96", "evidence_type": "state_law", "medication_slug": null, "segment_slug": null, "target_table": "state_rx_overrides", "target_field": "e_rx_scope", "target_key": "PA" }
+    ]
+  },
+  {
+    "state_code": "OH",
+    "state_name": "Ohio",
+    "state_slug": "ohio",
+    "hero_image_url": "/images/states/ohio.jpg",
+    "sources": [
+      { "source_key": "oh_oarrs", "source_label": "Ohio Automated Rx Reporting System (OARRS)", "source_url": "https://www.ohiopmp.gov/", "source_type": "state_board_guidance" }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Pharmacists can dispense out-of-state valid prescriptions, but strict checks in OARRS are mandatory.",
+      "schedule_ii_transfer_text": "Electronic transmission required.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Ohio mandates electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Controlled substances prescribed via telehealth are restricted, closely tracking DEA guidelines for in-person evaluations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "OARRS",
+      "pdmp_url": "https://www.ohiopmp.gov/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "State of Ohio Board of Pharmacy",
+      "board_url": "https://www.pharmacy.ohio.gov/",
+      "board_phone": "(614) 466-4143",
+      "special_restrictions": "Mandatory query of OARRS system required before dispensing opiate and benzodiazepine medications."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4 weeks",
+      "avg_wait_primary_care": "1-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "Extensive tracking restricts fast cross-state dispensation.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      { "category": "general", "evidence_type": "state_board_guidance", "sort_order": 1, "rule_text": "Pharmacists are legally obligated to query OARRS prior to dispensing an outpatient controlled substance.", "source_url": null }
+    ],
+    "restrictions": [
+      { "restriction_type": "e_rx_only", "applies_to": "all_controlled", "description": "Electronic prescribing is required for schedule II controlled substances.", "workaround": null, "evidence_type": "state_law", "source_url": null }
+    ],
+    "segments": [
+      { "segment_slug": "travel-therapist", "segment_data": { "risk_level": "high", "key_friction": "OARRS tracking cross-state can cause prescription verification delays." }, "items": [{ "sort_order": 1, "guidance_text": "OARRS closely tracks controlled substances. Out of state prescribers should utilize e-prescribing platforms that integrate smoothly.", "evidence_type": "editorial", "source_url": null }] }
+    ],
+    "claims": [
+      { "claim_text": "OARRS system mandatory review required prior to dispensing controlled formulations.", "source_key": "oh_oarrs", "evidence_type": "state_board_guidance", "medication_slug": null, "segment_slug": null, "target_table": "state_rx_overrides", "target_field": "pdmp_mandatory_check", "target_key": "OH" }
+    ]
+  }
+]

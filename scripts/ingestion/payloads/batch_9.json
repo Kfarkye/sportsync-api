@@ -1,0 +1,492 @@
+[
+  {
+    "state_code": "CT",
+    "state_name": "Connecticut",
+    "state_slug": "connecticut",
+    "hero_image_url": "/images/states/connecticut.jpg",
+    "sources": [
+      {
+        "source_key": "ct_cpmrs",
+        "source_label": "CPMRS",
+        "source_url": "https://portal.ct.gov/DCP/Drug-Control-Division/Drug-Control/Prescription-Monitoring-Program",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "ct_erx",
+        "source_label": "Connecticut E-Rx Mandate",
+        "source_url": "https://portal.ct.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out-of-state valid prescriptions accepted conditionally under EPCS mandates and CPMRS checks.",
+      "schedule_ii_transfer_text": "Electronic transmission only.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Mandatory electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Aligns with DEA guidelines for initial telehealth evaluations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "CPMRS",
+      "pdmp_url": "https://portal.ct.gov/DCP/Drug-Control-Division/Drug-Control/Prescription-Monitoring-Program",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Connecticut Commission of Pharmacy",
+      "board_url": "https://portal.ct.gov/DCP/Agency-Administration/About-the-Department/Commission-of-Pharmacy",
+      "board_phone": "(860) 713-6070",
+      "special_restrictions": "CPMRS query prior to prescribing and dispensing is strictly enforced."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "1-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "State tracking robust for out-of-state prescriptions.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Electronic prescribing is universally required for controlled substances in Connecticut.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper prescriptions are universally denied.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "college-student",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "CPMRS mandatory checks cause dispensing delays for transient students."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Ensure your prescriber uses EPCS-certified software before arriving in CT.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Connecticut CPMRS enforces mandatory dispensing checks.",
+        "source_key": "ct_cpmrs",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "CT"
+      }
+    ]
+  },
+  {
+    "state_code": "RI",
+    "state_name": "Rhode Island",
+    "state_slug": "rhode-island",
+    "hero_image_url": "/images/states/rhode-island.jpg",
+    "sources": [
+      {
+        "source_key": "ri_pdmp",
+        "source_label": "Rhode Island PDMP",
+        "source_url": "https://health.ri.gov/programs/detail.php?pgm_id=162",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "ri_erx",
+        "source_label": "Rhode Island E-Rx Mandate",
+        "source_url": "https://health.ri.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Permitted with aggressive monitoring and PDMP verification.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Electronic prescribing is required for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth prescribing restricted for initial CS evaluation.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Rhode Island PDMP",
+      "pdmp_url": "https://health.ri.gov/programs/detail.php?pgm_id=162",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Rhode Island Board of Pharmacy",
+      "board_url": "https://health.ri.gov/licenses/detail.php?id=275",
+      "board_phone": "(401) 222-2837",
+      "special_restrictions": "PDMP checks are tightly enforced across all dispensing events to curb diversion."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "State PDMP tracking robust for out-of-state prescriptions.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "schedule_ii",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Schedule II substances require strict electronic transmission.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are forbidden.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "college-student",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Strict PDMP enforcement causes dispensing delays."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Coordinate with your prescriber to use EPCS before arriving in RI.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Rhode Island monitors dispensing rigorously via PDMP.",
+        "source_key": "ri_pdmp",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "RI"
+      }
+    ]
+  },
+  {
+    "state_code": "MA",
+    "state_name": "Massachusetts",
+    "state_slug": "massachusetts",
+    "hero_image_url": "/images/states/massachusetts.jpg",
+    "sources": [
+      {
+        "source_key": "ma_masspat",
+        "source_label": "MassPAT",
+        "source_url": "https://www.mass.gov/prescription-monitoring-program-pmp",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "ma_erx",
+        "source_label": "Massachusetts EPCS Mandate",
+        "source_url": "https://www.mass.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Permitted with mandatory MassPAT verification.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Massachusetts mandates electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth prescribing restricted heavily for initial CS evaluation.",
+      "emergency_supply_text": null,
+      "pdmp_name": "MassPAT",
+      "pdmp_url": "https://www.mass.gov/prescription-monitoring-program-pmp",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Massachusetts Board of Registration in Pharmacy",
+      "board_url": "https://www.mass.gov/orgs/board-of-registration-in-pharmacy",
+      "board_phone": "(800) 414-0168",
+      "special_restrictions": "MassPAT inquiries are strictly audited."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "State PDMP tracking is heavily optimized via MassPAT.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Massachusetts mandates the electronic transmission of all controlled substances.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are not accepted for controlled substances.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "college-student",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Verification delays for out-of-state prescribers."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Verify EPCS clearance with your out-of-state prescriber.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Massachusetts created an absolute mandate for e-prescribing.",
+        "source_key": "ma_erx",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "e_rx_scope",
+        "target_key": "MA"
+      }
+    ]
+  },
+  {
+    "state_code": "VT",
+    "state_name": "Vermont",
+    "state_slug": "vermont",
+    "hero_image_url": "/images/states/vermont.jpg",
+    "sources": [
+      {
+        "source_key": "vt_vpms",
+        "source_label": "VPMS",
+        "source_url": "https://www.healthvermont.gov/systems/prescription-monitoring-system-vpms",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "vt_erx",
+        "source_label": "Vermont E-Rx Mandate",
+        "source_url": "https://www.healthvermont.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Accepted conditionally subject to strict VPMS checks.",
+      "schedule_ii_transfer_text": "Must be electronic.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Vermont requires electronic transmission for controlled substances.",
+      "telehealth_controlled_text": "Follows standard DEA prescribing laws regarding in-person evaluations.",
+      "emergency_supply_text": null,
+      "pdmp_name": "VPMS",
+      "pdmp_url": "https://www.healthvermont.gov/systems/prescription-monitoring-system-vpms",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Vermont Board of Pharmacy",
+      "board_url": "https://sos.vermont.gov/pharmacy/",
+      "board_phone": "(802) 828-2373",
+      "special_restrictions": "VPMS queries are rigorous for all remote or out-of-state patients."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "VPMS monitoring is intensely regulated.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "schedule_ii",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Schedule II substances require strict electronic transmission in VT.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are explicitly forbidden in VT.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "snowbird",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Strict e-prescribing standards and VPMS rules apply."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Use electronic prescribing exclusively via EPCS.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Vermont monitors heavily via the state VPMS.",
+        "source_key": "vt_vpms",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "VT"
+      }
+    ]
+  },
+  {
+    "state_code": "NH",
+    "state_name": "New Hampshire",
+    "state_slug": "new-hampshire",
+    "hero_image_url": "/images/states/new-hampshire.jpg",
+    "sources": [
+      {
+        "source_key": "nh_pdmp",
+        "source_label": "NH PDMP",
+        "source_url": "https://www.oplc.nh.gov/prescription-drug-monitoring-program",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "nh_erx",
+        "source_label": "New Hampshire E-Rx Mandate",
+        "source_url": "https://www.oplc.nh.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out-of-state valid prescriptions allowed electronically.",
+      "schedule_ii_transfer_text": "Mandatory electronic transmission.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "New Hampshire mandates electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Telehealth regulations emphasize physical relationship prior to CS prescribing.",
+      "emergency_supply_text": null,
+      "pdmp_name": "NH PDMP",
+      "pdmp_url": "https://www.oplc.nh.gov/prescription-drug-monitoring-program",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "New Hampshire Board of Pharmacy",
+      "board_url": "https://www.oplc.nh.gov/board-pharmacy",
+      "board_phone": "(603) 271-2152",
+      "special_restrictions": "NH PDMP checks are mandatory for all controlled substance prescriptions before dispensing."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4 weeks",
+      "avg_wait_primary_care": "2 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "NH PDMP compliance is strongly enforced for all prescribers.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "New Hampshire requires full electronic prescribing for all controlled schedules.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are forbidden in New Hampshire.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "travel-nurse",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "NH PDMP imposes comprehensive verification requirements."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Ensure your prescriber links their systems with NH pharmacies.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "NH PDMP checks are strictly integrated into pharmacy workflows.",
+        "source_key": "nh_pdmp",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "NH"
+      }
+    ]
+  }
+]

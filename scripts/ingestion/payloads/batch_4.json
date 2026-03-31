@@ -1,0 +1,492 @@
+[
+  {
+    "state_code": "ND",
+    "state_name": "North Dakota",
+    "state_slug": "north-dakota",
+    "hero_image_url": "/images/states/north-dakota.jpg",
+    "sources": [
+      {
+        "source_key": "nd_pdmp",
+        "source_label": "North Dakota PDMP",
+        "source_url": "https://www.nodakpharmacy.com/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "nd_erx",
+        "source_label": "North Dakota E-Prescribing",
+        "source_url": "https://www.nodakpharmacy.com/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out-of-state valid prescriptions may be filled subject to electronic mandate compliance and PDMP checks.",
+      "schedule_ii_transfer_text": "CII prescriptions must be transmitted electronically.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Mandatory electronic prescribing applies to all controlled substances.",
+      "telehealth_controlled_text": "Typically requires an established relationship; out-of-state telehealth providers are strictly regulated.",
+      "emergency_supply_text": null,
+      "pdmp_name": "ND PDMP",
+      "pdmp_url": "https://www.nodakpharmacy.com/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "North Dakota Board of Pharmacy",
+      "board_url": "https://www.nodakpharmacy.com/",
+      "board_phone": "(701) 328-9535",
+      "special_restrictions": "PDMP verification is aggressively tracked across borders."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-4 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing.",
+      "notes": "Low density states rely heavily on EPCS software for compliance.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "All controlled substance prescriptions must be generated via EPCS.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are universally blocked for controlled substances.",
+        "workaround": "Submit electronically.",
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "travel-nurse",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Verification delays due to PDMP mandatory checks."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Ensure your out of state prescriber uses an interoperable e-prescribing tool.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "North Dakota generally mandates EPCS for controlled schedules.",
+        "source_key": "nd_erx",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "e_rx_scope",
+        "target_key": "ND"
+      }
+    ]
+  },
+  {
+    "state_code": "SD",
+    "state_name": "South Dakota",
+    "state_slug": "south-dakota",
+    "hero_image_url": "/images/states/south-dakota.jpg",
+    "sources": [
+      {
+        "source_key": "sd_pdmp",
+        "source_label": "South Dakota PDMP",
+        "source_url": "https://doh.sd.gov/boards/pharmacy/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "sd_erx",
+        "source_label": "South Dakota Electronics Act",
+        "source_url": "https://doh.sd.gov/boards/pharmacy/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out of state valid prescriptions allowed if completely electronic.",
+      "schedule_ii_transfer_text": "Electronic transmission required.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Electronic prescribing is universally mandated.",
+      "telehealth_controlled_text": "Initial evaluation restrictions strictly adhere to federal standard.",
+      "emergency_supply_text": null,
+      "pdmp_name": "SD PDMP",
+      "pdmp_url": "https://doh.sd.gov/boards/pharmacy/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "South Dakota Board of Pharmacy",
+      "board_url": "https://doh.sd.gov/boards/pharmacy/",
+      "board_phone": "(605) 362-2737",
+      "special_restrictions": "Standard state PDMP tracking applies."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "1-2 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "Remote tracking robust across state lines.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "schedule_ii",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Schedule II substances require strict electronic transmission.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are forbidden.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "snowbird",
+        "segment_data": {
+          "risk_level": "high",
+          "key_friction": "Strict e-prescribing standards apply to visiting patients."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Use electronic prescribing exclusively to avoid verification failure.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "SD PDMP monitors dispensing uniformly.",
+        "source_key": "sd_pdmp",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "SD"
+      }
+    ]
+  },
+  {
+    "state_code": "NE",
+    "state_name": "Nebraska",
+    "state_slug": "nebraska",
+    "hero_image_url": "/images/states/nebraska.jpg",
+    "sources": [
+      {
+        "source_key": "ne_pdmp",
+        "source_label": "Nebraska PDMP",
+        "source_url": "https://dhhs.ne.gov/pages/public-health.aspx",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "ne_erx",
+        "source_label": "Nebraska E-Rx Requirements",
+        "source_url": "https://dhhs.ne.gov",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out of state valid prescriptions allowed completely electronic.",
+      "schedule_ii_transfer_text": "Mandatory electronic transmission.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Nebraska mandates electronic prescribing for all controlled substances.",
+      "telehealth_controlled_text": "Initial evaluation restrictions tracked.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Nebraska PDMP",
+      "pdmp_url": "https://dhhs.ne.gov/pages/public-health.aspx",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Nebraska Department of Health and Human Services",
+      "board_url": "https://dhhs.ne.gov",
+      "board_phone": "(402) 471-2115",
+      "special_restrictions": "Nebraska strictly verifies out-of-state prescribers via PDMP integrations."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4 weeks",
+      "avg_wait_primary_care": "2 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing via telehealth.",
+      "notes": "EPCS compliance strongly required.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Electronic prescribing is mandated universally for controlled substances in Nebraska.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are forbidden unless under narrow exceptions.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "college-student",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "EPCS required for out-of-state providers."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Ensure your prescriber links their systems with Nebraska pharmacies.",
+            "evidence_type": "editorial",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Nebraska mandates EPCS for controlled medications.",
+        "source_key": "ne_erx",
+        "evidence_type": "state_law",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "e_rx_scope",
+        "target_key": "NE"
+      }
+    ]
+  },
+  {
+    "state_code": "KS",
+    "state_name": "Kansas",
+    "state_slug": "kansas",
+    "hero_image_url": "/images/states/kansas.jpg",
+    "sources": [
+      {
+        "source_key": "ks_ktracs",
+        "source_label": "K-TRACS",
+        "source_url": "https://pharmacy.ks.gov/",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "ks_erx",
+        "source_label": "Kansas E-Rx Mandate",
+        "source_url": "https://pharmacy.ks.gov/",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Permitted subject to stringent electronic rules and K-TRACS verifications.",
+      "schedule_ii_transfer_text": "Electronic transmission only.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Kansas requires electronic transmission for controlled substances.",
+      "telehealth_controlled_text": "DEA telehealth rules tracking is applied heavily.",
+      "emergency_supply_text": null,
+      "pdmp_name": "K-TRACS",
+      "pdmp_url": "https://pharmacy.ks.gov/",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Kansas State Board of Pharmacy",
+      "board_url": "https://pharmacy.ks.gov/",
+      "board_phone": "(785) 296-4056",
+      "special_restrictions": "K-TRACS verification is heavily utilized to prevent drug seeking cross borders."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4-6 weeks",
+      "avg_wait_primary_care": "2-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing.",
+      "notes": "Stringent laws apply equally to out-of-state entities.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "schedule_ii",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Schedule II substances must be sent electronically without exception.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper prescriptions are universally denied in Kansas.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "snowbird",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Rigorous K-TRACS review causes dispensing delays."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Keep an established electronic trail with your prescriber.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "K-TRACS system ensures proper dispensing limits across boundaries.",
+        "source_key": "ks_ktracs",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "KS"
+      }
+    ]
+  },
+  {
+    "state_code": "OK",
+    "state_name": "Oklahoma",
+    "state_slug": "oklahoma",
+    "hero_image_url": "/images/states/oklahoma.jpg",
+    "sources": [
+      {
+        "source_key": "ok_pmp",
+        "source_label": "Oklahoma PMP AWARxE",
+        "source_url": "https://oklahoma.gov/pharmacy.html",
+        "source_type": "state_board_guidance"
+      },
+      {
+        "source_key": "ok_erx",
+        "source_label": "Oklahoma EPCS Mandate",
+        "source_url": "https://oklahoma.gov/pharmacy.html",
+        "source_type": "state_statute"
+      }
+    ],
+    "overrides": {
+      "out_of_state_controlled": "permitted_with_restrictions",
+      "schedule_ii_transfer": "electronic_only",
+      "schedule_iii_v_transfer": "permitted",
+      "e_rx_scope": "all_controlled",
+      "telehealth_controlled": "restricted",
+      "emergency_supply_allowed": false,
+      "out_of_state_controlled_text": "Out-of-state prescriptions accepted conditionally under EPCS laws.",
+      "schedule_ii_transfer_text": "Mandatory electronic transmission.",
+      "schedule_iii_v_transfer_text": "Permitted with up to 5 refills over 6 months.",
+      "e_rx_scope_text": "Requires absolute electronic transmission via certified software.",
+      "telehealth_controlled_text": "Standard federal guidelines imposed.",
+      "emergency_supply_text": null,
+      "pdmp_name": "Oklahoma PMP",
+      "pdmp_url": "https://oklahoma.gov/pharmacy.html",
+      "pdmp_mandatory_check": true,
+      "board_of_pharmacy": "Oklahoma State Board of Pharmacy",
+      "board_url": "https://oklahoma.gov/pharmacy.html",
+      "board_phone": "(405) 521-3815",
+      "special_restrictions": "Reviewing standard patient history inside the PMP applies directly before dispensing."
+    },
+    "access_facts": {
+      "avg_wait_psychiatry": "4 weeks",
+      "avg_wait_primary_care": "1-3 weeks",
+      "pcp_can_prescribe_stimulants": true,
+      "telehealth_services_available": "Limited initial controlled substance prescribing.",
+      "notes": "State mandates high verification load for out-of-state prescriptions.",
+      "evidence_type": "market_access",
+      "source_url": null
+    },
+    "rules": [
+      {
+        "category": "general",
+        "evidence_type": "state_law",
+        "sort_order": 1,
+        "rule_text": "Electronic prescribing is required for OK.",
+        "source_url": null
+      }
+    ],
+    "restrictions": [
+      {
+        "restriction_type": "e_rx_only",
+        "applies_to": "all_controlled",
+        "description": "Paper scripts are strictly prohibited.",
+        "workaround": null,
+        "evidence_type": "state_law",
+        "source_url": null
+      }
+    ],
+    "segments": [
+      {
+        "segment_slug": "snowbird",
+        "segment_data": {
+          "risk_level": "medium",
+          "key_friction": "Strict e-prescribing rules cause transit delays."
+        },
+        "items": [
+          {
+            "sort_order": 1,
+            "guidance_text": "Provide Oklahoma pharmacy info to your physician before departing.",
+            "evidence_type": "educational",
+            "source_url": null
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "claim_text": "Oklahoma utilizes PMP AWARxE for heavy monitoring.",
+        "source_key": "ok_pmp",
+        "evidence_type": "state_board_guidance",
+        "medication_slug": null,
+        "segment_slug": null,
+        "target_table": "state_rx_overrides",
+        "target_field": "pdmp_mandatory_check",
+        "target_key": "OK"
+      }
+    ]
+  }
+]
