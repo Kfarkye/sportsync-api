@@ -50,6 +50,17 @@ const VENUE_ALIASES = {
   "Estadio Banorte": "Estadio Azteca",
 };
 
+const COACH_KEY_PATTERN = /(coach|manager|staff)/i;
+const BOOKMAKER_ALIASES = {
+  betmgm: "BetMGM",
+  caesars: "Caesars",
+  draftkings: "DraftKings",
+  espn: "ESPN",
+  fanduel: "FanDuel",
+  kalshi: "Kalshi",
+  polymarket: "Polymarket",
+};
+
 const PLACEHOLDER_REPLACEMENTS = [
   {
     previous_slug: "uefa-playoff-a",
@@ -141,6 +152,215 @@ function parseJsonOrNull(text) {
   } catch {
     return null;
   }
+}
+
+function normalizeForLookup(value) {
+  return String(value || "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
+}
+
+function normalizeEspnRefUrl(value) {
+  if (typeof value !== "string") {
+    return null;
+  }
+  return value.replace(/^http:\/\//i, "https://");
+}
+
+function parseLeagueFromEspnUrl(url) {
+  if (typeof url !== "string") {
+    return null;
+  }
+  const match = url.match(/\/league\/([A-Z0-9._-]+)/i);
+  return match ? match[1].toLowerCase() : null;
+}
+
+function parseLeaguesDropdownFromSquadHtml(html) {
+  if (typeof html !== "string") {
+    return [];
+  }
+  const match = html.match(/"leaguesDropdown":(\[[\s\S]*?\]),"sbpg"/);
+  if (!match) {
+    return [];
+  }
+  const parsed = parseJsonOrNull(match[1]);
+  if (!Array.isArray(parsed)) {
+    return [];
+  }
+  const leagues = parsed
+    .map((entry) => parseLeagueFromEspnUrl(entry?.url) || String(entry?.value || "").toLowerCase())
+    .filter(Boolean);
+  return [...new Set(leagues)];
+}
+
+function extractNameParts(entry) {
+  if (!entry || typeof entry !== "object") {
+    return null;
+  }
+  const first = typeof entry.firstName === "string" ? entry.firstName.trim() : "";
+  const last = typeof entry.lastName === "string" ? entry.lastName.trim() : "";
+  const byParts = [first, last].filter(Boolean).join(" ").trim();
+  if (byParts) {
+    return byParts;
+  }
+  for (const key of ["displayName", "fullName", "name", "shortName"]) {
+    const value = entry[key];
+    if (typeof value === "string" && value.trim()) {
+      return value.trim();
+    }
+  }
+  return null;
+}
+
+function flattenCoachLikeEntries(value) {
+  if (!value) {
+    return [];
+  }
+  if (Array.isArray(value)) {
+    return value;
+  }
+  if (typeof value === "object") {
+    if (Array.isArray(value.items)) {
+      return value.items;
+    }
+    return [value];
+  }
+  return [];
+}
+
+function collectCoachLikePaths(payload, prefix = "$", out = new Set()) {
+  if (payload === null || payload === undefined) {
+    return out;
+  }
+  if (Array.isArray(payload)) {
+    for (let index = 0; index < payload.length; index += 1) {
+      collectCoachLikePaths(payload[index], `${prefix}[${index}]`, out);
+    }
+    return out;
+  }
+  if (typeof payload === "object") {
+    for (const [key, value] of Object.entries(payload)) {
+      const path = `${prefix}.${key}`;
+      if (COACH_KEY_PATTERN.test(key)) {
+        out.add(path);
+      }
+      collectCoachLikePaths(value, path, out);
+    }
+  }
+  return out;
+}
+
+function collectCoachNames(payload, prefix = "$", result = []) {
+  if (payload === null || payload === undefined) {
+    return result;
+  }
+  if (Array.isArray(payload)) {
+    for (let index = 0; index < payload.length; index += 1) {
+      collectCoachNames(payload[index], `${prefix}[${index}]`, result);
+    }
+    return result;
+  }
+  if (typeof payload !== "object") {
+    return result;
+  }
+
+  for (const [key, value] of Object.entries(payload)) {
+    const path = `${prefix}.${key}`;
+    if (COACH_KEY_PATTERN.test(key)) {
+      const entries = flattenCoachLikeEntries(value);
+      for (const entry of entries) {
+        const name = extractNameParts(entry);
+        if (name) {
+          result.push({ name, path });
+        }
+      }
+    }
+    collectCoachNames(value, path, result);
+  }
+  return result;
+}
+
+function parseSlotLabel(displayName) {
+  const normalized = String(displayName || "").trim();
+  if (!normalized) {
+    return null;
+  }
+
+  const groupWinner = normalized.match(/^Group\s+([A-L])\s+Winner$/i);
+  if (groupWinner) {
+    return `${groupWinner[1].toUpperCase()}1`;
+  }
+
+  const groupSecond = normalized.match(/^Group\s+([A-L])\s+2nd\s+Place$/i);
+  if (groupSecond) {
+    return `${groupSecond[1].toUpperCase()}2`;
+  }
+
+  const thirdPlace = normalized.match(/^Third\s+Place\s+Group\s+([A-L](?:\/[A-L])*)$/i);
+  if (thirdPlace) {
+    return `3${thirdPlace[1].toUpperCase()}`;
+  }
+
+  const round32Winner = normalized.match(/^Round\s+of\s+32\s+(\d+)\s+Winner$/i);
+  if (round32Winner) {
+    return `Winner R32-${round32Winner[1]}`;
+  }
+
+  const round16Winner = normalized.match(/^Round\s+of\s+16\s+(\d+)\s+Winner$/i);
+  if (round16Winner) {
+    return `Winner R16-${round16Winner[1]}`;
+  }
+
+  const quarterfinalWinner = normalized.match(/^Quarterfinal\s+(\d+)\s+Winner$/i);
+  if (quarterfinalWinner) {
+    return `Winner QF-${quarterfinalWinner[1]}`;
+  }
+
+  const semifinalOutcome = normalized.match(/^Semifinal\s+(\d+)\s+(Winner|Loser)$/i);
+  if (semifinalOutcome) {
+    const side = semifinalOutcome[2].toLowerCase() === "winner" ? "Winner" : "Loser";
+    return `${side} SF-${semifinalOutcome[1]}`;
+  }
+
+  return null;
+}
+
+function inferWcFuturesMarket(value) {
+  const normalized = normalizeForLookup(value);
+  if (!normalized) {
+    return null;
+  }
+  if (normalized.includes("group") && normalized.includes("winner")) {
+    return "group_winner";
+  }
+  if (normalized.includes("outright") || normalized.includes("winner")) {
+    return "outright_winner";
+  }
+  return null;
+}
+
+function normalizeBookmaker(value) {
+  const normalized = normalizeForLookup(value);
+  if (!normalized) {
+    return null;
+  }
+  return BOOKMAKER_ALIASES[normalized] || value;
+}
+
+function normalizeImpliedProbability(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric) || numeric <= 0) {
+    return null;
+  }
+  if (numeric > 0 && numeric < 1) {
+    return Number(numeric.toFixed(6));
+  }
+  if (numeric >= 1 && numeric <= 100) {
+    return Number((numeric / 100).toFixed(6));
+  }
+  return null;
 }
 
 function resolveServiceRoleKey() {
@@ -465,24 +685,169 @@ function findNumericRank(teamDetail) {
   return Number.isFinite(value) ? Math.trunc(value) : null;
 }
 
-function extractCoachName(rosterPayload) {
-  const coachBlock = rosterPayload?.coach;
-  const coachEntry = Array.isArray(coachBlock) ? coachBlock[0] : coachBlock;
-  if (!coachEntry || typeof coachEntry !== "object") {
+function pickCoachName(candidates) {
+  const unique = [...new Set(candidates.map((candidate) => candidate?.name).filter(Boolean))];
+  return unique[0] || null;
+}
+
+function buildTeamSlugLookup(wc26Teams) {
+  const lookup = new Map();
+  for (const team of wc26Teams) {
+    lookup.set(normalizeForLookup(team.slug), team.slug);
+    lookup.set(normalizeForLookup(team.fifa_code), team.slug);
+    lookup.set(normalizeForLookup(team.name), team.slug);
+  }
+
+  const aliases = {
+    "congodr": "cod",
+    "drcongo": "cod",
+    "ivorycoast": "civ",
+    "cotedivoire": "civ",
+    "iriran": "irn",
+    "southkorea": "kor",
+    "korearepublic": "kor",
+    "unitedstates": "usa",
+    usa: "usa",
+    turkey: "tur",
+    czechrepublic: "cze",
+  };
+
+  for (const [key, slug] of Object.entries(aliases)) {
+    if (!lookup.has(key)) {
+      lookup.set(key, slug);
+    }
+  }
+
+  return lookup;
+}
+
+function maybeMapFutureTeamToSlug(teamLabel, lookup) {
+  const normalized = normalizeForLookup(teamLabel);
+  if (!normalized) {
     return null;
   }
-  const fromParts = [coachEntry.firstName, coachEntry.lastName]
-    .filter((value) => typeof value === "string" && value.trim().length > 0)
-    .join(" ")
-    .trim();
-  if (fromParts) {
-    return fromParts;
+  return lookup.get(normalized) || null;
+}
+
+function isWorldCupLeagueValue(value) {
+  const normalized = normalizeForLookup(value);
+  if (!normalized) {
+    return false;
   }
-  const fallback =
-    (typeof coachEntry.displayName === "string" && coachEntry.displayName.trim()) ||
-    (typeof coachEntry.name === "string" && coachEntry.name.trim()) ||
-    "";
-  return fallback || null;
+  return normalized.includes("fifaworld") || normalized.includes("worldcup");
+}
+
+function collectCoachAudit(payloadMap) {
+  const names = [];
+  const paths = new Set();
+
+  for (const [source, payload] of payloadMap.entries()) {
+    if (!payload) {
+      continue;
+    }
+    const sourcePaths = collectCoachLikePaths(payload);
+    for (const path of sourcePaths) {
+      paths.add(`${source}:${path}`);
+    }
+    const sourceNames = collectCoachNames(payload);
+    for (const entry of sourceNames) {
+      names.push({
+        name: entry.name,
+        path: `${source}:${entry.path}`,
+      });
+    }
+  }
+
+  return {
+    coach_name: pickCoachName(names),
+    coach_paths: [...paths].sort(),
+    coach_name_paths: names.map((entry) => `${entry.path}=${entry.name}`),
+  };
+}
+
+async function fetchCoachPayloadFromCoreTeam(coreTeamPayload) {
+  const ref = normalizeEspnRefUrl(coreTeamPayload?.coaches?.$ref);
+  if (!ref) {
+    return null;
+  }
+  const coachesListResponse = await requestWithRetry(
+    ref,
+    {},
+    `fetch coaches list ${ref}`,
+    [404, 500],
+  );
+  if (!coachesListResponse.ok) {
+    return { list: coachesListResponse.json || null, details: [] };
+  }
+
+  const detailRefs = Array.isArray(coachesListResponse.json?.items)
+    ? coachesListResponse.json.items
+        .map((item) => normalizeEspnRefUrl(item?.$ref))
+        .filter(Boolean)
+    : [];
+  const detailPayloads = await mapWithConcurrency(detailRefs, async (detailRef) => {
+    const detailResponse = await requestWithRetry(
+      detailRef,
+      {},
+      `fetch coach detail ${detailRef}`,
+      [404, 500],
+    );
+    return detailResponse.ok ? detailResponse.json : null;
+  });
+
+  return {
+    list: coachesListResponse.json || null,
+    details: detailPayloads.filter(Boolean),
+  };
+}
+
+async function fetchAlternateLeagueCoachPayloads(detailPayload, teamId) {
+  const squadLink = Array.isArray(detailPayload?.team?.links)
+    ? detailPayload.team.links.find((link) => Array.isArray(link?.rel) && link.rel.includes("squad"))
+    : null;
+  const squadUrl = squadLink?.href || `https://www.espn.com/soccer/team/squad/_/id/${teamId}`;
+  const squadHtml = await requestWithRetry(
+    squadUrl,
+    {},
+    `fetch squad html ${teamId}`,
+    [404],
+  );
+  if (!squadHtml.ok || typeof squadHtml.body !== "string") {
+    return [];
+  }
+
+  const leagues = parseLeaguesDropdownFromSquadHtml(squadHtml.body)
+    .filter((league) => league !== "fifa.world");
+  if (!leagues.length) {
+    return [];
+  }
+
+  const payloads = await mapWithConcurrency(leagues, async (league) => {
+    const teamResponse = await requestWithRetry(
+      `https://sports.core.api.espn.com/v2/sports/soccer/leagues/${league}/teams/${teamId}`,
+      {},
+      `fetch core team alt league ${league}/${teamId}`,
+      [404],
+    );
+    if (!teamResponse.ok) {
+      return null;
+    }
+    const coachPayload = await fetchCoachPayloadFromCoreTeam(teamResponse.json);
+    if (!coachPayload) {
+      return {
+        league,
+        core_team: teamResponse.json,
+      };
+    }
+    return {
+      league,
+      core_team: teamResponse.json,
+      coaches_list: coachPayload.list,
+      coaches_details: coachPayload.details,
+    };
+  });
+
+  return payloads.filter(Boolean);
 }
 
 function toRosterJson(rosterPayload) {
@@ -662,7 +1027,43 @@ async function fetchAllEspnEvents() {
   return uniqueEventIds;
 }
 
-async function drainFixtures(serviceKey, wc26Teams, espnTeams) {
+async function fetchOpenApiSpec(serviceKey) {
+  const response = await requestWithRetry(
+    `${REST_BASE}/`,
+    { headers: authHeaders(serviceKey) },
+    "fetch rest openapi",
+  );
+  return response.json || {};
+}
+
+async function upsertFixtureSlotLabelsIfAvailable(serviceKey, slotRows, openapi) {
+  if (!slotRows.length) {
+    return;
+  }
+  const hasSlotsTable = Boolean(openapi?.definitions?.wc26_fixture_slots?.properties);
+  if (!hasSlotsTable) {
+    console.log(
+      "  wc26_fixture_slots table not found (schema locked). slot labels logged for migration readiness.",
+    );
+    const preview = slotRows.slice(0, 10).map((row) => ({
+      fixture_id: row.fixture_id,
+      home_slot_label: row.home_slot_label,
+      away_slot_label: row.away_slot_label,
+    }));
+    console.log(`  slot-label preview: ${JSON.stringify(preview)}`);
+    return;
+  }
+
+  const filteredRows = slotRows.filter((row) => row.home_slot_label || row.away_slot_label);
+  if (!filteredRows.length) {
+    return;
+  }
+
+  await restUpsert(serviceKey, "wc26_fixture_slots", filteredRows, "fixture_id");
+  console.log(`  upserted ${filteredRows.length} fixture slot-label rows`);
+}
+
+async function drainFixtures(serviceKey, wc26Teams, espnTeams, openapi) {
   console.log("\n[step 2] draining fixtures");
 
   const teamsByCode = new Map(
@@ -763,6 +1164,7 @@ async function drainFixtures(serviceKey, wc26Teams, espnTeams) {
   fixturesRaw.sort((a, b) => a.kickoff_ms - b.kickoff_ms || a.event_id - b.event_id);
   const outcomesByMatchNumber = new Map();
   const fixtures = [];
+  const fixtureSlots = [];
   for (let index = 0; index < fixturesRaw.length; index += 1) {
     const row = fixturesRaw[index];
     const matchNumber = index + 1;
@@ -772,9 +1174,12 @@ async function drainFixtures(serviceKey, wc26Teams, espnTeams) {
       Number.isFinite(row.home_team_id) ? teamIdToSlug.get(row.home_team_id) || null : null;
     let awaySlug =
       Number.isFinite(row.away_team_id) ? teamIdToSlug.get(row.away_team_id) || null : null;
+    let homeSlotLabel = null;
+    let awaySlotLabel = null;
 
     if (!homeSlug && Number.isFinite(row.home_team_id)) {
       const displayName = await resolvePlaceholderDisplayName(row.home_team_id);
+      homeSlotLabel = parseSlotLabel(displayName);
       homeSlug = resolvePlaceholderDisplayToSlug(
         displayName,
         groupSeeds,
@@ -784,6 +1189,7 @@ async function drainFixtures(serviceKey, wc26Teams, espnTeams) {
     }
     if (!awaySlug && Number.isFinite(row.away_team_id)) {
       const displayName = await resolvePlaceholderDisplayName(row.away_team_id);
+      awaySlotLabel = parseSlotLabel(displayName);
       awaySlug = resolvePlaceholderDisplayToSlug(
         displayName,
         groupSeeds,
@@ -827,6 +1233,14 @@ async function drainFixtures(serviceKey, wc26Teams, espnTeams) {
       city: row.city,
       kickoff: row.kickoff,
     });
+
+    if (!isGroup) {
+      fixtureSlots.push({
+        fixture_id: `wc26_${String(matchNumber).padStart(3, "0")}`,
+        home_slot_label: homeSlotLabel,
+        away_slot_label: awaySlotLabel,
+      });
+    }
   }
 
   if (fixtures.length !== 104) {
@@ -835,6 +1249,7 @@ async function drainFixtures(serviceKey, wc26Teams, espnTeams) {
 
   await restUpsert(serviceKey, "wc26_fixtures", fixtures, "fixture_id");
   console.log(`  upserted ${fixtures.length} fixtures`);
+  await upsertFixtureSlotLabelsIfAvailable(serviceKey, fixtureSlots, openapi);
 }
 
 async function drainTeamEnrichment(serviceKey, wc26Teams, espnTeams) {
@@ -842,6 +1257,7 @@ async function drainTeamEnrichment(serviceKey, wc26Teams, espnTeams) {
   const slugByCode = new Map(
     wc26Teams.map((team) => [String(team.fifa_code || "").toUpperCase(), team.slug]),
   );
+  const existingBySlug = new Map(wc26Teams.map((team) => [team.slug, team]));
 
   const teamUpdates = await mapWithConcurrency(espnTeams, async (espnTeam) => {
     const espnId = Number(espnTeam.id);
@@ -861,21 +1277,74 @@ async function drainTeamEnrichment(serviceKey, wc26Teams, espnTeams) {
       {},
       `fetch team roster ${espnId}`,
     );
+    const coreTeamResponse = await requestWithRetry(
+      `${ESPN_CORE_BASE}/teams/${espnId}`,
+      {},
+      `fetch core team ${espnId}`,
+      [404],
+    );
+
+    const coachPayload = coreTeamResponse.ok
+      ? await fetchCoachPayloadFromCoreTeam(coreTeamResponse.json)
+      : null;
+
+    const payloadMap = new Map();
+    payloadMap.set("site_detail", detailResponse.json || null);
+    payloadMap.set("site_roster", rosterResponse.json || null);
+    payloadMap.set("core_team", coreTeamResponse.ok ? coreTeamResponse.json : null);
+    payloadMap.set("core_coaches_list", coachPayload?.list || null);
+    if (Array.isArray(coachPayload?.details)) {
+      for (let idx = 0; idx < coachPayload.details.length; idx += 1) {
+        payloadMap.set(`core_coach_detail_${idx + 1}`, coachPayload.details[idx]);
+      }
+    }
 
     const fifaRank = findNumericRank(detailResponse.json);
-    const coachName = extractCoachName(rosterResponse.json);
+    let coachAudit = collectCoachAudit(payloadMap);
+    let alternateLeaguePayloads = [];
+    if (!coachAudit.coach_name) {
+      alternateLeaguePayloads = await fetchAlternateLeagueCoachPayloads(detailResponse.json, espnId);
+      for (let idx = 0; idx < alternateLeaguePayloads.length; idx += 1) {
+        const payload = alternateLeaguePayloads[idx];
+        const prefix = `alt_league_${payload.league || idx + 1}`;
+        payloadMap.set(`${prefix}_team`, payload.core_team || null);
+        payloadMap.set(`${prefix}_coaches_list`, payload.coaches_list || null);
+        if (Array.isArray(payload.coaches_details)) {
+          for (let detailIndex = 0; detailIndex < payload.coaches_details.length; detailIndex += 1) {
+            payloadMap.set(
+              `${prefix}_coach_detail_${detailIndex + 1}`,
+              payload.coaches_details[detailIndex],
+            );
+          }
+        }
+      }
+      coachAudit = collectCoachAudit(payloadMap);
+    }
     const rosterJson = toRosterJson(rosterResponse.json);
+    const existing = existingBySlug.get(slug) || {};
 
     return {
       slug,
-      fifa_rank: fifaRank,
-      head_coach: coachName,
-      roster_json: rosterJson,
+      fifa_rank: fifaRank ?? existing.fifa_rank ?? null,
+      head_coach: coachAudit.coach_name ?? existing.head_coach ?? null,
+      roster_json:
+        rosterJson.players.length > 0
+          ? rosterJson
+          : existing.roster_json || { players: [] },
+      _audit: {
+        slug,
+        code,
+        team_name: espnTeam.displayName || espnTeam.name || slug,
+        coach_name: coachAudit.coach_name,
+        coach_paths: coachAudit.coach_paths,
+        coach_name_paths: coachAudit.coach_name_paths,
+        alt_leagues_checked: alternateLeaguePayloads.map((payload) => payload.league).filter(Boolean),
+      },
     };
   });
 
   await mapWithConcurrency(teamUpdates, async (update) => {
-    const { slug, ...payload } = update;
+    const { slug, _audit, ...payload } = update;
     const updated = await restPatch(
       serviceKey,
       "wc26_teams",
@@ -888,6 +1357,49 @@ async function drainTeamEnrichment(serviceKey, wc26Teams, espnTeams) {
     return updated[0];
   });
   console.log(`  updated enrichment fields for ${teamUpdates.length} teams`);
+
+  const audits = teamUpdates.map((update) => update._audit);
+  const sourceGaps = audits.filter(
+    (audit) =>
+      !audit.coach_name &&
+      (audit.coach_paths.length === 0 ||
+        audit.coach_paths.every((path) => /coaches?\.\$ref$/i.test(path))),
+  );
+  const parserGaps = audits.filter(
+    (audit) =>
+      !audit.coach_name &&
+      !sourceGaps.some((sourceGap) => sourceGap.slug === audit.slug),
+  );
+
+  const pathFrequency = new Map();
+  for (const audit of audits) {
+    for (const path of audit.coach_paths) {
+      pathFrequency.set(path, (pathFrequency.get(path) || 0) + 1);
+    }
+  }
+  const topPaths = [...pathFrequency.entries()]
+    .sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]))
+    .slice(0, 30)
+    .map(([path, count]) => `${count} ${path}`);
+
+  console.log(
+    `  coach extraction audit: parsed=${audits.length - sourceGaps.length - parserGaps.length}, source_gaps=${sourceGaps.length}, parser_gaps=${parserGaps.length}`,
+  );
+  if (topPaths.length) {
+    console.log(`  coach-like keys/paths: ${topPaths.join(" | ")}`);
+  }
+  if (sourceGaps.length) {
+    const summary = sourceGaps
+      .map((audit) => `${audit.code}(${audit.team_name})`)
+      .join(", ");
+    console.log(`  ESPN source gaps (no coach payload): ${summary}`);
+  }
+  if (parserGaps.length) {
+    const summary = parserGaps
+      .map((audit) => `${audit.code}(${audit.team_name})`)
+      .join(", ");
+    console.log(`  parser gaps (coach-like payload but no parsed name): ${summary}`);
+  }
 }
 
 function americanToDecimal(americanOdds) {
@@ -901,68 +1413,84 @@ function americanToDecimal(americanOdds) {
 }
 
 async function drainOddsIfAvailable(serviceKey, wc26Teams) {
-  console.log("\n[step 4] draining futures odds");
-  const response = await requestWithRetry(
-    `${ESPN_SITE_BASE}/futures`,
-    {},
-    "fetch futures endpoint",
-    [404],
+  console.log("\n[step 4] draining futures odds from existing odds pipeline");
+
+  const futuresRows = await restSelect(
+    serviceKey,
+    "futures_odds",
+    "select=league,season,market,team,odds_american,implied_prob,bookmaker,snapshot_date,created_at,updated_at,notes&limit=10000",
   );
 
-  if (response.status === 404) {
-    console.log("  futures endpoint unavailable on ESPN (404), skipping odds drain");
+  const wcFuturesRows = futuresRows.filter((row) => {
+    const leagueFlag = isWorldCupLeagueValue(row.league);
+    const marketFlag = isWorldCupLeagueValue(row.market) || inferWcFuturesMarket(row.market);
+    const notesFlag = isWorldCupLeagueValue(row.notes);
+    return Boolean(leagueFlag || marketFlag || notesFlag);
+  });
+
+  if (!wcFuturesRows.length) {
+    console.log(
+      "  no World Cup rows found in futures_odds (existing odds pipeline currently not mapped for WC26), skipping insert",
+    );
     return 0;
   }
 
-  const slugByCode = new Map(
-    wc26Teams.map((team) => [String(team.fifa_code || "").toUpperCase(), team.slug]),
-  );
-
+  const teamLookup = buildTeamSlugLookup(wc26Teams);
   const rows = [];
-  const fetchedAt = new Date().toISOString();
-  const payload = response.json;
-  const eventList = Array.isArray(payload?.events) ? payload.events : [];
-
-  for (const event of eventList) {
-    const competitors = event?.competitions?.[0]?.competitors || [];
-    for (const competitor of competitors) {
-      const code = String(competitor?.team?.abbreviation || "").toUpperCase();
-      const slug = slugByCode.get(code) || null;
-      const american = Number(competitor?.odds?.american || competitor?.odds?.moneyLine);
-      if (!slug || !Number.isFinite(american)) {
-        continue;
-      }
-      const decimal = americanToDecimal(american);
-      rows.push({
-        team_slug: slug,
-        market: "outright_winner",
-        bookmaker: "ESPN",
-        american_odds: Math.trunc(american),
-        decimal_odds: decimal,
-        implied_probability: decimal ? Number((1 / decimal).toFixed(6)) : null,
-        fetched_at: fetchedAt,
-        volume: null,
-      });
+  for (const futures of wcFuturesRows) {
+    const market = inferWcFuturesMarket(futures.market) || "outright_winner";
+    const slug = maybeMapFutureTeamToSlug(futures.team, teamLookup);
+    if (!slug) {
+      continue;
     }
+
+    const american = Number(futures.odds_american);
+    const americanOdds = Number.isFinite(american) && american !== 0 ? Math.trunc(american) : null;
+    const decimal =
+      americanOdds !== null
+        ? americanToDecimal(americanOdds)
+        : null;
+    const implied =
+      normalizeImpliedProbability(futures.implied_prob) ||
+      (decimal ? Number((1 / decimal).toFixed(6)) : null);
+
+    const bookmaker = normalizeBookmaker(futures.bookmaker);
+    if (!bookmaker || (americanOdds === null && decimal === null && implied === null)) {
+      continue;
+    }
+
+    rows.push({
+      team_slug: slug,
+      market,
+      bookmaker,
+      american_odds: americanOdds,
+      decimal_odds: decimal,
+      implied_probability: implied,
+      fetched_at:
+        futures.snapshot_date ||
+        futures.updated_at ||
+        futures.created_at ||
+        new Date().toISOString(),
+      volume: null,
+    });
   }
 
   if (!rows.length) {
-    console.log("  futures endpoint returned no usable outright odds rows");
+    console.log(
+      "  futures_odds had WC rows but none mapped cleanly to wc26_teams, skipping insert",
+    );
     return 0;
   }
 
   await restInsert(serviceKey, "wc26_odds", rows);
-  console.log(`  inserted ${rows.length} futures odds rows`);
+  console.log(`  inserted ${rows.length} odds rows from futures_odds`);
   return rows.length;
 }
 
-async function seedGroupStandings(serviceKey, wc26Teams, espnTeams) {
+async function seedGroupStandings(serviceKey, wc26Teams, espnTeams, openapi) {
   console.log("\n[step 5] seeding group standings");
 
-  const openapi = await requestWithRetry(`${REST_BASE}/`, {
-    headers: authHeaders(serviceKey),
-  }, "fetch rest openapi");
-  const standingsProps = openapi.json?.definitions?.wc_group_standings?.properties || {};
+  const standingsProps = openapi?.definitions?.wc_group_standings?.properties || {};
   const schemaColumns = Object.keys(standingsProps).map((columnName) => ({
     column_name: columnName,
     data_type: standingsProps[columnName]?.type || "unknown",
@@ -1087,6 +1615,7 @@ async function runValidation(serviceKey) {
 
 async function main() {
   const serviceKey = resolveServiceRoleKey();
+  const openapi = await fetchOpenApiSpec(serviceKey);
 
   await probeEspnEndpoints();
   await verifyInterconWinners();
@@ -1095,7 +1624,7 @@ async function main() {
   const wc26Teams = await restSelect(
     serviceKey,
     "wc26_teams",
-    "select=slug,name,fifa_code,group_letter,confederation,fifa_rank,head_coach",
+    "select=slug,name,fifa_code,group_letter,confederation,fifa_rank,head_coach,roster_json",
   );
   if (wc26Teams.length !== 48) {
     throw new Error(`Expected 48 wc26_teams rows, got ${wc26Teams.length}`);
@@ -1103,15 +1632,15 @@ async function main() {
 
   const espnTeams = await fetchEspnTeams();
 
-  await drainFixtures(serviceKey, wc26Teams, espnTeams);
+  await drainFixtures(serviceKey, wc26Teams, espnTeams, openapi);
   await drainTeamEnrichment(serviceKey, wc26Teams, espnTeams);
   const wc26TeamsRefreshed = await restSelect(
     serviceKey,
     "wc26_teams",
-    "select=slug,name,fifa_code,group_letter,confederation,fifa_rank,head_coach",
+    "select=slug,name,fifa_code,group_letter,confederation,fifa_rank,head_coach,roster_json",
   );
   await drainOddsIfAvailable(serviceKey, wc26TeamsRefreshed);
-  await seedGroupStandings(serviceKey, wc26TeamsRefreshed, espnTeams);
+  await seedGroupStandings(serviceKey, wc26TeamsRefreshed, espnTeams, openapi);
   await runValidation(serviceKey);
 
   console.log("\ncomplete");
