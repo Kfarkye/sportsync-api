@@ -51,11 +51,17 @@ if ! jq -e '.headers[] | select(.source == "/api/checkout-session") | .headers[]
   exit 1
 fi
 
+if ! jq -e '.headers[] | select(.source == "/api/stripe-webhook") | .headers[] | select(.key == "Cache-Control" and .value == "no-store, max-age=0")' "$VERCEL_CONFIG" >/dev/null; then
+  echo "FAIL: /api/stripe-webhook cache policy missing or incorrect" >&2
+  exit 1
+fi
+
 api_files=(
   "$ROOT_DIR/api/match-context.js"
   "$ROOT_DIR/api/trends.js"
   "$ROOT_DIR/api/demo-matches.js"
   "$ROOT_DIR/api/checkout-session.js"
+  "$ROOT_DIR/api/stripe-webhook.js"
 )
 
 for file in "${api_files[@]}"; do

@@ -66,6 +66,7 @@ function assertHeaderPresence(res, label) {
   const matchContextHandler = require(path.join(rootDir, "api/match-context.js"));
   const trendsHandler = require(path.join(rootDir, "api/trends.js"));
   const checkoutHandler = require(path.join(rootDir, "api/checkout-session.js"));
+  const stripeWebhookHandler = require(path.join(rootDir, "api/stripe-webhook.js"));
 
   {
     const res = createMockRes();
@@ -100,6 +101,13 @@ function assertHeaderPresence(res, label) {
     await checkoutHandler({ method: "GET", query: {} }, res);
     assertErrorShape(res, 405, "METHOD_NOT_ALLOWED", "checkout GET");
     assertHeaderPresence(res, "checkout GET");
+  }
+
+  {
+    const res = createMockRes();
+    await stripeWebhookHandler({ method: "GET", query: {} }, res);
+    assertErrorShape(res, 405, "METHOD_NOT_ALLOWED", "stripe-webhook GET");
+    assertHeaderPresence(res, "stripe-webhook GET");
   }
 
   console.log("check-error-shape: PASS");

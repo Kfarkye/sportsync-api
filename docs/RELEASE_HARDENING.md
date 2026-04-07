@@ -73,3 +73,9 @@ All API errors must return:
 - Workflow: `.github/workflows/release-gate.yml`
 - Single blocking command: `bash ./scripts/release-gate.sh`
 - Optional secret for protected checks: `SPORTSYNC_PUBLIC_CHECK_API_KEY`
+
+## Stripe webhook configuration
+Required environment variables for live purchase handling:
+- `STRIPE_WEBHOOK_SECRET` (Stripe signing secret, `whsec_...`)
+- `STRIPE_NOTIFY_WEBHOOK_URL` (Slack/Discord webhook URL for payment notifications)
+- `FULFILLMENT_WEBHOOK_URL` (optional internal webhook for onboarding)

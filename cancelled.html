@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SportsSync — Checkout Cancelled</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAFAF8;
+    --surface: #FFFFFF;
+    --text-primary: #1A1A18;
+    --text-secondary: #6B6B63;
+    --text-tertiary: #9B9B91;
+    --accent: #C85A3A;
+    --border: #E8E7E3;
+    --border-strong: #D4D3CD;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  nav {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 72px 24px 96px;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Source Serif 4', serif;
+    font-size: clamp(30px, 4vw, 42px);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 18px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 24px;
+  }
+
+  .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .value {
+    font-size: 14px;
+    color: var(--text-primary);
+    word-break: break-all;
+  }
+
+  .actions {
+    margin-top: 28px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 12px 22px;
+    background: var(--text-primary);
+    color: var(--bg);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+  }
+
+  .btn-secondary {
+    display: inline-block;
+    padding: 12px 22px;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+  }
+
+  footer {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer span, footer a {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    text-decoration: none;
+  }
+
+  @media (max-width: 720px) {
+    main { padding: 56px 24px 72px; }
+    footer { flex-direction: column; gap: 12px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <span class="nav-brand">SportsSync</span>
+</nav>
+<main>
+  <div class="eyebrow">Checkout cancelled</div>
+  <h1>No charge was made.</h1>
+  <p>Your checkout was cancelled. You can restart anytime or email us if you need a custom plan.</p>
+
+  <div class="card">
+    <div class="label">Plan</div>
+    <div class="value" id="plan">Loading...</div>
+  </div>
+
+  <div class="actions">
+    <a class="btn-primary" href="/">Back to pricing</a>
+    <a class="btn-secondary" href="mailto:api@sportsync.io">Email support</a>
+  </div>
+</main>
+<footer>
+  <span>&copy; 2026 SportsSync</span>
+  <a href="mailto:api@sportsync.io">api@sportsync.io</a>
+</footer>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const plan = params.get("plan") || "unknown";
+  const planEl = document.getElementById("plan");
+  planEl.textContent = plan;
+</script>
+</body>
+</html>

@@ -134,8 +134,8 @@ module.exports = async function handler(req, res) {
   params.set("mode", planConfig.mode);
   params.set("line_items[0][price]", planConfig.price);
   params.set("line_items[0][quantity]", "1");
-  params.set("success_url", `${baseUrl}/?checkout=success`);
-  params.set("cancel_url", `${baseUrl}/?checkout=cancelled`);
+  params.set("success_url", `${baseUrl}/success.html?session_id={CHECKOUT_SESSION_ID}&plan=${plan}`);
+  params.set("cancel_url", `${baseUrl}/cancelled.html?plan=${plan}`);
   params.set("allow_promotion_codes", "true");
   params.set("metadata[plan]", plan);
 
